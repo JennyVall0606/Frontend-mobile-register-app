@@ -27,7 +27,7 @@ export default function HomeScreen() {
 
         <TouchableOpacity
           style={[styles.button, { marginTop: 20 }]}
-          onPress={() => navigation.navigate('ControlHistory')}
+          onPress={() => navigation.navigate('ControlScreen')}
         >
           <Text style={styles.buttonText}>Control de Historial</Text>
         </TouchableOpacity>
