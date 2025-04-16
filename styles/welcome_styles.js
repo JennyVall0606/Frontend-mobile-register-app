@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: 'rgb(0, 0, 0)',
+    color: 'rgb(6, 97, 59)',
 
     marginTop: 20,
   },
@@ -60,7 +60,7 @@ button: {
 },
 
 buttonText: {
-  color: 'rgb(0, 0, 0)',
+  color: 'rgb(3, 44, 3)',
   fontSize: 20, // Aumenta el tamaño de la letra aquí
   textAlign: 'center',
   fontWeight: '60', // Opcional, para que se vea más fuerte

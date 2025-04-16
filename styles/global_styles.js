@@ -11,24 +11,59 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 40,
-    marginBottom: 16,
-    gap: 10,
+    marginTop: 60,
+    paddingHorizontal: 20,
+    marginBottom: 20,
+    gap: 50,
   },
   icon: {
-    width: 32,
-    height: 32,
+    width: 50,
+    height: 50,
   },
   searchInput: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'rgb(192, 197, 194)',
     padding: 8,
-    borderRadius: 8,
-    marginHorizontal: 10,
+    borderRadius: 20,
+    marginHorizontal: -30,
+    borderColor: 'rgb(53, 50, 50)',      // Borde negro
+    borderWidth: 1,         // Grosor del borde
   },
   content: {
     flex: 1,
   },
+  dropdownMenuLeft: {
+    position: 'absolute',
+    top: 105,
+    left: 30,
+    backgroundColor: 'rgb(192, 197, 194)',
+    padding: 2,
+    borderRadius: 8,
+    elevation: 5,
+    zIndex: 999,
+  },
+  
+  dropdownMenuRight: {
+    position: 'absolute',
+    top: 105,
+    right: 30,
+    backgroundColor: 'rgb(192, 197, 194)',
+    padding: 2,
+    borderRadius: 4,
+    elevation: 5,
+    zIndex: 999,
+  },
+  
+  dropdownItem: {
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    fontSize: 15,
+    color: 'rgb(40, 43, 41)',
+    marginBottom: 4, // Espacio entre ítems
+  },
+  
+
+
 });
 
 
