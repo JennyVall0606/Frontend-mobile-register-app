@@ -1,16 +1,16 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
   background: {
     flex: 1, // Esto asegura que ocupe toda la pantalla
-    justifyContent: 'center', // Centra el contenido si es necesario
-    alignItems: 'center', // Alinea el contenido (opcional)
+    justifyContent: "center", // Centra el contenido si es necesario
+    alignItems: "center", // Alinea el contenido (opcional)
   },
-  
+
   topBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginTop: 60,
     paddingHorizontal: 20,
     marginBottom: 20,
@@ -22,11 +22,9 @@ export default StyleSheet.create({
     height: 40,
   },
 
-  
-
   searchInput: {
     flex: 1,
-    backgroundColor: 'rgb(207, 207, 212)',
+    backgroundColor: "rgb(207, 207, 212)",
     padding: 8,
     borderRadius: 20,
     fontSize: 16, // Ajusté el tamaño de fuente
@@ -47,10 +45,10 @@ export default StyleSheet.create({
   },
 
   dropdownMenuLeft: {
-    position: 'absolute',
+    position: "absolute",
     top: 105, // Puedes ajustar este valor si quieres mover el menú más abajo
     left: 30,
-    backgroundColor: 'rgb(192, 197, 194)',
+    backgroundColor: "rgb(192, 197, 194)",
     padding: 2,
     borderRadius: 8,
     elevation: 5,
@@ -58,10 +56,10 @@ export default StyleSheet.create({
   },
 
   dropdownMenuRight: {
-    position: 'absolute',
+    position: "absolute",
     top: 105, // Puedes ajustar este valor si quieres mover el menú más abajo
     right: 30,
-    backgroundColor: 'rgb(192, 197, 194)',
+    backgroundColor: "rgb(192, 197, 194)",
     padding: 2,
     borderRadius: 8, // Reduje el borde para que sea consistente con el menú izquierdo
     elevation: 5,
@@ -72,25 +70,25 @@ export default StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 16,
     fontSize: 15,
-    color: 'rgb(40, 43, 41)',
+    color: "rgb(40, 43, 41)",
     marginBottom: 4, // Espacio entre ítems
   },
 
   fechaTexto: {
-    color: '#333',
+    color: "#333",
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
     marginLeft: 20,
     marginBottom: 10,
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
 
   searchResults: {
-    position: 'absolute',
+    position: "absolute",
     top: 140, // Mueve el flotante más abajo
     left: 20,
     right: 20,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 10,
     padding: 8, // Reducido para ocupar menos espacio
     zIndex: 20,
@@ -99,57 +97,60 @@ export default StyleSheet.create({
   },
 
   topBarContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 10,
     height: 60,
     zIndex: 10,
   },
   searchContainerCustom: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: "row",
     marginHorizontal: 10,
-    backgroundColor: 'rgb(207, 207, 212)',
+    backgroundColor: "rgb(207, 207, 212)",
     borderRadius: 15,
-    alignItems: 'center',
+    alignItems: "center",
     paddingHorizontal: 10,
-    borderColor: 'rgb(53, 50, 50)', // Borde negro
+    borderColor: "rgb(53, 50, 50)", // Borde negro
     borderWidth: 1, // Grosor del borde
   },
 
   searchInputPlaceholder: {
-    color: 'rgb(53, 50, 50)',
+    color: "rgb(53, 50, 50)",
   },
-  
+
   searchResultsContainer: {
-    position: 'absolute',
-    top: 110,
-    left: 20,
-    right: 20,
-    backgroundColor: 'white',
+    position: "absolute",
+    top: 105,
+    left: 90,
+    right: 90,
+    backgroundColor: "rgb(207, 207, 212)",
     borderRadius: 10,
     padding: 10,
-    zIndex: 20,
-    maxHeight: 180,
-    elevation: 5,
+    maxHeight: 100,
+    borderColor: "rgb(53, 50, 50)", // Borde negro
+    borderWidth: 1, // Grosor del borde
+    zIndex: 999,
+    elevation: 10,
   },
-  
-  searchResultsContainer: {
-    position: 'absolute',
-    top: 110,
-    left: 80,
-    right: 80,
-    backgroundColor: 'rgb(207, 207, 212)',
-    borderRadius: 10,
-    padding: 10,
-    zIndex: 20,
-    maxHeight: 180,
-    elevation: 5,
+
+  resultText: {
+    fontSize: 16,
+    color: "rgb(53, 50, 50)", // Gris oscuro
+    paddingVertical: 10, // Espacio vertical adicional para mayor área de clic
+    paddingHorizontal: 14, // Espacio horizontal adicional
+    fontWeight: "400", // Puedes usar 'bold' si prefieres más énfasis
   },
-  
+
+  resultItem: {
+    borderRadius: 10, // Más separación entre los resultados
+    paddingVertical: 5, // Espacio vertical adicional
+    paddingHorizontal: 5, // Espacio horizontal adicional
+  },
+
   noResultsText: {
     fontSize: 16,
-    color: 'rgb(53, 50, 50)',
+    color: "rgb(53, 50, 50)",
   },
 });

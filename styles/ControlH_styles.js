@@ -1,81 +1,182 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 75,
-    backgroundColor: '#fff',
+  alignItems: 'center',
+  justifyContent: 'flex-start',
+  paddingHorizontal: 20, // Agrega espacio en los lados izquierdo y derecho
+  paddingTop: 10, // Puedes ajustar este valor si necesitas más espacio en la parte superior
+  
   },
-  title: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 12,
-    color: '#333',
-  },
-  subtitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginTop: 20,
-    marginBottom: 8,
-    color: '#444',
-  },
-  searchContainer: {
-    flexDirection: 'row',
+
+  backButton: {
+    position: 'absolute',
+    top: -15, // Ajusta este valor para subirlo más o menos
+    left: 8, // Opcional: para moverlo horizontalmente
+    padding: 10,
     alignItems: 'center',
-    backgroundColor: '#eee',
+    justifyContent: 'center',
+  },
+
+  icon: {
+    fontSize: 30, // Tamaño del ícono
+    color: "rgb(53, 51, 51)", // Color del ícono
+  },
+
+  title: {
+    fontSize: 29,
+    fontWeight: 'bold',
+    marginTop: 20, // reemplaza paddingTop del container
+    marginBottom: 20,
+    color: 'rgb(6, 97, 59)',
+    textAlign: 'center',
+    width: '100%' // asegura que esté centrado
+  },
+
+  subtitle: {
+    fontSize: 24,
+    fontWeight: "600",
+    marginTop: 20,
+    marginBottom: 30,
+    color: "rgb(6, 97, 59)",
+    textAlign: 'center', // Centrado para el subtítulo
+  },
+
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgb(192, 197, 194)",
     paddingHorizontal: 10,
     paddingVertical: 6,
-    borderRadius: 8,
+    borderRadius: 20,
+    marginBottom: 20, // Para darle un pequeño espacio debajo
   },
+
   input: {
     marginLeft: 10,
     flex: 1,
-    fontSize: 14,
+    fontSize: 15,
   },
+
+  searchIcon: {
+    fontSize: 20,
+    color: "rgb(53, 51, 51)",
+    marginRight: 5,
+  },
+
+  // Estilo de la tabla
   table: {
+    width: '100%', // Asegura que ocupe todo el ancho disponible
+    marginHorizontal: 0, // Elimina cualquier margen horizontal
     borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    overflow: 'hidden',
-    marginBottom: 16,
+    borderColor: "rgb(53, 51, 51)",
+    borderRadius: 5,
+    overflow: "hidden",
+    marginBottom: 20, // Espacio inferior entre la tabla y otros elementos
   },
+
   tableHeader: {
-    flexDirection: 'row',
-    backgroundColor: '#e0e0e0',
+    flexDirection: "row",
+    backgroundColor: "rgb(70, 136, 84)",
     borderBottomWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "rgb(53, 51, 51)",
   },
+
   tableRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     borderBottomWidth: 1,
-    borderColor: '#eee',
-    backgroundColor: '#fafafa',
+    borderColor: "rgb(53, 51, 51)",
+    backgroundColor: "rgb(192, 197, 194)",
   },
+
   cellHeader: {
-    flex: 1,
-    padding: 8,
-    fontWeight: 'bold',
-    fontSize: 13,
-    color: '#333',
-    textAlign: 'center',
-  },
-  cell: {
-    flex: 1,
-    padding: 8,
+    flex: 40, // Asegura que cada celda ocupe el mismo espacio
+    padding: 6,
+    fontWeight: "bold",
     fontSize: 12,
-    textAlign: 'center',
-    color: '#555',
+    color: "rgb(41, 41, 39)",
+    textAlign: "center", // Asegura que el texto esté centrado
   },
+  cellHeaderId: {
+    flex: 15, // más pequeño
+    padding: 6,
+    fontWeight: "bold",
+    fontSize: 12,
+    color: "rgb(41, 41, 39)",
+    textAlign: "center",
+  },
+
+  cell: {
+    flex: 35, // Esto hará que las celdas se estiren igual
+    padding: 6,
+    fontSize: 10,
+    textAlign: "center",
+    color: "rgb(46, 39, 45)",
+  },
+  cellId: {
+    flex: 15,
+    padding: 6,
+    fontSize: 10,
+    textAlign: "center",
+    color: "rgb(46, 39, 45)",
+  },
+
+  cellHeaderDosis: {
+    flex: 50, // más ancho que ID, pero no tan ancho como nombre
+    padding: 6,
+    fontWeight: "bold",
+    fontSize: 12,
+    color: "rgb(41, 41, 39)",
+    textAlign: "center",
+  },
+  
+  cellDosis: {
+    flex: 50,
+    padding: 6,
+    fontSize: 11,
+    textAlign: "center",
+    color: "rgb(46, 39, 45)",
+  },
+  
+  cellHeaderNombre: {
+    flex: 50, // Más ancho que las otras columnas
+    padding: 6,
+    fontWeight: "bold",
+    fontSize: 12,
+    color: "rgb(41, 41, 39)",
+    textAlign: "center",
+  },
+  
+  cellNombre: {
+    flex: 50,
+    padding: 6,
+    fontSize: 11,
+    textAlign: "center",
+    color: "rgb(46, 39, 45)",
+  },
+  
+
+  // Ajuste en el actionsContainer
   actionsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-    alignItems: 'center',
-    paddingHorizontal: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: '100%', // Asegura que ocupe todo el ancho disponible
+    alignItems: "center",
+    paddingHorizontal: 0, // Elimina cualquier padding horizontal innecesario
+    marginBottom: 20, // Espacio inferior opcional
   },
+
   link: {
-    color: '#0066cc',
-    fontWeight: 'bold',
-    fontSize: 13,
+    color: "rgb(41, 41, 39)",
+    fontWeight: "bold",
+    fontSize: 15,
+    marginBottom: 50,
+  },
+
+  addIcon: {
+    fontSize: 30,
+    color: "rgb(19, 150, 29)",
+    marginBottom: 50,
   },
 });

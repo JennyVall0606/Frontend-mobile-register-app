@@ -1,14 +1,13 @@
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'flex-start', // ← esto alinea arriba
-        paddingTop: 40,               // ← espacio desde arriba
-        paddingHorizontal: 20,
-      },
-
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    paddingTop: 40,
+    paddingHorizontal: 20,
+  },
   title: {
     fontSize: 30,
     fontWeight: 'bold',
@@ -16,22 +15,27 @@ export default StyleSheet.create({
     color: 'rgb(6, 97, 59)',
   },
   logo: {
-    width: 250,
-    height: 250,
-    marginBottom: 100,
+    width: 200,
+    height: 200,
+    marginBottom: 50,
   },
-  button: {
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 20,
+  },
+  squareButton: {
     backgroundColor: 'rgb(160, 159, 159)',
-    paddingVertical: 18,       // ↑ más alto
-    paddingHorizontal: 40,     // ↑ más ancho
+    width: 130,
+    height: 130,
     borderRadius: 10,
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  
   buttonText: {
     color: 'rgb(3, 44, 3)',
-    fontSize: 20,              // ↑ texto más grande
+    fontSize: 24,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
-  
 });

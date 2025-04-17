@@ -18,19 +18,21 @@ export default function HomeScreen() {
           resizeMode="contain"
         />
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate('RegisterCattle')}
-        >
-          <Text style={styles.buttonText}>Registrar Ganado</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonRow}>
+          <TouchableOpacity
+            style={styles.squareButton}
+            onPress={() => navigation.navigate('RegisterCattle')}
+          >
+            <Text style={styles.buttonText}>Registrar Ganado</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.button, { marginTop: 20 }]}
-          onPress={() => navigation.navigate('ControlScreen')}
-        >
-          <Text style={styles.buttonText}>Control de Historial</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.squareButton}
+            onPress={() => navigation.navigate('ControlScreen')}
+          >
+            <Text style={styles.buttonText}>Control Historial</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </Layout>
   );
