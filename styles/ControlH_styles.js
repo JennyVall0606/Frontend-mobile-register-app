@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
   justifyContent: 'flex-start',
   paddingHorizontal: 20, // Agrega espacio en los lados izquierdo y derecho
   paddingTop: 10, // Puedes ajustar este valor si necesitas más espacio en la parte superior
-  
+  marginBottom: 10,
   },
 
   backButton: {

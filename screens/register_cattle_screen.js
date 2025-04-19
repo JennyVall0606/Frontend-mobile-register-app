@@ -14,7 +14,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import Layout from "../components/layout";
-import Icon from "react-native-vector-icons/Feather";
+import { Ionicons } from "@expo/vector-icons"; // Asegúrate de importar Icon
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import styles, { getDropdownWrapper } from "../styles/register_cattle_styles";
@@ -33,6 +33,8 @@ export default function RegisterCattleScreen() {
   const [observations, setObservations] = useState("");
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [currentDateType, setCurrentDateType] = useState("");
+
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState([
     { label: "Brucelosis", value: "brucelosis" },
@@ -66,7 +68,11 @@ export default function RegisterCattleScreen() {
   };
 
   const handleConfirmDate = (date) => {
-    setBirthDate(date.toLocaleDateString());
+    if (currentDateType === "peso") {
+      setWeight(date.toLocaleDateString());
+    } else {
+      setBirthDate(date.toLocaleDateString());
+    }
     setDatePickerVisibility(false);
   };
 
@@ -132,8 +138,8 @@ export default function RegisterCattleScreen() {
                   onPress={() => setImage(null)}
                   style={styles.deleteButton}
                 >
-                  <Icon
-                    name="trash-2"
+                  <Ionicons
+                    name="trash-bin"
                     size={20}
                     style={styles.deleteButtonIcon}
                   />
@@ -148,30 +154,25 @@ export default function RegisterCattleScreen() {
               onChangeText={setBreed}
             />
 
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={[styles.input, styles.dateInput]} // Asegúrate de que 'styles.input' esté correctamente aplicado
-                placeholder="Fecha de nacimiento"
-                value={birthDate}
-                onFocus={() => setDatePickerVisibility(true)}
-                editable={false} // El campo es solo lectura porque se selecciona a través del date picker
-              />
-
-              <TouchableOpacity
-                style={styles.calendarIcon}
-                onPress={() => setDatePickerVisibility(true)}
-              >
-                <Icon name="calendar" style={styles.icon} />
-              </TouchableOpacity>
-
-              <DateTimePickerModal
-                isVisible={isDatePickerVisible}
-                mode="date"
-                onConfirm={handleConfirmDate}
-                themeVariant="light"
-                onCancel={() => setDatePickerVisibility(false)}
-              />
-            </View>
+            <TouchableOpacity
+              style={styles.dateButton}
+              onPress={() => {
+                setCurrentDateType("fechaNacimiento");
+                setDatePickerVisibility(true);
+              }}
+            >
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Ionicons
+                  name="calendar"
+                  size={20}
+                  color="black"
+                  style={{ marginRight: 8 }}
+                />
+                <Text style={styles.dateButtonText}>
+                  {birthDate ? birthDate : "Fecha de nacimiento"}
+                </Text>
+              </View>
+            </TouchableOpacity>
 
             <TextInput
               style={styles.input}
@@ -211,10 +212,10 @@ export default function RegisterCattleScreen() {
                 value={disease}
                 setValue={setDisease}
                 placeholder="Selecciona una enfermedad"
-                zIndex={1000} // Asegura que el modal se dibuje correctamente sobre otros elementos
+                zIndex={1000}
                 style={styles.dropdown}
                 textStyle={styles.dropdownText}
-                listMode="SCROLLVIEW" // Cambiado a MODAL para que no ocupe toda la pantalla
+                listMode="SCROLLVIEW"
               />
             </View>
 
@@ -235,6 +236,14 @@ export default function RegisterCattleScreen() {
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
+
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date"
+        onConfirm={handleConfirmDate}
+        themeVariant="light"
+        onCancel={() => setDatePickerVisibility(false)}
+      />
     </Layout>
   );
 }

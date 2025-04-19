@@ -159,8 +159,24 @@ export const styles = StyleSheet.create({
   },
 
   addIcon: {
-    fontSize: 30,
+    fontSize: 40,
     color: "rgb(19, 150, 29)",
-    marginBottom: 50,
+    marginBottom: 60,
+    marginTop: 40,
   },
+  paginationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  paginationButton: {
+    fontSize: 16,
+    color: 'blue',
+  },
+  pageInfo: {
+    fontSize: 16,
+    color: 'black',
+    alignSelf: 'center',
+  },
+  
 });
