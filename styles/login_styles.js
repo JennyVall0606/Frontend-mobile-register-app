@@ -13,9 +13,9 @@ const styles = StyleSheet.create({
     width: 200,
     height: 190,
     borderRadius: 70,
-    marginTop: -20, // Esto lo convierte en un círculo
+    marginTop: -20,
     marginBottom: 10,
-    backgroundColor: "#000",
+    backgroundColor: "rgb(18, 22, 20)",
   },
 
   title: {
@@ -35,8 +35,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontSize: 16,
     backgroundColor: "rgb(222, 231, 225)",
-    width: "150%", // Ocupa el 80% del ancho
-    marginTop: 20,
+    width: "150%", 
   },
 
   button: {
@@ -45,15 +44,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     borderRadius: 8,
     marginTop: 100,
-    alignSelf: "center", // opcional, lo centra horizontalmente
-    width: "70%", // opcional, lo hace más ancho
+    alignSelf: "center", 
+    width: "70%", 
   },
 
   buttonText: {
     color: "rgb(3, 44, 3)",
-    fontSize: 20, // Aumenta el tamaño de la letra aquí
+    fontSize: 20, 
     textAlign: "center",
-    fontWeight: "60", // Opcional, para que se vea más fuerte
+    fontWeight: "60", 
     fontFamily: "bold",
   },
 });

@@ -17,7 +17,8 @@ import Layout from "../components/layout";
 import { Ionicons } from "@expo/vector-icons"; // Asegúrate de importar Icon
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import styles, { getDropdownWrapper } from "../styles/register_cattle_styles";
+import styles from "../styles/register_cattle_styles";
+
 
 export default function RegisterCattleScreen() {
   const navigation = useNavigation();
@@ -112,13 +113,13 @@ export default function RegisterCattleScreen() {
 
   return (
     <Layout>
-      <SafeAreaView style={{ flex: 1, padding: 20 }}>
+      <SafeAreaView style={styles.container}>
         <KeyboardAvoidingView
           style={styles.keyboardView}
           behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
           <ScrollView
-            contentContainerStyle={{ paddingBottom: 20 }}
+            contentContainerStyle={styles.scrollContent}
             keyboardShouldPersistTaps="handled"
           >
             <TouchableOpacity
@@ -168,11 +169,11 @@ export default function RegisterCattleScreen() {
               }}
             >
               <View style={styles.rowContainer}>
-      <Ionicons name="calendar" style={styles.iconStyle} />
-      <Text style={styles.dateButtonText}>
-        {birthDate ? birthDate : "Fecha de nacimiento"}
-      </Text>
-    </View>
+                <Ionicons name="calendar" style={styles.iconStyle} />
+                <Text style={styles.dateButtonText}>
+                  {birthDate ? birthDate : "Fecha de nacimiento"}
+                </Text>
+              </View>
             </TouchableOpacity>
 
             <TextInput
@@ -204,7 +205,7 @@ export default function RegisterCattleScreen() {
               onChangeText={setMother}
             />
 
-            <View style={getDropdownWrapper(open)}>
+            <View>
               <DropDownPicker
                 open={open}
                 setOpen={setOpen}

@@ -63,7 +63,7 @@ export default function VaccinesScreen({ navigation }) {
           />
         </View>
 
-        <ScrollView style={{ marginTop: 20 }}>
+        <ScrollView style={styles.scrollView}>
           <View style={styles.table}>
             <View style={styles.tableHeader}>
               <Text style={styles.cellHeaderId}>ID</Text>

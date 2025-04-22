@@ -136,14 +136,13 @@ export default function Layout({ children }) {
 
         <View
           style={[
-            globalStyles.searchContainer,
             globalStyles.searchContainerCustom,
           ]}
         >
           <TextInput
             placeholder="Buscar..."
-            placeholderTextColor={globalStyles.searchInputPlaceholder.color}
-            style={[globalStyles.searchInput, globalStyles.searchInputCustom]}
+            placeholderTextColor={globalStyles.searchInputPlaceholder}
+            style={[globalStyles.searchInput]}
             value={searchQuery}
             onChangeText={setSearchQuery}
             accessible={true}

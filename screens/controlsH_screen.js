@@ -52,7 +52,7 @@ export default function ControlScreen({ navigation }) {
           />
         </View>
 
-        <ScrollView style={{ marginTop: 10 }}>
+        <ScrollView style={styles.scrollContainer}>
           <Text style={styles.subtitle}>Pesos registrados</Text>
           <View style={styles.table}>
             <View style={styles.tableHeader}>

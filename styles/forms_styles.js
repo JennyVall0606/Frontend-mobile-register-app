@@ -5,15 +5,24 @@ export default StyleSheet.create({
     padding: 20,
    
   },
+
   backButton: {
     marginBottom: 10,
   },
+
+  iconFecha: {
+    fontSize: 24,
+    color: "rgb(53, 51, 51)",
+    marginRight: 10, 
+  },
+
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
   },
+
   switchRow: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -25,39 +34,27 @@ export default StyleSheet.create({
     padding: 10,
     borderRadius: 10,
   },
-  switchButtonActive: {
-    backgroundColor: '#add8e6',
-  },
-  switchButtonInactive: {
-    backgroundColor: '#eee',
-  },
 
   iconChecked: {
-    color: 'black',  // Color del ícono cuando está marcado
-    fontSize: 20,    // Tamaño del ícono
+    color: "rgb(7, 7, 7)",
+    fontSize: 20,   
   },
   iconUnchecked: {
-    color: 'black',  // Color del ícono cuando no está marcado
-    fontSize: 20,    // Tamaño del ícono
+    color: "rgb(7, 7, 7)",
+    fontSize: 20,    
   },
 
-  iconCalendar: {
-    color: 'black',  // Color del ícono
-    fontSize: 20,    // Tamaño del ícono
-  },
-
-
-
-  
   switchText: {
     marginLeft: 5,
   },
+
   formSection: {
     marginBottom: 30,
     padding: 10,
     
     borderRadius: 10,
   },
+
   subtitle: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -65,43 +62,16 @@ export default StyleSheet.create({
     textAlign: 'center',
     
   },
+
   input: {
     borderWidth: 1,
     borderColor: 'rgb(41, 39, 38)',
     borderRadius: 8,
     padding: 10,
     marginBottom: 10,
-    backgroundColor: '#fff',
+    backgroundColor: 'rgb(253, 253, 253)',
   },
-  dropdownHint: {
-    fontSize: 12,
-    color: 'gray',
-    marginBottom: 10,
-  },
-  button: {
-    backgroundColor: 'rgb(185, 182, 182)',
-    padding: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 50,
-   
-  },
-  buttonText: {
-    color: 'rgb(3, 44, 3)',
-    fontWeight: 'bold',
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-    
-  },
-  dateInput: {
-    flex: 1,
-  },
-  calendarIcon: {
-    marginLeft: 1,
-  },
+  
   dateButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -110,18 +80,46 @@ export default StyleSheet.create({
     borderColor: 'rgb(41, 39, 38)',
     borderRadius: 8,
     marginBottom: 10,
-    backgroundColor: '#fff',
+    backgroundColor: 'rgb(253, 253, 253)',
   },
+
+  iconCalendar: {
+    color: 'rgb(9, 10, 10)',
+    fontSize: 20,    
+  },
+
   dateButtonText: {
     fontSize: 14,
     color: 'rgb(9, 10, 10)',
   },
+
+  button: {
+    backgroundColor: 'rgb(185, 182, 182)',
+    padding: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 50,
+   
+  },
+
+  buttonText: {
+    color: 'rgb(3, 44, 3)',
+    fontWeight: 'bold',
+  },
+
   dropdown: {
     marginBottom: 10,
     borderRadius: 8,
     backgroundColor: 'rgb(6, 97, 59)',
-   
-    
   },
+
+  dateInput: {
+    flex: 1,
+  },
+
+  calendarIcon: {
+    marginLeft: 1,
+  },
+
 });
 

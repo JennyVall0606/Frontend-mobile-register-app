@@ -13,30 +13,29 @@ const styles = StyleSheet.create({
     width: 200,
     height: 190,
     borderRadius: 70,
-    marginTop: -20, // Esto lo convierte en un círculo
+    marginTop: -20, 
     marginBottom: 10,
-    backgroundColor: "#000",
+    backgroundColor: "rgb(5, 5, 5)",
   },
 
   title: {
     fontSize: 24,
     fontWeight: "bold",
     color: "rgb(6, 97, 59)",
-
     marginTop: 20,
   },
-  // Aquí agregas los estilos para las imágenes
+ 
   imageRow: {
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
     marginTop: 100,
-    width: "100%", // Asegura que las imágenes se distribuyan bien
+    width: "100%", 
   },
   image: {
     width: 80,
     height: 80,
-    borderRadius: 10, // Opcional, para hacer las imágenes redondas
+    borderRadius: 10, 
   },
 
   subtitle: {
@@ -44,8 +43,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "rgb(78, 73, 73)",
     marginTop: 50,
-    textAlign: "center", // Centra el texto
-    fontFamily: "serif", // O puedes usar 'serif' o cualquier fuente personalizada que te guste
+    textAlign: "center", 
+    fontFamily: "serif", 
     paddingHorizontal: 15,
   },
 
@@ -55,15 +54,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     borderRadius: 8,
     marginTop: 100,
-    alignSelf: "center", // opcional, lo centra horizontalmente
-    width: "50%", // opcional, lo hace más ancho
+    alignSelf: "center", 
+    width: "50%", 
   },
 
   buttonText: {
     color: "rgb(3, 44, 3)",
-    fontSize: 20, // Aumenta el tamaño de la letra aquí
+    fontSize: 20, 
     textAlign: "center",
-    fontWeight: "60", // Opcional, para que se vea más fuerte
+    fontWeight: "60", 
     fontFamily: "serif",
   },
 });

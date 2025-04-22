@@ -181,7 +181,7 @@ export default function FormsScreen() {
           onPress={() => navigation.goBack()}
           style={styles.backButton}
         >
-          <Ionicons name="arrow-back" style={formsStyles.icon} />
+          <Ionicons name="arrow-back" style={styles.iconFecha} />
         </TouchableOpacity>
 
         <Text style={styles.title}>Formularios de control</Text>
