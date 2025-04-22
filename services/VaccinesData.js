@@ -485,58 +485,5 @@ export const vacunas = [
       "dosis": "1.1 ml",
       "obs": "Reacci\u00f3n al\u00e9rgica"
     },
-    {
-      "id": "55",
-      "fecha": "25-02-24",
-      "id_animal": "A047",
-      "nombre": "Vacuna C",
-      "tipo": "Virus",
-      "dosis": "1.6 ml",
-      "obs": "Sin reacci\u00f3n"
-    },
-    {
-      "id": "56",
-      "fecha": "25-02-25",
-      "id_animal": "A006",
-      "nombre": "Vacuna D",
-      "tipo": "Virus",
-      "dosis": "2.0 ml",
-      "obs": "Sin reacci\u00f3n"
-    },
-    {
-      "id": "57",
-      "fecha": "25-02-26",
-      "id_animal": "A002",
-      "nombre": "Vacuna B",
-      "tipo": "Virus",
-      "dosis": "2.0 ml",
-      "obs": "Estable"
-    },
-    {
-      "id": "58",
-      "fecha": "25-02-27",
-      "id_animal": "A050",
-      "nombre": "Vacuna E",
-      "tipo": "Bacteriana",
-      "dosis": "2.1 ml",
-      "obs": "Sin reacci\u00f3n"
-    },
-    {
-      "id": "59",
-      "fecha": "25-02-28",
-      "id_animal": "A017",
-      "nombre": "Vacuna E",
-      "tipo": "Mixta",
-      "dosis": "1.2 ml",
-      "obs": "Reacci\u00f3n al\u00e9rgica"
-    },
-    {
-      "id": "60",
-      "fecha": "25-03-01",
-      "id_animal": "A025",
-      "nombre": "Vacuna A",
-      "tipo": "Mixta",
-      "dosis": "2.5 ml",
-      "obs": "Estable"
-    }
+
   ]
