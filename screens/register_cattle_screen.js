@@ -37,9 +37,15 @@ export default function RegisterCattleScreen() {
 
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState([
-    { label: "Brucelosis", value: "brucelosis" },
-    { label: "Fiebre aftosa", value: "fiebre_aftosa" },
-    { label: "Tuberculosis", value: "tuberculosis" },
+    { label: "Brucelosis1", value: "brucelosis1" },
+    { label: "Fiebre aftosa2", value: "fiebre_aftosa2" },
+    { label: "Tuberculosis3", value: "tuberculosis3" },
+    { label: "Brucelosis4", value: "brucelosis4" },
+    { label: "Fiebre aftosa5", value: "fiebre_aftosa5" },
+    { label: "Tuberculosis6", value: "tuberculosis6" },
+    { label: "Brucelosis7", value: "brucelosis7" },
+    { label: "Fiebre aftosa8", value: "fiebre_aftosa8" },
+    { label: "Tuberculosis9", value: "tuberculosis9" },
   ]);
 
   useEffect(() => {
@@ -161,17 +167,12 @@ export default function RegisterCattleScreen() {
                 setDatePickerVisibility(true);
               }}
             >
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Ionicons
-                  name="calendar"
-                  size={20}
-                  color="black"
-                  style={{ marginRight: 8 }}
-                />
-                <Text style={styles.dateButtonText}>
-                  {birthDate ? birthDate : "Fecha de nacimiento"}
-                </Text>
-              </View>
+              <View style={styles.rowContainer}>
+      <Ionicons name="calendar" style={styles.iconStyle} />
+      <Text style={styles.dateButtonText}>
+        {birthDate ? birthDate : "Fecha de nacimiento"}
+      </Text>
+    </View>
             </TouchableOpacity>
 
             <TextInput

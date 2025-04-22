@@ -3,17 +3,25 @@ import {
   View,
   Text,
   TextInput,
-  ScrollView,
   TouchableOpacity,
   Alert,
+  ScrollView,
+  StyleSheet,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { useNavigation } from "@react-navigation/native";
 import Layout from "../components/layout";
 import styles from "../styles/forms_styles";
 import { findCattleByChip } from "../services/cattleData";
+import tipoVacunas from "../services/tipoVacunas";
+import nombreVacunas from "../services/nombreVacunas";
+import DropDownPicker from "react-native-dropdown-picker";
+import formsStyles from "../styles/forms_styles"; // Ajusta la ruta según donde esté tu archivo
 
 export default function FormsScreen() {
+  const navigation = useNavigation();
+
   const [pesoChecked, setPesoChecked] = useState(false);
   const [vacunaChecked, setVacunaChecked] = useState(false);
 
@@ -22,19 +30,25 @@ export default function FormsScreen() {
   const [peso, setPeso] = useState("");
   const [fechaPeso, setFechaPeso] = useState("");
   const [cattlePeso, setCattlePeso] = useState(null);
-  const [filteredCattle, setFilteredCattle] = useState([]); // Para los resultados de la búsqueda
 
   // Estados para formulario de vacunas
   const [chipVacuna, setChipVacuna] = useState("");
-  const [tipoVacuna, setTipoVacuna] = useState("");
-  const [nombreVacuna, setNombreVacuna] = useState("");
+  const [tipoVacuna, setTipoVacuna] = useState(null);
+  const [nombreVacuna, setNombreVacuna] = useState(null);
   const [dosis, setDosis] = useState("");
   const [observacion, setObservacion] = useState("");
   const [fechaVacuna, setFechaVacuna] = useState("");
   const [cattleVacuna, setCattleVacuna] = useState(null);
 
+  // DropDownPicker estados
+  const [openTipoVacuna, setOpenTipoVacuna] = useState(false);
+  const [openVacunaNombre, setOpenVacunaNombre] = useState(false);
+  const [itemsTipoVacuna, setItemsTipoVacuna] = useState(tipoVacunas);
+  const [itemsVacunaNombre, setItemsVacunaNombre] = useState(nombreVacunas);
+
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [currentDateType, setCurrentDateType] = useState("");
+  const [filteredCattle, setFilteredCattle] = useState([]);
 
   const handleConfirmDate = (date) => {
     const today = new Date();
@@ -50,62 +64,6 @@ export default function FormsScreen() {
     setDatePickerVisibility(false);
   };
 
-  const handleChipPesoChange = (text) => {
-    setChipPeso(text);
-
-    // Búsqueda automática cuando el chip tiene al menos 4 caracteres
-    if (text.trim().length >= 1) {
-      const results = findCattleByChip(text.trim()); // Búsqueda de animales
-      setFilteredCattle(results); // Mostrar los resultados
-    } else {
-      setFilteredCattle([]); // Si el chip tiene menos de 4 caracteres, limpiamos los resultados
-    }
-
-    // Si el chip tiene 4 caracteres o más, se buscará el dato
-    if (text.trim().length >= 4) {
-      const vaca = findCattleByChip(text.trim());
-      if (vaca) {
-        setCattlePeso(vaca);
-        setPeso(vaca.peso?.toString() || "");
-        setFechaPeso(vaca.fechaNacimiento || "");
-      } else {
-        resetPesoFields();
-      }
-    } else {
-      resetPesoFields();
-    }
-  };
-
-  const handleChipVacunaChange = (text) => {
-    setChipVacuna(text);
-
-    // Búsqueda automática cuando el chip tiene al menos 4 caracteres
-    if (text.trim().length >= 4) {
-      const results = findCattleByChip(text.trim()); // Búsqueda de animales
-      setFilteredCattle(results); // Mostrar los resultados
-    } else {
-      setFilteredCattle([]); // Limpiar resultados si el chip es menor a 4 caracteres
-    }
-
-    // Si el chip tiene 4 caracteres o más, se buscará el dato
-    if (text.trim().length >= 4) {
-      const vaca = cattleData.find((item) => item.chip === text.trim());
-
-      if (vaca) {
-        setCattleVacuna(vaca);
-        setTipoVacuna(vaca.tipoVacuna || "");
-        setNombreVacuna(vaca.nombreVacuna || "");
-        setDosis(vaca.dosis || "");
-        setObservacion(vaca.observacion || "");
-        setFechaVacuna(vaca.fechaNacimiento || "");
-      } else {
-        resetVacunaFields();
-      }
-    } else {
-      resetVacunaFields();
-    }
-  };
-
   const resetPesoFields = () => {
     setCattlePeso(null);
     setPeso("");
@@ -114,11 +72,56 @@ export default function FormsScreen() {
 
   const resetVacunaFields = () => {
     setCattleVacuna(null);
-    setTipoVacuna("");
-    setNombreVacuna("");
+    setTipoVacuna(null);
+    setNombreVacuna(null);
     setDosis("");
     setObservacion("");
     setFechaVacuna("");
+  };
+
+  const handleChipPesoChange = (text) => {
+    setChipPeso(text);
+    if (text.length > 0) {
+      const results = findCattleByChip(text.toLowerCase());
+      setFilteredCattle(results);
+
+      const exactMatch = results.find((vaca) => vaca.chip === text);
+      if (exactMatch) {
+        setChipPeso(exactMatch.chip);
+        setCattlePeso(exactMatch);
+        setPeso(exactMatch.peso?.toString() || "");
+        setFechaPeso(exactMatch.fechaNacimiento || "");
+        setFilteredCattle([]);
+      } else {
+        resetPesoFields();
+      }
+    } else {
+      setFilteredCattle([]);
+    }
+  };
+
+  const handleChipVacunaChange = (text) => {
+    setChipVacuna(text);
+    if (text.length > 0) {
+      const results = findCattleByChip(text.toLowerCase());
+      setFilteredCattle(results);
+
+      const exactMatch = results.find((vaca) => vaca.chip === text);
+      if (exactMatch) {
+        setChipVacuna(exactMatch.chip);
+        setCattleVacuna(exactMatch);
+        setTipoVacuna(exactMatch.tipoVacuna || null);
+        setNombreVacuna(exactMatch.nombreVacuna || null);
+        setDosis(exactMatch.dosis || "");
+        setObservacion(exactMatch.observacion || "");
+        setFechaVacuna(exactMatch.fechaNacimiento || "");
+        setFilteredCattle([]);
+      } else {
+        resetVacunaFields();
+      }
+    } else {
+      setFilteredCattle([]);
+    }
   };
 
   const guardarPeso = () => {
@@ -130,8 +133,11 @@ export default function FormsScreen() {
       Alert.alert("Error", "El chip no existe.");
       return;
     }
-    // Aquí podrías guardar en backend o local
+    // Guardar datos
     Alert.alert("Éxito", "Datos de peso guardados.");
+    // Limpiar formulario
+    resetPesoFields();
+    setChipPeso("");
   };
 
   const guardarVacuna = () => {
@@ -143,37 +149,46 @@ export default function FormsScreen() {
       Alert.alert("Error", "El chip no existe.");
       return;
     }
-    // Aquí podrías guardar en backend o local
+    // Guardar datos
     Alert.alert("Éxito", "Datos de vacuna guardados.");
+    // Limpiar formulario
+    resetVacunaFields();
+    setChipVacuna("");
   };
 
   const handleSelectCattle = (cattle) => {
-    setChipPeso(cattle.chip);
-    setCattlePeso(cattle);
-    setPeso(cattle.weight || "");  // Cambiar 'peso' por el nombre correcto del campo si es necesario
-    setFechaPeso(cattle.birthDate || "");  // Cambiar 'fechaNacimiento' por el campo correspondiente
+    if (pesoChecked) {
+      setChipPeso(cattle.chip);
+      setCattlePeso(cattle);
+      setPeso(cattle.peso?.toString() || "");
+      setFechaPeso(cattle.fechaNacimiento || "");
+    } else if (vacunaChecked) {
+      setChipVacuna(cattle.chip);
+      setCattleVacuna(cattle);
+      setTipoVacuna(cattle.tipoVacuna || null);
+      setNombreVacuna(cattle.nombreVacuna || null);
+      setDosis(cattle.dosis || "");
+      setObservacion(cattle.observacion || "");
+      setFechaVacuna(cattle.fechaNacimiento || "");
+    }
     setFilteredCattle([]);
   };
-  
 
   return (
     <Layout>
-      <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.container}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.backButton}
         >
-          <Ionicons name="arrow-back" size={24} color="black" />
+          <Ionicons name="arrow-back" style={formsStyles.icon} />
         </TouchableOpacity>
 
         <Text style={styles.title}>Formularios de control</Text>
 
         <View style={styles.switchRow}>
           <TouchableOpacity
-            style={[
-              styles.switchButton,
-              { backgroundColor: pesoChecked ? "#add8e6" : "#eee" },
-            ]}
+            style={[styles.switchButton]}
             onPress={() => {
               setPesoChecked(true);
               setVacunaChecked(false);
@@ -181,17 +196,17 @@ export default function FormsScreen() {
           >
             <Ionicons
               name={pesoChecked ? "checkbox" : "square-outline"}
-              size={20}
-              color="black"
+              style={
+                pesoChecked
+                  ? formsStyles.iconChecked
+                  : formsStyles.iconUnchecked
+              }
             />
             <Text style={styles.switchText}>Control de Peso</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[
-              styles.switchButton,
-              { backgroundColor: vacunaChecked ? "#add8e6" : "#eee" },
-            ]}
+            style={[styles.switchButton]}
             onPress={() => {
               setVacunaChecked(true);
               setPesoChecked(false);
@@ -199,8 +214,11 @@ export default function FormsScreen() {
           >
             <Ionicons
               name={vacunaChecked ? "checkbox" : "square-outline"}
-              size={20}
-              color="black"
+              style={
+                vacunaChecked
+                  ? formsStyles.iconChecked
+                  : formsStyles.iconUnchecked
+              }
             />
             <Text style={styles.switchText}>Control de Vacunas</Text>
           </TouchableOpacity>
@@ -217,7 +235,7 @@ export default function FormsScreen() {
               onChangeText={handleChipPesoChange}
             />
             {filteredCattle.length > 0 && (
-              <ScrollView style={styles.cattleList}>
+              <ScrollView vertical style={styles.cattleList}>
                 {filteredCattle.map((item) => (
                   <TouchableOpacity
                     key={item.chip}
@@ -230,12 +248,6 @@ export default function FormsScreen() {
                 ))}
               </ScrollView>
             )}
-            {cattlePeso && (
-              <View style={styles.cattleInfo}>
-                <Text>{`Vaca encontrada: ${cattlePeso.nombre}`}</Text>
-                <Text>{`Peso actual: ${cattlePeso.peso} kg`}</Text>
-              </View>
-            )}
             <TouchableOpacity
               style={styles.dateButton}
               onPress={() => {
@@ -243,7 +255,10 @@ export default function FormsScreen() {
                 setDatePickerVisibility(true);
               }}
             >
-              <Ionicons name="calendar" size={20} color="black" />
+              <Ionicons
+                name="calendar"
+                style={formsStyles.iconCalendar} // Aplicamos el estilo para el ícono de calendario
+              />
               <Text style={styles.dateButtonText}>
                 {fechaPeso || "Fecha de pesaje"}
               </Text>
@@ -261,10 +276,10 @@ export default function FormsScreen() {
           </View>
         )}
 
-        {/* FORMULARIO DE VACUNAS */}
+        {/* FORMULARIO DE VACUNACIÓN */}
         {vacunaChecked && (
           <View style={styles.formSection}>
-            <Text style={styles.subtitle}>Formulario de Control de Vacunas</Text>
+            <Text style={styles.subtitle}>Formulario de Vacunación</Text>
             <TextInput
               style={styles.input}
               placeholder="Chip de la vaca"
@@ -272,7 +287,7 @@ export default function FormsScreen() {
               onChangeText={handleChipVacunaChange}
             />
             {filteredCattle.length > 0 && (
-              <ScrollView style={styles.cattleList}>
+              <ScrollView vertical style={styles.cattleList}>
                 {filteredCattle.map((item) => (
                   <TouchableOpacity
                     key={item.chip}
@@ -285,35 +300,31 @@ export default function FormsScreen() {
                 ))}
               </ScrollView>
             )}
-            {cattleVacuna && (
-              <View style={styles.cattleInfo}>
-                <Text>{`Vaca encontrada: ${cattleVacuna.nombre}`}</Text>
-                <Text>{`Vacuna: ${cattleVacuna.nombreVacuna}`}</Text>
-              </View>
-            )}
-            <TouchableOpacity
-              style={styles.dateButton}
-              onPress={() => {
-                setCurrentDateType("vacuna");
-                setDatePickerVisibility(true);
-              }}
-            >
-              <Ionicons name="calendar" size={20} color="black" />
-              <Text style={styles.dateButtonText}>
-                {fechaVacuna || "Fecha de vacunación"}
-              </Text>
-            </TouchableOpacity>
-            <TextInput
-              style={styles.input}
-              placeholder="Tipo de vacuna"
+            <DropDownPicker
+              open={openTipoVacuna}
+              setOpen={setOpenTipoVacuna}
+              items={itemsTipoVacuna}
               value={tipoVacuna}
-              onChangeText={setTipoVacuna}
+              setValue={setTipoVacuna}
+              placeholder="Tipo de vacuna"
+              containerStyle={[
+                styles.dropdown,
+                { zIndex: openVacunaNombre ? 0 : 1 },
+              ]}
+              listMode="SCROLLVIEW"
             />
-            <TextInput
-              style={styles.input}
-              placeholder="Nombre de la vacuna"
+            <DropDownPicker
+              open={openVacunaNombre}
+              setOpen={setOpenVacunaNombre}
+              items={itemsVacunaNombre}
               value={nombreVacuna}
-              onChangeText={setNombreVacuna}
+              setValue={setNombreVacuna}
+              placeholder="Nombre de vacuna"
+              containerStyle={[
+                styles.dropdown,
+                { zIndex: openTipoVacuna ? 0 : 1 },
+              ]}
+              listMode="SCROLLVIEW"
             />
             <TextInput
               style={styles.input}
@@ -324,25 +335,40 @@ export default function FormsScreen() {
             />
             <TextInput
               style={styles.input}
-              placeholder="Observación"
+              placeholder="Observaciones"
               value={observacion}
               onChangeText={setObservacion}
             />
+            <TouchableOpacity
+              style={styles.dateButton}
+              onPress={() => {
+                setCurrentDateType("vacuna");
+                setDatePickerVisibility(true);
+              }}
+            >
+              <Ionicons
+                name="calendar"
+                style={formsStyles.iconCalendar} // Aplicamos el estilo para el ícono de calendario
+              />
+              <Text style={styles.dateButtonText}>
+                {fechaVacuna || "Fecha de vacunación"}
+              </Text>
+            </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={guardarVacuna}>
               <Text style={styles.buttonText}>Guardar</Text>
             </TouchableOpacity>
           </View>
         )}
 
+        {/* DateTimePicker Modal */}
         <DateTimePickerModal
           isVisible={isDatePickerVisible}
           mode="date"
           onConfirm={handleConfirmDate}
+          themeVariant="light"
           onCancel={() => setDatePickerVisibility(false)}
         />
-      </ScrollView>
+      </View>
     </Layout>
   );
 }
-
-

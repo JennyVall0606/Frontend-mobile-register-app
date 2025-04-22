@@ -6,6 +6,9 @@ export default StyleSheet.create({
     justifyContent: "center", // Centra el contenido si es necesario
     alignItems: "center", // Alinea el contenido (opcional)
   },
+  container: {
+    flex: 1, // Estilo global para los contenedores que necesitan flex: 1
+  },
 
   topBar: {
     flexDirection: "row",

@@ -10,7 +10,7 @@ export default function SimpleLayout({ children }) {
       source={require("../assets/acuarela.jpg")} // Verifica que la ruta sea correcta
       style={globalStyles.background} // Aplica el estilo global
     >
-      <View style={{ flex: 1 }}>{children}</View>
+      <View style={globalStyles.container}>{children}</View>
     </ImageBackground>
   );
 }

@@ -42,6 +42,19 @@ export default StyleSheet.create({
     color: "#333",
     fontSize: 16,
   },
+  iconStyle: {
+    fontSize: 20,
+    color: 'black',
+    marginRight: 8,
+  },
+  dateButtonText: {
+    fontSize: 16,
+    color: 'black',  // Ajusta el color y el tamaño según lo que necesites
+  },
+  rowContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   imageContainer: {
     position: "relative",
     marginBottom: 15,
@@ -108,6 +121,11 @@ export default StyleSheet.create({
   deleteButtonIcon: {
     color: "#fff",
     fontSize: 20,
+  },
+  iconStyle: {
+    fontSize: 20,  // equivalente a size={20}
+    color: 'black', // equivalente a color="black"
+    marginRight: 8,  // si lo necesitas
   },
 
   // NUEVOS estilos corregidos y movidos aquí:

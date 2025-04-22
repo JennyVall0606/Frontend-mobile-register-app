@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 export default StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: '#fff',
+   
   },
   backButton: {
     marginBottom: 10,
@@ -25,23 +25,49 @@ export default StyleSheet.create({
     padding: 10,
     borderRadius: 10,
   },
+  switchButtonActive: {
+    backgroundColor: '#add8e6',
+  },
+  switchButtonInactive: {
+    backgroundColor: '#eee',
+  },
+
+  iconChecked: {
+    color: 'black',  // Color del ícono cuando está marcado
+    fontSize: 20,    // Tamaño del ícono
+  },
+  iconUnchecked: {
+    color: 'black',  // Color del ícono cuando no está marcado
+    fontSize: 20,    // Tamaño del ícono
+  },
+
+  iconCalendar: {
+    color: 'black',  // Color del ícono
+    fontSize: 20,    // Tamaño del ícono
+  },
+
+
+
+  
   switchText: {
     marginLeft: 5,
   },
   formSection: {
     marginBottom: 30,
     padding: 10,
-    backgroundColor: '#f2f2f2',
+    
     borderRadius: 10,
   },
   subtitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 50,
+    textAlign: 'center',
+    
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: 'rgb(41, 39, 38)',
     borderRadius: 8,
     padding: 10,
     marginBottom: 10,
@@ -53,19 +79,22 @@ export default StyleSheet.create({
     marginBottom: 10,
   },
   button: {
-    backgroundColor: '#2196F3',
+    backgroundColor: 'rgb(185, 182, 182)',
     padding: 12,
     borderRadius: 8,
     alignItems: 'center',
+    marginTop: 50,
+   
   },
   buttonText: {
-    color: '#fff',
+    color: 'rgb(3, 44, 3)',
     fontWeight: 'bold',
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
+    
   },
   dateInput: {
     flex: 1,
@@ -78,14 +107,21 @@ export default StyleSheet.create({
     alignItems: 'center',
     padding: 12,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: 'rgb(41, 39, 38)',
     borderRadius: 8,
     marginBottom: 10,
     backgroundColor: '#fff',
   },
   dateButtonText: {
     fontSize: 14,
-    color: '#000',
+    color: 'rgb(9, 10, 10)',
   },
-  
+  dropdown: {
+    marginBottom: 10,
+    borderRadius: 8,
+    backgroundColor: 'rgb(6, 97, 59)',
+   
+    
+  },
 });
+
