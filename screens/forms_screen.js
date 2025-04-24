@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   View,
   Text,
@@ -13,7 +13,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useNavigation } from "@react-navigation/native";
 import Layout from "../components/layout";
 import styles from "../styles/forms_styles";
-import { findCattleByChip } from "../services/cattleData";
+import axios from "axios";
 import tipoVacunas from "../services/tipoVacunas";
 import nombreVacunas from "../services/nombreVacunas";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -26,11 +26,14 @@ export default function FormsScreen() {
   const [vacunaChecked, setVacunaChecked] = useState(false);
 
   // Estados para formulario de peso
+  
   const [chipPeso, setChipPeso] = useState("");
+  const [cattlePeso, setCattlePeso] = useState(null);
   const [peso, setPeso] = useState("");
   const [fechaPeso, setFechaPeso] = useState("");
-  const [cattlePeso, setCattlePeso] = useState(null);
+  const typingTimeoutRef = useRef(null);
 
+  
   // Estados para formulario de vacunas
   const [chipVacuna, setChipVacuna] = useState("");
   const [tipoVacuna, setTipoVacuna] = useState(null);
@@ -50,19 +53,41 @@ export default function FormsScreen() {
   const [currentDateType, setCurrentDateType] = useState("");
   const [filteredCattle, setFilteredCattle] = useState([]);
 
+
+ 
+  let debounceTimeout;
+
+
+  const fetchCattleData = async (chip) => {
+    try {
+      const response = await axios.get(`http://192.168.1.4:3000/register/animal/${chip}`);
+
+      return response.data;
+    } catch (error) {
+      console.error("Error al buscar el ganado:", error);
+      return null;
+    }
+  };
+
   const handleConfirmDate = (date) => {
-    const today = new Date();
-    if (date > today) {
+    const today = new Date().toISOString().split("T")[0]; // obtener fecha actual en formato yyyy-mm-dd
+  
+    if (date.toISOString().split("T")[0] > today) {
       Alert.alert("Fecha inválida", "No puedes seleccionar una fecha futura.");
       return;
     }
-
-    const formattedDate = date.toLocaleDateString();
-    currentDateType === "peso"
-      ? setFechaPeso(formattedDate)
-      : setFechaVacuna(formattedDate);
+  
+    // ✅ Formato correcto para MySQL
+    const formattedDate = date.toISOString().split("T")[0]; // yyyy-mm-dd
+  
+    if (currentDateType === "peso") {
+      setFechaPeso(formattedDate);
+    } else {
+      setFechaVacuna(formattedDate);
+    }
     setDatePickerVisibility(false);
   };
+  
 
   const resetPesoFields = () => {
     setCattlePeso(null);
@@ -79,52 +104,56 @@ export default function FormsScreen() {
     setFechaVacuna("");
   };
 
-  const handleChipPesoChange = (text) => {
-    setChipPeso(text);
-    if (text.length > 0) {
-      const results = findCattleByChip(text.toLowerCase());
-      setFilteredCattle(results);
 
-      const exactMatch = results.find((vaca) => vaca.chip === text);
-      if (exactMatch) {
-        setChipPeso(exactMatch.chip);
-        setCattlePeso(exactMatch);
-        setPeso(exactMatch.peso?.toString() || "");
-        setFechaPeso(exactMatch.fechaNacimiento || "");
-        setFilteredCattle([]);
-      } else {
-        resetPesoFields();
-      }
-    } else {
-      setFilteredCattle([]);
+ 
+
+  
+
+  const handleChipPesoChange = (chip) => {
+    setChipPeso(chip);
+   
+  
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
     }
+  
+    typingTimeoutRef.current = setTimeout(async () => {
+      const cattleData = await fetchCattleData(chip);
+      console.log("Respuesta del backend:", cattleData);
+  
+      if (cattleData && cattleData.chip_animal) {
+        setCattlePeso(cattleData);
+        Alert.alert("encontrado", "El chip  existente.");
+      } else {
+        Alert.alert("No encontrado", "El chip no existe en la base de datos.");
+        setCattlePeso(null);
+      }
+    }, 5000); // 700 ms después de que el usuario deja de escribir
+  };
+  
+  
+  const handleChipVacunaChange = (chip) => {
+    setChipVacuna(chip);
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+  
+    typingTimeoutRef.current = setTimeout(async () => {
+      const cattleData = await fetchCattleData(chip);
+      console.log("Respuesta del backend:", cattleData);
+  
+      if (cattleData && cattleData.chip_animal) {
+        setCattleVacuna(cattleData);
+        Alert.alert("encontrado", "El chip  existente.");
+      } else {
+        Alert.alert("No encontrado", "El chip no existe en la base de datos.");
+        
+        setCattleVacuna(null);
+      }
+    }, 5000); // 700 ms después de que el usuario deja de escribir
   };
 
-  const handleChipVacunaChange = (text) => {
-    setChipVacuna(text);
-    if (text.length > 0) {
-      const results = findCattleByChip(text.toLowerCase());
-      setFilteredCattle(results);
-
-      const exactMatch = results.find((vaca) => vaca.chip === text);
-      if (exactMatch) {
-        setChipVacuna(exactMatch.chip);
-        setCattleVacuna(exactMatch);
-        setTipoVacuna(exactMatch.tipoVacuna || null);
-        setNombreVacuna(exactMatch.nombreVacuna || null);
-        setDosis(exactMatch.dosis || "");
-        setObservacion(exactMatch.observacion || "");
-        setFechaVacuna(exactMatch.fechaNacimiento || "");
-        setFilteredCattle([]);
-      } else {
-        resetVacunaFields();
-      }
-    } else {
-      setFilteredCattle([]);
-    }
-  };
-
-  const guardarPeso = () => {
+  const guardarPeso = async () => {
     if (!chipPeso || !peso || !fechaPeso) {
       Alert.alert("Error", "Completa todos los campos.");
       return;
@@ -133,15 +162,27 @@ export default function FormsScreen() {
       Alert.alert("Error", "El chip no existe.");
       return;
     }
-    // Guardar datos
-    Alert.alert("Éxito", "Datos de peso guardados.");
-    // Limpiar formulario
-    resetPesoFields();
-    setChipPeso("");
+  
+    try {
+      const response = await axios.post("http://192.168.1.4:3000/weighing/add", {
+        chip_animal: chipPeso,
+        fecha_pesaje: fechaPeso,
+        peso_kg: peso,
+      });
+  
+      Alert.alert("Éxito", response.data.message || "Pesaje guardado correctamente");
+      resetPesoFields();
+      setChipPeso("");
+    } catch (error) {
+      console.error("Error al guardar el pesaje:", error);
+      Alert.alert("Error", "No se pudo guardar el pesaje");
+    }
   };
+  
+  const guardarVacuna = async () => {
+  
 
-  const guardarVacuna = () => {
-    if (!chipVacuna || !tipoVacuna || !nombreVacuna || !dosis || !fechaVacuna) {
+    if (!chipVacuna || !tipoVacuna || !nombreVacuna || !dosis || !observacion || !fechaVacuna) {
       Alert.alert("Error", "Completa todos los campos.");
       return;
     }
@@ -149,11 +190,25 @@ export default function FormsScreen() {
       Alert.alert("Error", "El chip no existe.");
       return;
     }
-    // Guardar datos
-    Alert.alert("Éxito", "Datos de vacuna guardados.");
-    // Limpiar formulario
-    resetVacunaFields();
-    setChipVacuna("");
+    try {
+      const response = await axios.post("http://192.168.1.4:3000/vaccines/add", {
+        fecha_vacuna: fechaVacuna,
+      tipo_vacunas_id_tipo_vacuna: tipoVacuna,
+      chip_animal: chipVacuna,
+      nombre_vacunas_id_vacuna: nombreVacuna,
+      dosis_administrada: dosis,
+      observaciones: observacion
+      });
+  
+      Alert.alert("Éxito", response.data.message || "vacuna guardada correctamente");
+      resetVacunaFields();
+setChipVacuna("");
+
+    } catch (error) {
+      console.error("Error al guardar la vacuna:", error);
+Alert.alert("Error", "No se pudo guardar la vacuna");
+
+    }
   };
 
   const handleSelectCattle = (cattle) => {
