@@ -131,7 +131,7 @@ export default StyleSheet.create({
     position: "absolute",
     top: 105, 
     right: 30,
-    backgroundColor: "rgb(2, 236, 96)",
+    backgroundColor: "rgb(192, 197, 194)",
     padding: 2,
     borderRadius: 8, 
     elevation: 5,

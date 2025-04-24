@@ -18,6 +18,8 @@ import { Ionicons } from "@expo/vector-icons"; // Asegúrate de importar Icon
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import styles from "../styles/register_cattle_styles";
+import axios from "axios";
+
 
 
 export default function RegisterCattleScreen() {
@@ -38,16 +40,24 @@ export default function RegisterCattleScreen() {
 
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState([
-    { label: "Brucelosis1", value: "brucelosis1" },
-    { label: "Fiebre aftosa2", value: "fiebre_aftosa2" },
-    { label: "Tuberculosis3", value: "tuberculosis3" },
-    { label: "Brucelosis4", value: "brucelosis4" },
-    { label: "Fiebre aftosa5", value: "fiebre_aftosa5" },
-    { label: "Tuberculosis6", value: "tuberculosis6" },
-    { label: "Brucelosis7", value: "brucelosis7" },
-    { label: "Fiebre aftosa8", value: "fiebre_aftosa8" },
-    { label: "Tuberculosis9", value: "tuberculosis9" },
+    { label: "Brucelosis", value: "brucelosis" },
+    { label: "Fiebre aftosa", value: "fiebre_aftosa" },
+    { label: "Tuberculosis bovina", value: "tuberculosis_bovina" },
+    { label: "Anaplasmosis", value: "anaplasmosis" },
+    { label: "Leucosis bovina", value: "leucosis_bovina" },
+    { label: "Diarrea viral bovina (BVD)", value: "diarrea_viral_bovina" },
+    { label: "Paratuberculosis (Johne)", value: "paratuberculosis" },
+    { label: "Neosporosis", value: "neosporosis" },
+    { label: "Enfermedad respiratoria bovina", value: "enfermedad_respiratoria_bovina" },
+    { label: "Fiebre del transporte", value: "fiebre_del_transporte" },
+    { label: "Dermatitis digital", value: "dermatitis_digital" },
+    { label: "Rabia", value: "rabia" },
+    { label: "Salmonelosis", value: "salmonelosis" },
+    { label: "Acetonemia (cetosis)", value: "acetonemia" },
+    { label: "Mastitis", value: "mastitis" },
+    { label: "OTRA", value: "OTRA" }
   ]);
+  
 
   useEffect(() => {
     const requestPermission = async () => {
@@ -75,13 +85,15 @@ export default function RegisterCattleScreen() {
   };
 
   const handleConfirmDate = (date) => {
+    const formattedDate = date.toISOString().split('T')[0]; // Esto da '2025-04-23'
     if (currentDateType === "peso") {
-      setWeight(date.toLocaleDateString());
+      setWeight(formattedDate);
     } else {
-      setBirthDate(date.toLocaleDateString());
+      setBirthDate(formattedDate);
     }
     setDatePickerVisibility(false);
   };
+  
 
   const resetForm = () => {
     setImage(null);
@@ -95,21 +107,35 @@ export default function RegisterCattleScreen() {
     setObservations("");
   };
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (!chip || !breed || !birthDate || !weight) {
-      Alert.alert(
-        "⚠️ Datos incompletos",
-        "Por favor completa los campos obligatorios."
-      );
+      Alert.alert("⚠️ Datos incompletos", "Por favor completa los campos obligatorios.");
       return;
     }
-
-    Alert.alert(
-      "✅ Registro exitoso",
-      "El ganado ha sido registrado correctamente"
-    );
-    resetForm();
+  
+    try {
+      const formData = {
+        chip_animal: chip,
+        raza_id_raza: parseInt(breed) || 25,
+        fecha_nacimiento: birthDate,
+        peso_nacimiento: parseFloat(weight),
+        id_padre: father || null,
+        id_madre: mother || null,
+        enfermedades: disease || null,
+        observaciones: observations || "", // Asegura que siempre esté presente
+      };
+      
+  
+      await axios.post("http://192.168.1.4:3000/register/add", formData);
+  
+      Alert.alert("✅ Registro exitoso", "El ganado ha sido registrado correctamente");
+      resetForm();
+    } catch (error) {
+      console.error("Error al registrar:", error);
+      Alert.alert("❌ Error", "No se pudo registrar el ganado.");
+    }
   };
+  
 
   return (
     <Layout>
