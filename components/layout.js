@@ -68,7 +68,7 @@ export default function Layout({ children }) {
       return;
     }
 
-    // Redirección personalizada por palabra clave
+ 
     if (query.includes("registro")) {
       handleNavigate("RegisterCattleScreen");
       return;
