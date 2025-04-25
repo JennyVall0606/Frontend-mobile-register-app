@@ -9,47 +9,50 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import Layout from "../components/layout";
 import { styles } from "../styles/vaccines_history_styles";
-
-import axios from "axios"; 
+import axios from "axios";
 
 export default function VaccinesScreen({ navigation }) {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 5;
   const [historicoVacunas, setHistoricoVacunas] = useState([]);
+  const [filteredVacunas, setFilteredVacunas] = useState([]);
   const [loading, setLoading] = useState(true);
 
- 
+  // Obtiene las vacunas y maneja el filtro de búsqueda
   useEffect(() => {
-    
-
     axios
-      .get("http://192.168.1.4:3000/vaccines/historico-vacunas") 
+      .get("http://192.168.1.4:3000/vaccines/historico-vacunas")
       .then((response) => {
-        
-        const filteredVacunas = response.data.sort(
+        const sortedVacunas = response.data.sort(
           (a, b) => new Date(b.fecha_vacuna) - new Date(a.fecha_vacuna)
-        ); 
-
-        setHistoricoVacunas(filteredVacunas);
+        );
+        setHistoricoVacunas(sortedVacunas);
+        setFilteredVacunas(sortedVacunas); // Almacena los datos sin filtrar inicialmente
       })
       .catch((error) => console.error("Error al obtener las vacunas:", error))
-      .finally(() => setLoading(false)); 
-  }, []); 
+      .finally(() => setLoading(false));
+  }, []);
+
+  // Filtra los resultados cuando el usuario escribe en el campo de búsqueda
+  useEffect(() => {
+    if (search) {
+      const filtered = historicoVacunas.filter((item) =>
+        item.chip.toString().toLowerCase().includes(search.toLowerCase())
+      );
+      setFilteredVacunas(filtered);
+    } else {
+      setFilteredVacunas(historicoVacunas);
+    }
+  }, [search, historicoVacunas]);
 
   if (loading) {
     return <Text>Cargando...</Text>;
   }
 
- 
-  const indexOfLastRecord = currentPage * recordsPerPage;
-  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  const currentRecords = historicoVacunas.slice(
-    indexOfFirstRecord,
-    indexOfLastRecord
-  );
+  const totalPages = Math.ceil(filteredVacunas.length / recordsPerPage);
 
-
+  // Definir funciones de paginación
   const nextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
@@ -62,7 +65,12 @@ export default function VaccinesScreen({ navigation }) {
     }
   };
 
-  const totalPages = Math.ceil(historicoVacunas.length / recordsPerPage);
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const currentRecords = filteredVacunas.slice(
+    indexOfFirstRecord,
+    indexOfLastRecord
+  );
 
   return (
     <Layout>
@@ -112,7 +120,7 @@ export default function VaccinesScreen({ navigation }) {
             ))}
           </View>
 
-          {/* Botones de navegación */}
+          
           <View style={styles.paginationContainer}>
             <TouchableOpacity onPress={prevPage} disabled={currentPage === 1}>
               <Text style={styles.paginationButton}>Anterior</Text>
@@ -130,6 +138,7 @@ export default function VaccinesScreen({ navigation }) {
             </TouchableOpacity>
           </View>
 
+         
           <View style={styles.actionsContainer}>
             <TouchableOpacity
               onPress={() => navigation.navigate("VaccinesScreen")}

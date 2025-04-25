@@ -63,16 +63,7 @@ export default function ControlScreen({ navigation }) {
 
         <Text style={styles.title}>Historial de controles</Text>
 
-        <View style={styles.searchContainer}>
-          <Ionicons name="search" style={styles.searchIcon} />
-          <TextInput
-            placeholder="Buscar chip de vaca"
-            style={styles.input}
-            value={search}
-            onChangeText={setSearch}
-          />
-        </View>
-
+       
         <ScrollView style={styles.scrollContainer}>
           <Text style={styles.subtitle}>Pesos registrados</Text>
           <View style={styles.table}>

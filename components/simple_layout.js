@@ -1,7 +1,8 @@
-
+// components/SimpleLayout.js
+// components/SimpleLayout.js
 import React from "react";
 import { ImageBackground, View } from "react-native";
-import globalStyles from "../styles/global_styles"; 
+import globalStyles from "../styles/global_styles"; // Verifica la ruta correcta
 
 export default function SimpleLayout({ children }) {
   return (

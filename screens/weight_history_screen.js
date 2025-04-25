@@ -12,39 +12,48 @@ import { styles } from "../styles/weight_history_styles";
 import axios from "axios";
 export default function WeightScreen({ navigation }) {
   const [search, setSearch] = useState("");
+  const [historicoPesaje, setHistoricoPesaje] = useState([]);
+  const [filteredPesaje, setFilteredPesaje] = useState([]); // Nuevo estado para los datos filtrados
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 10;
-  const [historicoPesaje, setHistoricoPesaje] = useState([]);
-  const [loading, setLoading] = useState(true);
+
 
   
+  // Obtiene los datos de pesaje
   useEffect(() => {
-    
     axios
-      .get("http://192.168.1.4:3000/weighing/historico-pesaje") 
+      .get("http://192.168.1.4:3000/weighing/historico-pesaje")
       .then((response) => {
-       
-        const filteredPesos = response.data.sort(
+        const sortedPesaje = response.data.sort(
           (a, b) => new Date(b.fecha) - new Date(a.fecha)
-        ); 
-        setHistoricoPesaje(filteredPesos);
+        );
+        setHistoricoPesaje(sortedPesaje);
+        setFilteredPesaje(sortedPesaje); // Guardamos los datos no filtrados inicialmente
       })
       .catch((error) => console.error("Error al obtener los pesos:", error))
-      .finally(() => setLoading(false)); 
+      .finally(() => setLoading(false));
   }, []);
 
+  // Filtra los resultados cuando el usuario escribe en el campo de búsqueda
+  useEffect(() => {
+    if (search) {
+      const filtered = historicoPesaje.filter((item) =>
+        item.chip && item.chip.toString().toLowerCase().includes(search.toLowerCase()) // Aseguramos que item.chip sea una cadena
+      );
+      setFilteredPesaje(filtered);
+    } else {
+      setFilteredPesaje(historicoPesaje);
+    }
+  }, [search, historicoPesaje]);
+  
   if (loading) {
     return <Text>Cargando...</Text>;
   }
-  
-  const indexOfLastRecord = currentPage * recordsPerPage;
-  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  const currentRecords = historicoPesaje.slice(
-    indexOfFirstRecord,
-    indexOfLastRecord
-  );
 
- 
+  const totalPages = Math.ceil(filteredPesaje.length / recordsPerPage);
+
+  // Definir funciones de paginación
   const nextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
@@ -57,7 +66,9 @@ export default function WeightScreen({ navigation }) {
     }
   };
 
-  const totalPages = Math.ceil(historicoPesaje.length / recordsPerPage);
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const currentRecords = filteredPesaje.slice(indexOfFirstRecord, indexOfLastRecord);
 
   return (
     <Layout>
@@ -102,7 +113,7 @@ export default function WeightScreen({ navigation }) {
           </View>
 
           <View style={styles.paginationContainer}>
-            <TouchableOpacity onPress={prevPage} disabled={currentPage === 1}>
+            <TouchableOpacity onPress={prevPage} disabled={currentPage === 10}>
               <Text style={styles.paginationButton}>Anterior</Text>
             </TouchableOpacity>
 
@@ -118,6 +129,8 @@ export default function WeightScreen({ navigation }) {
             </TouchableOpacity>
           </View>
 
+         
+
           <View style={styles.actionsContainer}>
             <TouchableOpacity
               onPress={() => navigation.navigate("WeightScreen")}
@@ -131,3 +144,4 @@ export default function WeightScreen({ navigation }) {
     </Layout>
   );
 }
+
