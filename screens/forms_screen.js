@@ -15,7 +15,7 @@ import Layout from "../components/layout";
 import styles from "../styles/forms_styles";
 import axios from "axios";
 import DropDownPicker from "react-native-dropdown-picker";
-import formsStyles from "../styles/forms_styles"; // Ajusta la ruta según donde esté tu archivo
+import formsStyles from "../styles/forms_styles"; 
 
 export default function FormsScreen() {
   const navigation = useNavigation();
@@ -76,15 +76,15 @@ export default function FormsScreen() {
   };
 
   const handleConfirmDate = (date) => {
-    const today = new Date().toISOString().split("T")[0]; // obtener fecha actual en formato yyyy-mm-dd
+    const today = new Date().toISOString().split("T")[0];
 
     if (date.toISOString().split("T")[0] > today) {
       Alert.alert("Fecha inválida", "No puedes seleccionar una fecha futura.");
       return;
     }
 
-    // ✅ Formato correcto para MySQL
-    const formattedDate = date.toISOString().split("T")[0]; // yyyy-mm-dd
+    //  Formato para MySQL
+    const formattedDate = date.toISOString().split("T")[0]; 
 
     if (currentDateType === "peso") {
       setFechaPeso(formattedDate);
@@ -127,7 +127,7 @@ export default function FormsScreen() {
         Alert.alert("No encontrado", "El chip no existe en la base de datos.");
         setCattlePeso(null);
       }
-    }, 5000); // 700 ms después de que el usuario deja de escribir
+    }, 5000); 
   };
 
   const handleChipVacunaChange = (chip) => {
@@ -148,7 +148,7 @@ export default function FormsScreen() {
 
         setCattleVacuna(null);
       }
-    }, 5000); // 700 ms después de que el usuario deja de escribir
+    }, 5000); 
   };
 
   const guardarPeso = async () => {
@@ -325,7 +325,7 @@ export default function FormsScreen() {
             >
               <Ionicons
                 name="calendar"
-                style={formsStyles.iconCalendar} // Aplicamos el estilo para el ícono de calendario
+                style={formsStyles.iconCalendar} 
               />
               <Text style={styles.dateButtonText}>
                 {fechaPeso || "Fecha de pesaje"}
@@ -344,7 +344,7 @@ export default function FormsScreen() {
           </View>
         )}
 
-        {/* FORMULARIO DE VACUNACIÓN */}
+        
         {vacunaChecked && (
           <View style={styles.formSection}>
             <Text style={styles.subtitle}>Formulario de Vacunación</Text>
@@ -383,7 +383,7 @@ export default function FormsScreen() {
     openVacunaNombre && styles.dropdownBelow,
   ]}
   listMode="SCROLLVIEW"
-  onChangeValue={() => setOpenTipoVacuna(false)} // Cierra al seleccionar
+  onChangeValue={() => setOpenTipoVacuna(false)} 
 />
 
 <DropDownPicker
@@ -401,7 +401,7 @@ export default function FormsScreen() {
     openTipoVacuna && styles.dropdownBelow,
   ]}
   listMode="SCROLLVIEW"
-  onChangeValue={() => setOpenVacunaNombre(false)} // Cierra al seleccionar
+  onChangeValue={() => setOpenVacunaNombre(false)} 
 />
 
 
@@ -428,7 +428,7 @@ export default function FormsScreen() {
             >
               <Ionicons
                 name="calendar"
-                style={formsStyles.iconCalendar} // Aplicamos el estilo para el ícono de calendario
+                style={formsStyles.iconCalendar} 
               />
               <Text style={styles.dateButtonText}>
                 {fechaVacuna || "Fecha de vacunación"}
@@ -440,7 +440,7 @@ export default function FormsScreen() {
           </View>
         )}
 
-        {/* DateTimePicker Modal */}
+       
         <DateTimePickerModal
           isVisible={isDatePickerVisible}
           mode="date"

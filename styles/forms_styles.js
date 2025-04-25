@@ -122,12 +122,12 @@ export default StyleSheet.create({
   },
 
   dropdownContainer: {
-    marginBottom: 20, // Espacio entre cada dropdown
-    zIndex: 10, // zIndex base para que el dropdown esté encima cuando se abre
+    marginBottom: 20, 
+    zIndex: 10, 
   },
   
   dropdownBelow: {
-    zIndex: 5, // Menor zIndex si el otro dropdown está abierto
+    zIndex: 5, 
   },
 
 });

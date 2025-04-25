@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-// Configura la URL base de tu API
-const API_URL = 'http://192.168.1.4:3000'; // 👈 sin /api
+
+const API_URL = 'http://192.168.1.4:3000'; 
 
 
 
-// Función para obtener productos desde el backend
+
 export const login = async (username, password) => {
     try {
         const response = await axios.post(`${API_URL}/api/login`, {
@@ -13,9 +13,9 @@ export const login = async (username, password) => {
             contraseña: password,
           });
           
-      // Si el login es exitoso, la respuesta debería incluir un token o algún dato para autenticar al usuario
+     
       if (response.status === 200) {
-        return { success: true, data: response.data }; // Aquí puedes manejar los datos de respuesta como un token
+        return { success: true, data: response.data }; 
       } else {
         return { success: false };
       }
@@ -25,5 +25,4 @@ export const login = async (username, password) => {
     }
   };
 
-// Si tienes otras funciones como POST, PUT, DELETE, puedes agregarlas aquí
 

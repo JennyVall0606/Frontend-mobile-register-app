@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,26 +9,47 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import Layout from "../components/layout";
 import { styles } from "../styles/ControlH_styles";
-import { vacunas } from "../services/VaccinesData";
-import { pesos } from "../services/weightData";
+
+import axios from "axios"; // Si prefieres usar axios
 
 export default function ControlScreen({ navigation }) {
   const [search, setSearch] = useState("");
+  const [historicoPesaje, setHistoricoPesaje] = useState([]);
+  const [historicoVacunas, setHistoricoVacunas] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Filtrar y ordenar los pesos y vacunas por fecha de forma descendente
-  const filteredPesos = pesos
-    .filter((item) =>
-      item.id_animal.toLowerCase().includes(search.toLowerCase())
-    )
-    .sort((a, b) => new Date(b.fecha) - new Date(a.fecha)) // Ordenar por fecha, más reciente primero
-    .slice(0, 5); // Tomar solo los 5 primeros registros
 
-  const filteredVacunas = vacunas
-    .filter((item) =>
-      item.id_animal.toLowerCase().includes(search.toLowerCase())
-    )
-    .sort((a, b) => new Date(b.fecha) - new Date(a.fecha)) // Ordenar por fecha, más reciente primero
-    .slice(0, 5); // Tomar solo los 5 primeros registros
+  useEffect(() => {
+ 
+    axios
+      .get("http://192.168.1.4:3000/weighing/historico-pesaje") 
+      .then((response) => {
+       
+        const filteredPesos = response.data
+          .sort((a, b) => new Date(b.fecha) - new Date(a.fecha)) 
+          .slice(0, 5);
+        setHistoricoPesaje(filteredPesos);
+      })
+      .catch((error) => console.error("Error al obtener los pesos:", error))
+      .finally(() => setLoading(false)); 
+  }, []);
+
+  axios
+    .get("http://192.168.1.4:3000/vaccines/historico-vacunas") 
+    .then((response) => {
+    
+      const filteredVacunas = response.data
+        .sort((a, b) => new Date(b.fecha_vacuna) - new Date(a.fecha_vacuna)) 
+        .slice(0, 5);
+      setHistoricoVacunas(filteredVacunas);
+    })
+    .catch((error) => console.error("Error al obtener las vacunas:", error))
+    .finally(() => setLoading(false)); 
+  []; 
+
+  if (loading) {
+    return <Text>Cargando...</Text>;
+  }
 
   return (
     <Layout>
@@ -61,11 +82,13 @@ export default function ControlScreen({ navigation }) {
               <Text style={styles.cellHeader}>Chip</Text>
               <Text style={styles.cellHeader}>Peso</Text>
             </View>
-            {filteredPesos.map((item) => (
+            {historicoPesaje.map((item) => (
               <View key={item.id} style={styles.tableRow}>
                 <Text style={styles.cellId}>{item.id}</Text>
-                <Text style={styles.cell}>{item.fecha}</Text>
-                <Text style={styles.cell}>{item.id_animal}</Text>
+                <Text style={styles.cell}>
+                  {new Date(item.fecha).toLocaleDateString("en-CA")}
+                </Text>
+                <Text style={styles.cell}>{item.chip}</Text>
                 <Text style={styles.cell}>{item.peso}</Text>
               </View>
             ))}
@@ -93,12 +116,15 @@ export default function ControlScreen({ navigation }) {
               <Text style={styles.cellHeaderDosis}>Dosis</Text>
               <Text style={styles.cellHeader}>Obs</Text>
             </View>
-            {filteredVacunas.map((item) => (
+            {historicoVacunas.map((item) => (
               <View key={item.id} style={styles.tableRow}>
                 <Text style={styles.cellId}>{item.id}</Text>
-                <Text style={styles.cell}>{item.fecha}</Text>
-                <Text style={styles.cell}>{item.id_animal}</Text>
+                <Text style={styles.cell}>
+                  {new Date(item.fecha).toLocaleDateString("en-CA")}
+                </Text>
+                <Text style={styles.cell}>{item.chip}</Text>
                 <Text style={styles.cellNombre}>{item.nombre}</Text>
+
                 <Text style={styles.cell}>{item.tipo}</Text>
                 <Text style={styles.cellDosis}>{item.dosis}</Text>
                 <Text style={styles.cell}>{item.obs}</Text>
@@ -121,4 +147,3 @@ export default function ControlScreen({ navigation }) {
     </Layout>
   );
 }
-

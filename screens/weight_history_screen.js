@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,24 +9,42 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import Layout from "../components/layout";
 import { styles } from "../styles/weight_history_styles";
-import { pesos } from "../services/weightData";
-
+import axios from "axios";
 export default function WeightScreen({ navigation }) {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 15;
+  const recordsPerPage = 10;
+  const [historicoPesaje, setHistoricoPesaje] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Filtrar los pesos por el campo id_animal
-  const filteredPesos = pesos.filter((item) =>
-    item.id_animal.toLowerCase().includes(search.toLowerCase())
-  );
+  
+  useEffect(() => {
+    
+    axios
+      .get("http://192.168.1.4:3000/weighing/historico-pesaje") 
+      .then((response) => {
+       
+        const filteredPesos = response.data.sort(
+          (a, b) => new Date(b.fecha) - new Date(a.fecha)
+        ); 
+        setHistoricoPesaje(filteredPesos);
+      })
+      .catch((error) => console.error("Error al obtener los pesos:", error))
+      .finally(() => setLoading(false)); 
+  }, []);
 
-  // Calcular los registros que deben mostrarse en la página actual
+  if (loading) {
+    return <Text>Cargando...</Text>;
+  }
+  
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  const currentRecords = filteredPesos.slice(indexOfFirstRecord, indexOfLastRecord);
+  const currentRecords = historicoPesaje.slice(
+    indexOfFirstRecord,
+    indexOfLastRecord
+  );
 
-  // Cambiar de página
+ 
   const nextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
@@ -39,7 +57,7 @@ export default function WeightScreen({ navigation }) {
     }
   };
 
-  const totalPages = Math.ceil(filteredPesos.length / recordsPerPage); // Total de páginas
+  const totalPages = Math.ceil(historicoPesaje.length / recordsPerPage);
 
   return (
     <Layout>
@@ -74,14 +92,15 @@ export default function WeightScreen({ navigation }) {
             {currentRecords.map((item) => (
               <View key={item.id} style={styles.tableRow}>
                 <Text style={styles.cellId}>{item.id}</Text>
-                <Text style={styles.cell}>{item.fecha}</Text>
-                <Text style={styles.cell}>{item.id_animal}</Text>
+                <Text style={styles.cell}>
+                  {new Date(item.fecha).toLocaleDateString("en-CA")}
+                </Text>
+                <Text style={styles.cell}>{item.chip}</Text>
                 <Text style={styles.cell}>{item.peso}</Text>
               </View>
             ))}
           </View>
 
-          {/* Botones de navegación */}
           <View style={styles.paginationContainer}>
             <TouchableOpacity onPress={prevPage} disabled={currentPage === 1}>
               <Text style={styles.paginationButton}>Anterior</Text>
@@ -91,7 +110,10 @@ export default function WeightScreen({ navigation }) {
               Página {currentPage} de {totalPages}
             </Text>
 
-            <TouchableOpacity onPress={nextPage} disabled={currentPage === totalPages}>
+            <TouchableOpacity
+              onPress={nextPage}
+              disabled={currentPage === totalPages}
+            >
               <Text style={styles.paginationButton}>Siguiente</Text>
             </TouchableOpacity>
           </View>
@@ -99,8 +121,7 @@ export default function WeightScreen({ navigation }) {
           <View style={styles.actionsContainer}>
             <TouchableOpacity
               onPress={() => navigation.navigate("WeightScreen")}
-            >
-            </TouchableOpacity>
+            ></TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate("FormScreen")}>
               <Ionicons name="add-circle" style={styles.addIcon} />
             </TouchableOpacity>
@@ -110,4 +131,3 @@ export default function WeightScreen({ navigation }) {
     </Layout>
   );
 }
-

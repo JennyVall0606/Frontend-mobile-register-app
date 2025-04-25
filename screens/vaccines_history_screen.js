@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,24 +9,47 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import Layout from "../components/layout";
 import { styles } from "../styles/vaccines_history_styles";
-import { vacunas } from "../services/VaccinesData";
+
+import axios from "axios"; 
 
 export default function VaccinesScreen({ navigation }) {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 15;
+  const recordsPerPage = 5;
+  const [historicoVacunas, setHistoricoVacunas] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Filtrar las vacunas por el campo id_animal
-  const filteredVacunas = vacunas.filter((item) =>
-    item.id_animal.toLowerCase().includes(search.toLowerCase())
-  );
+ 
+  useEffect(() => {
+    
 
-  // Calcular los registros que deben mostrarse en la página actual
+    axios
+      .get("http://192.168.1.4:3000/vaccines/historico-vacunas") 
+      .then((response) => {
+        
+        const filteredVacunas = response.data.sort(
+          (a, b) => new Date(b.fecha_vacuna) - new Date(a.fecha_vacuna)
+        ); 
+
+        setHistoricoVacunas(filteredVacunas);
+      })
+      .catch((error) => console.error("Error al obtener las vacunas:", error))
+      .finally(() => setLoading(false)); 
+  }, []); 
+
+  if (loading) {
+    return <Text>Cargando...</Text>;
+  }
+
+ 
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  const currentRecords = filteredVacunas.slice(indexOfFirstRecord, indexOfLastRecord);
+  const currentRecords = historicoVacunas.slice(
+    indexOfFirstRecord,
+    indexOfLastRecord
+  );
 
-  // Cambiar de página
+
   const nextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
@@ -39,7 +62,7 @@ export default function VaccinesScreen({ navigation }) {
     }
   };
 
-  const totalPages = Math.ceil(filteredVacunas.length / recordsPerPage); // Total de páginas
+  const totalPages = Math.ceil(historicoVacunas.length / recordsPerPage);
 
   return (
     <Layout>
@@ -77,8 +100,10 @@ export default function VaccinesScreen({ navigation }) {
             {currentRecords.map((item) => (
               <View key={item.id} style={styles.tableRow}>
                 <Text style={styles.cellId}>{item.id}</Text>
-                <Text style={styles.cell}>{item.fecha}</Text>
-                <Text style={styles.cell}>{item.id_animal}</Text>
+                <Text style={styles.cell}>
+                  {new Date(item.fecha).toLocaleDateString("en-CA")}
+                </Text>
+                <Text style={styles.cell}>{item.chip}</Text>
                 <Text style={styles.cellNombre}>{item.nombre}</Text>
                 <Text style={styles.cell}>{item.tipo}</Text>
                 <Text style={styles.cellDosis}>{item.dosis}</Text>
@@ -97,7 +122,10 @@ export default function VaccinesScreen({ navigation }) {
               Página {currentPage} de {totalPages}
             </Text>
 
-            <TouchableOpacity onPress={nextPage} disabled={currentPage === totalPages}>
+            <TouchableOpacity
+              onPress={nextPage}
+              disabled={currentPage === totalPages}
+            >
               <Text style={styles.paginationButton}>Siguiente</Text>
             </TouchableOpacity>
           </View>
@@ -105,8 +133,7 @@ export default function VaccinesScreen({ navigation }) {
           <View style={styles.actionsContainer}>
             <TouchableOpacity
               onPress={() => navigation.navigate("VaccinesScreen")}
-            >
-            </TouchableOpacity>
+            ></TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate("FormScreen")}>
               <Ionicons name="add-circle" style={styles.addIcon} />
             </TouchableOpacity>
@@ -116,5 +143,3 @@ export default function VaccinesScreen({ navigation }) {
     </Layout>
   );
 }
-
-

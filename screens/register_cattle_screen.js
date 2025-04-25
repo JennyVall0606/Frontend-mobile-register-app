@@ -14,7 +14,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import Layout from "../components/layout";
-import { Ionicons } from "@expo/vector-icons"; // Asegúrate de importar Icon
+import { Ionicons } from "@expo/vector-icons"; 
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import styles from "../styles/register_cattle_styles";
@@ -60,16 +60,17 @@ export default function RegisterCattleScreen() {
     { label: "Salmonelosis", value: "salmonelosis" },
     { label: "Acetonemia (cetosis)", value: "acetonemia" },
     { label: "Mastitis", value: "mastitis" },
+    { label: "Ninguna", value: "Ninguna" },
     { label: "OTRA", value: "OTRA" }
   ]);
   
   useEffect(() => {
     const fetchRazas = async () => {
       try {
-        const response = await axios.get('http://192.168.1.4:3000/register/razas'); // Asegúrate de cambiar esta URL al de tu backend
+        const response = await axios.get('http://192.168.1.4:3000/register/razas'); 
         const razaItems = response.data.map(raza => ({
-          label: raza.nombre_raza, // Ajusta según el campo que tenga tu tabla para el nombre
-          value: raza.id_raza // Asegúrate de usar el identificador correcto
+          label: raza.nombre_raza, 
+          value: raza.id_raza 
         }));
         console.log("Razas:", razaItems);
         setItemsRaza(razaItems);
@@ -108,7 +109,7 @@ export default function RegisterCattleScreen() {
   };
 
   const handleConfirmDate = (date) => {
-    const formattedDate = date.toISOString().split('T')[0]; // Esto da '2025-04-23'
+    const formattedDate = date.toISOString().split('T')[0]; 
     if (currentDateType === "peso") {
       setWeight(formattedDate);
     } else {
@@ -145,7 +146,7 @@ export default function RegisterCattleScreen() {
         id_padre: father || null,
         id_madre: mother || null,
         enfermedades: disease || null,
-        observaciones: observations || "", // Asegura que siempre esté presente
+        observaciones: observations || "", 
       };
       
   
@@ -203,17 +204,17 @@ export default function RegisterCattleScreen() {
               </View>
             )}
 
-<View >
-  
+<View style={{ zIndex: 2000, marginBottom: openRaza ? 250 : 20 }}>
   <DropDownPicker
     open={openRaza}
     setOpen={setOpenRaza}
     items={itemsRaza}
     setItems={setItemsRaza}
-    value={disease}
-    setValue={setDisease}
+    value={breed}
+    setValue={setBreed}
     placeholder="Selecciona una raza"
-    zIndex={1000}
+    zIndex={2000}
+    zIndexInverse={1000}
     style={styles.dropdown}
     textStyle={styles.dropdownText}
     listMode="SCROLLVIEW"
@@ -265,21 +266,22 @@ export default function RegisterCattleScreen() {
               onChangeText={setMother}
             />
 
-            <View>
-            <DropDownPicker
-  open={openEnfermedad}
-  setOpen={setOpenEnfermedad}
-  items={itemsEnfermedad}
-  setItems={setItemsEnfermedad}
-  value={disease}
-  setValue={setDisease}
-  placeholder="Selecciona una enfermedad"
-  zIndex={1000}
-  style={styles.dropdown}
-  textStyle={styles.dropdownText}
-  listMode="SCROLLVIEW"
-/>
-            </View>
+<View style={{ zIndex: 1000 }}>
+  <DropDownPicker
+    open={openEnfermedad}
+    setOpen={setOpenEnfermedad}
+    items={itemsEnfermedad}
+    setItems={setItemsEnfermedad}
+    value={disease}
+    setValue={setDisease}
+    placeholder="Selecciona una enfermedad"
+    zIndex={1000}
+    zIndexInverse={2000}
+    style={styles.dropdown}
+    textStyle={styles.dropdownText}
+    listMode="SCROLLVIEW"
+  />
+</View>
 
             <TextInput
               style={styles.input}

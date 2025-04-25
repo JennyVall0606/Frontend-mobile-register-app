@@ -9,7 +9,7 @@ export default function WelcomeScreen() {
   const navigation = useNavigation();
 
   const handleLogin = () => {
-    navigation.navigate("Login"); // Asegúrate que este nombre coincida con tu AppNavigator
+    navigation.navigate("Login"); 
   };
 
   return (

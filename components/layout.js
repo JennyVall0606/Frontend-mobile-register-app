@@ -82,7 +82,7 @@ export default function Layout({ children }) {
       return;
     }
 
-    // Búsqueda general: filtra según el contenido
+ 
     const results = appContent.filter(
       (item) => item.label && item.label.toLowerCase().includes(query) // Verifica que item.label exista antes de usar toLowerCase()
     );
@@ -100,17 +100,17 @@ export default function Layout({ children }) {
   };
 
   const handleNavigate = (screenName) => {
-    console.log("Navigating to:", screenName); // Verificar el valor de screenName
+    console.log("Navigating to:", screenName); 
     if (screenName) {
       setSearchQuery("");
       setSearchResults([]);
       setHasSearched(false);
       setNoResultsVisible(false);
       setTimeout(() => {
-        navigation.navigate(screenName); // Navegar con el nombre de la pantalla
+        navigation.navigate(screenName); 
       }, 100);
     } else {
-      console.error("No screenName provided"); // Si no se proporciona screenName, mostrar un error
+      console.error("No screenName provided"); 
     }
   };
 

@@ -4,11 +4,11 @@ import { Video } from "expo-av";
 import { useNavigation } from "@react-navigation/native";
 import Layout from "../components/simple_layout";
 import styles from "../styles/login_styles";
-import { login } from "../services/api";  // Asegúrate de que esta ruta apunte a donde tienes la función de login.
-import AsyncStorage from "@react-native-async-storage/async-storage"; // Importar AsyncStorage
+import { login } from "../services/api";  
+import AsyncStorage from "@react-native-async-storage/async-storage"; 
 
 
-const API_URL = 'http://192.168.1.4:3000'; // 👈 sin /api
+const API_URL = 'http://192.168.1.4:3000'; 
 
 
 
@@ -57,13 +57,13 @@ export default function LoginScreen() {
           onChangeText={setUsername}
         />
 
-        {/* Campo para la contraseña */}
+        
         <TextInput
           style={styles.input}
           placeholder="Contraseña"
           value={password}
           onChangeText={setPassword}
-          secureTextEntry // Oculta el texto para la contraseña
+          secureTextEntry 
         />
 
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
