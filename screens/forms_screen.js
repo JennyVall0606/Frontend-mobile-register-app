@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -26,18 +26,15 @@ export default function FormsScreen() {
   const [vacunaChecked, setVacunaChecked] = useState(false);
 
   // Estados para formulario de peso
-  
+
   const [chipPeso, setChipPeso] = useState("");
   const [cattlePeso, setCattlePeso] = useState(null);
   const [peso, setPeso] = useState("");
   const [fechaPeso, setFechaPeso] = useState("");
   const typingTimeoutRef = useRef(null);
 
-  
   // Estados para formulario de vacunas
   const [chipVacuna, setChipVacuna] = useState("");
-  const [tipoVacuna, setTipoVacuna] = useState(null);
-  const [nombreVacuna, setNombreVacuna] = useState(null);
   const [dosis, setDosis] = useState("");
   const [observacion, setObservacion] = useState("");
   const [fechaVacuna, setFechaVacuna] = useState("");
@@ -46,21 +43,32 @@ export default function FormsScreen() {
   // DropDownPicker estados
   const [openTipoVacuna, setOpenTipoVacuna] = useState(false);
   const [openVacunaNombre, setOpenVacunaNombre] = useState(false);
-  const [itemsTipoVacuna, setItemsTipoVacuna] = useState(tipoVacunas);
-  const [itemsVacunaNombre, setItemsVacunaNombre] = useState(nombreVacunas);
+  const [tipoVacuna, setTipoVacuna] = useState(null);
+  const [nombreVacuna, setNombreVacuna] = useState(null);
+  const [itemsTipoVacuna, setItemsTipoVacuna] = useState([]);
+  const [itemsVacunaNombre, setItemsVacunaNombre] = useState([]);
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [currentDateType, setCurrentDateType] = useState("");
   const [filteredCattle, setFilteredCattle] = useState([]);
 
+  useEffect(() => {
+    axios
+      .get("http://192.168.1.4:3000/vaccines/tipos-vacuna")
+      .then((res) => setItemsTipoVacuna(res.data))
+      .catch((err) => console.error(err));
 
- 
-  let debounceTimeout;
-
+    axios
+      .get("http://192.168.1.4:3000/vaccines/nombres-vacuna")
+      .then((res) => setItemsVacunaNombre(res.data))
+      .catch((err) => console.error(err));
+  }, []);
 
   const fetchCattleData = async (chip) => {
     try {
-      const response = await axios.get(`http://192.168.1.4:3000/register/animal/${chip}`);
+      const response = await axios.get(
+        `http://192.168.1.4:3000/register/animal/${chip}`
+      );
 
       return response.data;
     } catch (error) {
@@ -71,15 +79,15 @@ export default function FormsScreen() {
 
   const handleConfirmDate = (date) => {
     const today = new Date().toISOString().split("T")[0]; // obtener fecha actual en formato yyyy-mm-dd
-  
+
     if (date.toISOString().split("T")[0] > today) {
       Alert.alert("Fecha inválida", "No puedes seleccionar una fecha futura.");
       return;
     }
-  
+
     // ✅ Formato correcto para MySQL
     const formattedDate = date.toISOString().split("T")[0]; // yyyy-mm-dd
-  
+
     if (currentDateType === "peso") {
       setFechaPeso(formattedDate);
     } else {
@@ -87,7 +95,6 @@ export default function FormsScreen() {
     }
     setDatePickerVisibility(false);
   };
-  
 
   const resetPesoFields = () => {
     setCattlePeso(null);
@@ -104,23 +111,17 @@ export default function FormsScreen() {
     setFechaVacuna("");
   };
 
-
- 
-
-  
-
   const handleChipPesoChange = (chip) => {
     setChipPeso(chip);
-   
-  
+
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
     }
-  
+
     typingTimeoutRef.current = setTimeout(async () => {
       const cattleData = await fetchCattleData(chip);
       console.log("Respuesta del backend:", cattleData);
-  
+
       if (cattleData && cattleData.chip_animal) {
         setCattlePeso(cattleData);
         Alert.alert("encontrado", "El chip  existente.");
@@ -130,24 +131,23 @@ export default function FormsScreen() {
       }
     }, 5000); // 700 ms después de que el usuario deja de escribir
   };
-  
-  
+
   const handleChipVacunaChange = (chip) => {
     setChipVacuna(chip);
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
     }
-  
+
     typingTimeoutRef.current = setTimeout(async () => {
       const cattleData = await fetchCattleData(chip);
       console.log("Respuesta del backend:", cattleData);
-  
+
       if (cattleData && cattleData.chip_animal) {
         setCattleVacuna(cattleData);
         Alert.alert("encontrado", "El chip  existente.");
       } else {
         Alert.alert("No encontrado", "El chip no existe en la base de datos.");
-        
+
         setCattleVacuna(null);
       }
     }, 5000); // 700 ms después de que el usuario deja de escribir
@@ -162,15 +162,21 @@ export default function FormsScreen() {
       Alert.alert("Error", "El chip no existe.");
       return;
     }
-  
+
     try {
-      const response = await axios.post("http://192.168.1.4:3000/weighing/add", {
-        chip_animal: chipPeso,
-        fecha_pesaje: fechaPeso,
-        peso_kg: peso,
-      });
-  
-      Alert.alert("Éxito", response.data.message || "Pesaje guardado correctamente");
+      const response = await axios.post(
+        "http://192.168.1.4:3000/weighing/add",
+        {
+          chip_animal: chipPeso,
+          fecha_pesaje: fechaPeso,
+          peso_kg: peso,
+        }
+      );
+
+      Alert.alert(
+        "Éxito",
+        response.data.message || "Pesaje guardado correctamente"
+      );
       resetPesoFields();
       setChipPeso("");
     } catch (error) {
@@ -178,11 +184,16 @@ export default function FormsScreen() {
       Alert.alert("Error", "No se pudo guardar el pesaje");
     }
   };
-  
-  const guardarVacuna = async () => {
-  
 
-    if (!chipVacuna || !tipoVacuna || !nombreVacuna || !dosis || !observacion || !fechaVacuna) {
+  const guardarVacuna = async () => {
+    if (
+      !chipVacuna ||
+      !tipoVacuna ||
+      !nombreVacuna ||
+      !dosis ||
+      !observacion ||
+      !fechaVacuna
+    ) {
       Alert.alert("Error", "Completa todos los campos.");
       return;
     }
@@ -191,23 +202,27 @@ export default function FormsScreen() {
       return;
     }
     try {
-      const response = await axios.post("http://192.168.1.4:3000/vaccines/add", {
-        fecha_vacuna: fechaVacuna,
-      tipo_vacunas_id_tipo_vacuna: tipoVacuna,
-      chip_animal: chipVacuna,
-      nombre_vacunas_id_vacuna: nombreVacuna,
-      dosis_administrada: dosis,
-      observaciones: observacion
-      });
-  
-      Alert.alert("Éxito", response.data.message || "vacuna guardada correctamente");
-      resetVacunaFields();
-setChipVacuna("");
+      const response = await axios.post(
+        "http://192.168.1.4:3000/vaccines/add",
+        {
+          fecha_vacuna: fechaVacuna,
+          tipo_vacunas_id_tipo_vacuna: tipoVacuna,
+          chip_animal: chipVacuna,
+          nombre_vacunas_id_vacuna: nombreVacuna,
+          dosis_administrada: dosis,
+          observaciones: observacion,
+        }
+      );
 
+      Alert.alert(
+        "Éxito",
+        response.data.message || "vacuna guardada correctamente"
+      );
+      resetVacunaFields();
+      setChipVacuna("");
     } catch (error) {
       console.error("Error al guardar la vacuna:", error);
-Alert.alert("Error", "No se pudo guardar la vacuna");
-
+      Alert.alert("Error", "No se pudo guardar la vacuna");
     }
   };
 
@@ -356,31 +371,43 @@ Alert.alert("Error", "No se pudo guardar la vacuna");
               </ScrollView>
             )}
             <DropDownPicker
-              open={openTipoVacuna}
-              setOpen={setOpenTipoVacuna}
-              items={itemsTipoVacuna}
-              value={tipoVacuna}
-              setValue={setTipoVacuna}
-              placeholder="Tipo de vacuna"
-              containerStyle={[
-                styles.dropdown,
-                { zIndex: openVacunaNombre ? 0 : 1 },
-              ]}
-              listMode="SCROLLVIEW"
-            />
-            <DropDownPicker
-              open={openVacunaNombre}
-              setOpen={setOpenVacunaNombre}
-              items={itemsVacunaNombre}
-              value={nombreVacuna}
-              setValue={setNombreVacuna}
-              placeholder="Nombre de vacuna"
-              containerStyle={[
-                styles.dropdown,
-                { zIndex: openTipoVacuna ? 0 : 1 },
-              ]}
-              listMode="SCROLLVIEW"
-            />
+  open={openTipoVacuna}
+  setOpen={() => {
+    setOpenVacunaNombre(false);
+    setOpenTipoVacuna(true);
+  }}
+  value={tipoVacuna}
+  items={itemsTipoVacuna}
+  setValue={setTipoVacuna}
+  placeholder="Tipo de vacuna"
+  containerStyle={[
+    styles.dropdownContainer,
+    openVacunaNombre && styles.dropdownBelow,
+  ]}
+  listMode="SCROLLVIEW"
+  onChangeValue={() => setOpenTipoVacuna(false)} // Cierra al seleccionar
+/>
+
+<DropDownPicker
+  open={openVacunaNombre}
+  setOpen={() => {
+    setOpenTipoVacuna(false);
+    setOpenVacunaNombre(true);
+  }}
+  value={nombreVacuna}
+  items={itemsVacunaNombre}
+  setValue={setNombreVacuna}
+  placeholder="Nombre de vacuna"
+  containerStyle={[
+    styles.dropdownContainer,
+    openTipoVacuna && styles.dropdownBelow,
+  ]}
+  listMode="SCROLLVIEW"
+  onChangeValue={() => setOpenVacunaNombre(false)} // Cierra al seleccionar
+/>
+
+
+
             <TextInput
               style={styles.input}
               placeholder="Dosis"
