@@ -14,8 +14,6 @@ import { useNavigation } from "@react-navigation/native";
 import Layout from "../components/layout";
 import styles from "../styles/forms_styles";
 import axios from "axios";
-import tipoVacunas from "../services/tipoVacunas";
-import nombreVacunas from "../services/nombreVacunas";
 import DropDownPicker from "react-native-dropdown-picker";
 import formsStyles from "../styles/forms_styles"; // Ajusta la ruta según donde esté tu archivo
 

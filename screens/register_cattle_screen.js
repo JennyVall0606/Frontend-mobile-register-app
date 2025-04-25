@@ -26,8 +26,8 @@ export default function RegisterCattleScreen() {
   const navigation = useNavigation();
 
   const [image, setImage] = useState(null);
-  const [breed, setBreed] = useState("");
-  const [birthDate, setBirthDate] = useState("");
+
+ const [birthDate, setBirthDate] = useState("");
   const [weight, setWeight] = useState("");
   const [chip, setChip] = useState("");
   const [father, setFather] = useState("");
@@ -38,8 +38,13 @@ export default function RegisterCattleScreen() {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [currentDateType, setCurrentDateType] = useState("");
 
-  const [open, setOpen] = useState(false);
-  const [items, setItems] = useState([
+  const [openRaza, setOpenRaza] = useState(false);
+
+  const [itemsRaza, setItemsRaza] = useState([]);
+  const [breed, setBreed] = useState("");
+  const [openEnfermedad, setOpenEnfermedad] = useState(false);
+
+  const [itemsEnfermedad, setItemsEnfermedad] = useState([
     { label: "Brucelosis", value: "brucelosis" },
     { label: "Fiebre aftosa", value: "fiebre_aftosa" },
     { label: "Tuberculosis bovina", value: "tuberculosis_bovina" },
@@ -58,6 +63,24 @@ export default function RegisterCattleScreen() {
     { label: "OTRA", value: "OTRA" }
   ]);
   
+  useEffect(() => {
+    const fetchRazas = async () => {
+      try {
+        const response = await axios.get('http://192.168.1.4:3000/register/razas'); // Asegúrate de cambiar esta URL al de tu backend
+        const razaItems = response.data.map(raza => ({
+          label: raza.nombre_raza, // Ajusta según el campo que tenga tu tabla para el nombre
+          value: raza.id_raza // Asegúrate de usar el identificador correcto
+        }));
+        console.log("Razas:", razaItems);
+        setItemsRaza(razaItems);
+
+      } catch (error) {
+        console.error('Error al obtener las razas:', error);
+      }
+    };
+
+    fetchRazas();
+  }, []);
 
   useEffect(() => {
     const requestPermission = async () => {
@@ -180,12 +203,23 @@ export default function RegisterCattleScreen() {
               </View>
             )}
 
-            <TextInput
-              style={styles.input}
-              placeholder="Raza"
-              value={breed}
-              onChangeText={setBreed}
-            />
+<View >
+  
+  <DropDownPicker
+    open={openRaza}
+    setOpen={setOpenRaza}
+    items={itemsRaza}
+    setItems={setItemsRaza}
+    value={disease}
+    setValue={setDisease}
+    placeholder="Selecciona una raza"
+    zIndex={1000}
+    style={styles.dropdown}
+    textStyle={styles.dropdownText}
+    listMode="SCROLLVIEW"
+  />
+</View>
+
 
             <TouchableOpacity
               style={styles.dateButton}
@@ -232,19 +266,19 @@ export default function RegisterCattleScreen() {
             />
 
             <View>
-              <DropDownPicker
-                open={open}
-                setOpen={setOpen}
-                items={items}
-                setItems={setItems}
-                value={disease}
-                setValue={setDisease}
-                placeholder="Selecciona una enfermedad"
-                zIndex={1000}
-                style={styles.dropdown}
-                textStyle={styles.dropdownText}
-                listMode="SCROLLVIEW"
-              />
+            <DropDownPicker
+  open={openEnfermedad}
+  setOpen={setOpenEnfermedad}
+  items={itemsEnfermedad}
+  setItems={setItemsEnfermedad}
+  value={disease}
+  setValue={setDisease}
+  placeholder="Selecciona una enfermedad"
+  zIndex={1000}
+  style={styles.dropdown}
+  textStyle={styles.dropdownText}
+  listMode="SCROLLVIEW"
+/>
             </View>
 
             <TextInput
