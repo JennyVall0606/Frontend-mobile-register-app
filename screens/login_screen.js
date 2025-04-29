@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, TextInput, Image } from "react-native";
+import { View, Text, TouchableOpacity, Alert, TextInput, Image } from "react-native";
 import { Video } from "expo-av";
 import { useNavigation } from "@react-navigation/native";
 import Layout from "../components/simple_layout";
@@ -26,14 +26,27 @@ export default function LoginScreen() {
           await AsyncStorage.setItem("userToken", response.data.token);
           navigation.navigate("Home");
         } else {
-          alert("Usuario o contraseña incorrectos.");
+          Alert.alert(
+            "Error",
+          "Error al iniciar sesión. Verifica tus credenciales.",
+          [{ text: "OK" }]
+            
+          );
         }
       } catch (error) {
-        alert("Error al iniciar sesión. Verifica tus credenciales.");
+        Alert.alert(
+          "🚫Advertencia",
+            "Usuario o contraseña incorrectos.",
+            [{ text: "OK" }]
+        );
         console.error(error);
       }
     } else {
-      alert("Por favor ingresa usuario y contraseña");
+      Alert.alert(
+        "⚠️Atención",
+        "Por favor ingresa usuario y contraseña.",
+        [{ text: "OK" }]
+      );
     }
   };
   

@@ -1,6 +1,5 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import WelcomeScreen from "../screens/welcome_screen";
 import LoginScreen from "../screens/login_screen";
 import HomeScreen from "../screens/home_screen";
 import RegisterCattleScreen from "../screens/register_cattle_screen"; // Asegúrate de que esté bien importado
@@ -13,12 +12,8 @@ const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
   return (
-    <Stack.Navigator initialRouteName="Welcome">
-      <Stack.Screen
-        name="Welcome"
-        component={WelcomeScreen}
-        options={{ headerShown: false }}
-      />
+    <Stack.Navigator initialRouteName="Login">
+      
       <Stack.Screen
         name="Login"
         component={LoginScreen}

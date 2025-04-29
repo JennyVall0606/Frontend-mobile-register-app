@@ -13,19 +13,18 @@ export default StyleSheet.create({
 
   topBar: {
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginTop: 60,
-    paddingHorizontal: 20,
-    marginBottom: 20,
-    gap: 15, 
+  alignItems: "center",
+  justifyContent: "space-between",
+  marginTop: 60,
+  paddingHorizontal: 20,
+  marginBottom: 20,
+  gap: 300,  
   },
 
   topBarContainer: {
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 10,
+    paddingHorizontal: -500,
     height: 60,
     zIndex: 10,
   },
@@ -65,48 +64,10 @@ export default StyleSheet.create({
     height: 20,
   },
 
-  fechaTexto: {
-    color: "rgb(53, 50, 50)",
-    fontSize: 16,
-    fontWeight: "500",
-    marginLeft: 20,
-    marginBottom: 10,
-    alignSelf: "flex-start",
-  },
 
-  searchResultsContainer: {
-    position: "absolute",
-    top: 105,
-    left: 90,
-    right: 90,
-    backgroundColor: "rgb(207, 207, 212)",
-    borderRadius: 10,
-    padding: 10,
-    maxHeight: 100,
-    borderColor: "rgb(53, 50, 50)", 
-    borderWidth: 1, 
-    zIndex: 999,
-    elevation: 10,
-  },
 
-  resultItem: {
-    borderRadius: 10, 
-    paddingVertical: 5, 
-    paddingHorizontal: 5, 
-  },
 
-  resultText: {
-    fontSize: 16,
-    color: "rgb(53, 50, 50)", 
-    paddingVertical: 10, 
-    paddingHorizontal: 14, 
-    fontWeight: "400", 
-  },
-
-  noResultsText: {
-    fontSize: 16,
-    color: "rgb(53, 50, 50)",
-  },
+ 
 
   dropdownMenuLeft: {
     position: "absolute",

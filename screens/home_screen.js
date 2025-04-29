@@ -10,7 +10,7 @@ export default function HomeScreen() {
   return (
     <Layout>
       <View style={styles.container}>
-        <Text style={styles.title}>REGISTROS</Text>
+        <Text style={styles.title}>AgroGestor</Text>
 
         <Image
           source={require('../assets/logogv.png')}
@@ -30,7 +30,7 @@ export default function HomeScreen() {
             style={styles.squareButton}
             onPress={() => navigation.navigate('ControlScreen')}
           >
-            <Text style={styles.buttonText}>Control Historial</Text>
+            <Text style={styles.buttonText}>Ver mi ganado</Text>
           </TouchableOpacity>
         </View>
       </View>

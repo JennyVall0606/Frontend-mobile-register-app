@@ -14,34 +14,12 @@ import globalStyles from "../styles/global_styles";
 export default function Layout({ children }) {
   const [showMenu, setShowMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [fechaHoraActual, setFechaHoraActual] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [hasSearched, setHasSearched] = useState(false);
   const [noResultsVisible, setNoResultsVisible] = useState(false);
 
   const navigation = useNavigation();
-
-  useEffect(() => {
-    const actualizarFechaHora = () => {
-      const fecha = new Date();
-      const opcionesFecha = {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      };
-      const fechaFormateada = fecha.toLocaleDateString("es-CO", opcionesFecha);
-      const horaFormateada = fecha.toLocaleTimeString("es-CO", {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-      setFechaHoraActual(`${fechaFormateada} ${horaFormateada}`);
-    };
-
-    actualizarFechaHora();
-    const intervalo = setInterval(actualizarFechaHora, 1000);
-    return () => clearInterval(intervalo);
-  }, []);
 
   const appContent = [
     { id: "1", label: "Registro", screen: "RegisterCattle" },
@@ -134,28 +112,6 @@ export default function Layout({ children }) {
           />
         </TouchableOpacity>
 
-        <View
-          style={[
-            globalStyles.searchContainerCustom,
-          ]}
-        >
-          <TextInput
-            placeholder="Buscar..."
-            placeholderTextColor={globalStyles.searchInputPlaceholder}
-            style={[globalStyles.searchInput]}
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            accessible={true}
-            accessibilityLabel="Campo de búsqueda"
-          />
-          <TouchableOpacity onPress={handleSearch}>
-            <Image
-              source={require("../assets/search-arrow.png")}
-              style={globalStyles.searchIcon}
-            />
-          </TouchableOpacity>
-        </View>
-
         <TouchableOpacity
           onPress={() => {
             setShowUserMenu(!showUserMenu);
@@ -170,32 +126,6 @@ export default function Layout({ children }) {
           />
         </TouchableOpacity>
       </View>
-
-      <Text style={globalStyles.fechaTexto}>{fechaHoraActual}</Text>
-
-      {hasSearched && (
-        <View style={globalStyles.searchResultsContainer}>
-          {searchResults.length > 0 ? (
-            <ScrollView>
-              {searchResults.map((item) => (
-                <TouchableOpacity
-                  key={item.id}
-                  style={globalStyles.resultItem}
-                  onPress={() => handleNavigate(item.screen)}
-                  accessible={true}
-                  accessibilityLabel={`Ir a ${item.label}`}
-                >
-                  <Text style={globalStyles.resultText}>{item.label}</Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          ) : (
-            noResultsVisible && (
-              <Text style={globalStyles.noResultsText}>No hay resultados</Text>
-            )
-          )}
-        </View>
-      )}
 
       {showMenu && (
         <View style={globalStyles.dropdownMenuLeft}>
@@ -216,7 +146,7 @@ export default function Layout({ children }) {
 
       {showUserMenu && (
         <View style={globalStyles.dropdownMenuRight}>
-          <TouchableOpacity onPress={() => handleNavigate("Welcome")}>
+          <TouchableOpacity onPress={() => handleNavigate("Login")}>
             <Text style={globalStyles.dropdownItem}>Cerrar sesión</Text>
           </TouchableOpacity>
         </View>
