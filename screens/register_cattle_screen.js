@@ -31,7 +31,8 @@ export default function RegisterCattleScreen() {
   const [chip, setChip] = useState("");
   const [father, setFather] = useState("");
   const [mother, setMother] = useState("");
-  const [disease, setDisease] = useState(null);
+  const [disease, setDisease] = useState([]); 
+
   const [observations, setObservations] = useState("");
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [currentDateType, setCurrentDateType] = useState("");
@@ -41,16 +42,16 @@ export default function RegisterCattleScreen() {
   const [openEnfermedad, setOpenEnfermedad] = useState(false);
   const [itemsEnfermedad, setItemsEnfermedad] = useState([
     { label: "Brucelosis", value: "brucelosis" },
-    { label: "Fiebre aftosa", value: "fiebre_aftosa" },
-    { label: "Tuberculosis bovina", value: "tuberculosis_bovina" },
+    { label: "Fiebre aftosa", value: "fiebre aftosa" },
+    { label: "Tuberculosis bovina", value: "tuberculosis bovina" },
     { label: "Anaplasmosis", value: "anaplasmosis" },
-    { label: "Leucosis bovina", value: "leucosis_bovina" },
-    { label: "Diarrea viral bovina (BVD)", value: "diarrea_viral_bovina" },
+    { label: "Leucosis bovina", value: "leucosis bovina" },
+    { label: "Diarrea viral bovina (BVD)", value: "diarrea viral bovina" },
     { label: "Paratuberculosis (Johne)", value: "paratuberculosis" },
     { label: "Neosporosis", value: "neosporosis" },
-    { label: "Enfermedad respiratoria bovina", value: "enfermedad_respiratoria_bovina" },
-    { label: "Fiebre del transporte", value: "fiebre_del_transporte" },
-    { label: "Dermatitis digital", value: "dermatitis_digital" },
+    { label: "Enfermedad respiratoria bovina", value: "enfermedad respiratoria bovina" },
+    { label: "Fiebre del transporte", value: "fiebre del transporte" },
+    { label: "Dermatitis digital", value: "dermatitis digital" },
     { label: "Rabia", value: "rabia" },
     { label: "Salmonelosis", value: "salmonelosis" },
     { label: "Acetonemia (cetosis)", value: "acetonemia" },
@@ -169,7 +170,8 @@ export default function RegisterCattleScreen() {
       Alert.alert("❌ Error", "No se pudo registrar el ganado.");
     }
   };
-  
+
+
 
   return (
     <Layout>
@@ -254,14 +256,16 @@ export default function RegisterCattleScreen() {
               onCancel={() => setDatePickerVisibility(false)}
             />
 
-            {/* Inputs restantes */}
-            <TextInput
-              style={styles.input}
-              placeholder="Peso"
-              keyboardType="numeric"
-              value={weight}
-              onChangeText={setWeight}
-            />
+<View style={styles.weightContainer}>
+  <TextInput
+    style={styles.weightInput}
+    placeholder="Peso"
+    keyboardType="numeric"
+    value={weight}
+    onChangeText={setWeight}
+  />
+  <Text style={styles.weightUnit}>kg</Text>
+</View>
 
             <TextInput
               style={styles.input}
@@ -284,25 +288,41 @@ export default function RegisterCattleScreen() {
               onChangeText={setMother}
             />
 
-            <DropDownPicker
-              open={openEnfermedad}
-              setOpen={setOpenEnfermedad}
-              items={itemsEnfermedad}
-              setItems={setItemsEnfermedad}
-              value={disease}
-              setValue={setDisease}
-              placeholder="Selecciona una enfermedad"
-              style={styles.dropdown}
-              textStyle={styles.dropdownText}
-              listMode="SCROLLVIEW"
-            />
+<DropDownPicker
+  multiple={true}
+  min={0}
+  max={20}
+  open={openEnfermedad}
+  setOpen={setOpenEnfermedad}
+  items={itemsEnfermedad}
+  setItems={setItemsEnfermedad}
+  value={disease}
+  setValue={setDisease}
+  placeholder="Selecciona una o más enfermedades"
+  style={styles.dropdown}
+  textStyle={styles.dropdownText}
+  listMode="SCROLLVIEW"
+  multipleText={`${disease.length} enfermedad${disease.length === 1 ? '' : 'es'} seleccionada${disease.length === 1 ? '' : 's'}`}
+/>
 
-            <TextInput
-              style={styles.input}
-              placeholder="Observaciones"
-              value={observations}
-              onChangeText={setObservations}
-            />
+<Text style={styles.selectedDiseases}>
+  {disease.length > 0 ? `Enfermedades seleccionadas: ${disease.join(', ')}` : 'Selecciona las enfermedades'}
+</Text>
+
+
+
+<View style={styles.inputWrapper}>
+  <TextInput
+    style={styles.inputobs}
+    placeholder="Observaciones"
+    value={observations}
+    onChangeText={setObservations}
+    multiline
+    textAlignVertical="top"
+    maxLength={500} // Puedes ajustar el límite según necesidad
+  />
+</View>
+
 
             <TouchableOpacity
               onPress={handleRegister}
