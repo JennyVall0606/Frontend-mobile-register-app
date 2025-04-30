@@ -7,6 +7,7 @@ import ControlScreen from "../screens/controlsH_screen"; // Asegúrate de que es
 import WeightScreen from "../screens/weight_history_screen";
 import VaccinesScreen from "../screens/vaccines_history_screen";
 import FormScreen from "../screens/forms_screen";
+import CattleScreen from "../screens/CattleList_Screen"
 
 const Stack = createNativeStackNavigator();
 
@@ -22,6 +23,11 @@ export default function AppNavigator() {
       <Stack.Screen
         name="Home"
         component={HomeScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="CattleScreen"
+        component={CattleScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen

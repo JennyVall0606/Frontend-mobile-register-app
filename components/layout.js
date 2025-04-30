@@ -26,6 +26,7 @@ export default function Layout({ children }) {
     { id: "2", label: "Historiales", screen: "ControlScreen" },
     { id: "3", label: "Formulario", screen: "FormScreen" },
     { id: "4", label: "Inicio", screen: "Home" },
+    { id: "5", label: "VerGanado", screen: "CattleScreen" },
   ];
 
   const handleSearch = () => {
@@ -53,6 +54,9 @@ export default function Layout({ children }) {
     }
     if (query.includes("historiales")) {
       handleNavigate("ControlScreen");
+      return;
+    }if (query.includes("VerGanado")) {
+      handleNavigate("CattleScreen");
       return;
     }
     if (query.includes("formulario")) {
@@ -134,6 +138,9 @@ export default function Layout({ children }) {
           </TouchableOpacity>
           <TouchableOpacity onPress={() => handleNavigate("RegisterCattle")}>
             <Text style={globalStyles.dropdownItem}>Registro</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleNavigate("CattleScreen")}>
+            <Text style={globalStyles.dropdownItem}>Ver ganado</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => handleNavigate("ControlScreen")}>
             <Text style={globalStyles.dropdownItem}>Historiales</Text>

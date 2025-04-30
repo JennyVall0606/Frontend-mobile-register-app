@@ -28,7 +28,7 @@ export default function HomeScreen() {
 
           <TouchableOpacity
             style={styles.squareButton}
-            onPress={() => navigation.navigate('ControlScreen')}
+            onPress={() => navigation.navigate('CattleScreen')}
           >
             <Text style={styles.buttonText}>Ver mi ganado</Text>
           </TouchableOpacity>
