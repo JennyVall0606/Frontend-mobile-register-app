@@ -4,25 +4,57 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
+  ActivityIndicator,
   Image,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Layout from "../components/layout";
 import { styles } from "../styles/CattleList_Styles";
 import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Asegúrate de importarlo
 
 export default function CattleScreen({ navigation }) {
   const [search, setSearch] = useState("");
   const [ganado, setGanado] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get("http://192.168.1.4:3000/register/all")
-      .then((response) => setGanado(response.data))
-      .catch((error) => console.error("Error al obtener el ganado:", error));
+    const fetchAnimals = async () => {
+      try {
+        // Obtener el token desde AsyncStorage
+        const token = await AsyncStorage.getItem("token");
+
+        if (!token) {
+          Alert.alert("❌ Error", "Token no encontrado. Inicia sesión nuevamente.");
+          return;
+        }
+
+        // Hacer la solicitud al backend para obtener los animales del usuario autenticado
+        const response = await axios.get("http://192.168.1.4:3000/api/mis-animales", {
+          headers: {
+            Authorization: `Bearer ${token}`, // Agregar el token en los encabezados
+          },
+        });
+
+        setGanado(response.data); // Setear los animales en el estado
+        setLoading(false); // Detener el loading
+      } catch (error) {
+        console.error("Error al obtener el ganado:", error);
+        setLoading(false); // Detener el loading
+        Alert.alert("❌ Error", "Hubo un problema al obtener los datos del ganado.");
+      }
+    };
+
+    fetchAnimals();
   }, []);
 
-  // Agrupar ganado en pares
+  // Filtrar ganado por chip o nombre
+  const filteredGanado = ganado.filter((animal) =>
+    animal.chip && animal.chip.toLowerCase().includes(search.toLowerCase())
+  );
+  
+
+  // Agrupar ganado en pares para un mejor diseño
   const agruparEnPares = (animales) => {
     const pares = [];
     for (let i = 0; i < animales.length; i += 2) {
@@ -30,6 +62,14 @@ export default function CattleScreen({ navigation }) {
     }
     return pares;
   };
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   return (
     <Layout>
@@ -45,6 +85,7 @@ export default function CattleScreen({ navigation }) {
 
         <ScrollView style={styles.scrollContainer}>
           <Text style={styles.subtitle}>Animales registrados</Text>
+        
 
           {agruparEnPares(ganado).map((par, index) => (
             <View key={index} style={styles.card}>
@@ -67,7 +108,11 @@ export default function CattleScreen({ navigation }) {
               ))}
             </View>
           ))}
+          <Text style={styles.totalCount}>
+            Total de registros: {ganado.length}
+          </Text>
         </ScrollView>
+        
       </View>
     </Layout>
   );

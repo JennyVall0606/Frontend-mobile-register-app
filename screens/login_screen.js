@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import Layout from "../components/simple_layout";
 import styles from "../styles/login_styles";
 import { login } from "../services/api";  
-import AsyncStorage from "@react-native-async-storage/async-storage"; 
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
 
 
 const API_URL = 'http://192.168.1.4:3000'; 
@@ -23,7 +23,7 @@ export default function LoginScreen() {
         const response = await login(username, password);
   
         if (response.success && response.data.token) {
-          await AsyncStorage.setItem("userToken", response.data.token);
+          await AsyncStorage.setItem("token", response.data.token);
           navigation.navigate("Home");
         } else {
           Alert.alert(

@@ -52,5 +52,11 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 5,
   },
+  totalCount: {
+    fontSize: 14,
+  color: '#333',
+  marginBottom: 10,
+  textAlign: 'center', 
+  },
 });
 

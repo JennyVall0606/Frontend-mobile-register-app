@@ -19,6 +19,8 @@ import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker"; // Asegúrate de importarlo
 import styles from "../styles/register_cattle_styles";
 import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default function RegisterCattleScreen() {
   const navigation = useNavigation();
@@ -124,13 +126,26 @@ export default function RegisterCattleScreen() {
   };
 
   const handleRegister = async () => {
-    if (!chip || !breed || !birthDate || !weight) {
-      Alert.alert("⚠️ Datos incompletos", "Por favor completa los campos obligatorios.");
-      return;
-    }
-  
+
     try {
+      // Obtener el token
+      const token = await AsyncStorage.getItem("token");
+  
+      // Verificar si el token existe
+      if (!token) {
+        Alert.alert("❌ Error", "Token no encontrado. Inicia sesión nuevamente.");
+        return;
+      }
+  
+      // Validar si los campos obligatorios están completos
+      if (!chip || !breed || !birthDate || !weight) {
+        Alert.alert("⚠️ Datos incompletos", "Por favor completa los campos obligatorios.");
+        return;
+      }
+  
+      // Crear el FormData
       const formData = new FormData();
+  
   
       // Agregar solo la imagen principal
       if (image) {
@@ -151,25 +166,38 @@ export default function RegisterCattleScreen() {
       formData.append('peso_nacimiento', parseFloat(weight));
       formData.append('id_padre', father || null);
       formData.append('id_madre', mother || null);
-      formData.append('enfermedades', disease || null);
+      formData.append('enfermedades', disease.length > 0 ? disease : []);
+
       formData.append('observaciones', observations || "");
+
+      console.log("Enviando solicitud a:", "http://192.168.1.4:3000/register/add");
   
       const response = await axios.post("http://192.168.1.4:3000/register/add", formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`, // Agregar el token en el header
         },
       });
       
-      Alert.alert("✅ Registro exitoso", "El ganado ha sido registrado correctamente");
-      resetForm();
-    } catch (error) {
-      console.error("Error al registrar:", error);
-      if (error.response) {
-        console.log("Detalles del error:", error.response.data);
+
+       // Verificar si la respuesta es exitosa
+       if (response.status === 200 || response.status === 201) {
+        Alert.alert("✅ Registro exitoso", "El ganado ha sido registrado correctamente");
+        resetForm(); // Limpiar el formulario
       }
+       
+  } catch (error) {
+    // Manejo de errores
+    console.error("Error al registrar:", error);
+    if (error.response && error.response.data) {
+      console.log("Detalles del error:", error.response.data);
+      const mensaje = error.response.data.message || error.response.data.error || "No se pudo registrar el ganado.";
+      Alert.alert("❌ Error", mensaje);
+    } else {
       Alert.alert("❌ Error", "No se pudo registrar el ganado.");
     }
-  };
+  }
+};
 
 
 
@@ -302,12 +330,15 @@ export default function RegisterCattleScreen() {
   style={styles.dropdown}
   textStyle={styles.dropdownText}
   listMode="SCROLLVIEW"
-  multipleText={`${disease.length} enfermedad${disease.length === 1 ? '' : 'es'} seleccionada${disease.length === 1 ? '' : 's'}`}
+  multipleText={`${Array.isArray(disease) && disease.length} enfermedad${Array.isArray(disease) && disease.length === 1 ? '' : 'es'} seleccionada${Array.isArray(disease) && disease.length === 1 ? '' : 's'}`}
 />
 
 <Text style={styles.selectedDiseases}>
-  {disease.length > 0 ? `Enfermedades seleccionadas: ${disease.join(', ')}` : 'Selecciona las enfermedades'}
+  {Array.isArray(disease) && disease.length > 0 
+    ? `Enfermedades seleccionadas: ${disease.join(', ')}`
+    : 'Selecciona las enfermedades'}
 </Text>
+
 
 
 

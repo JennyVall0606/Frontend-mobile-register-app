@@ -177,7 +177,7 @@ export default StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 10,
-    height: 30,
+    height: 40,
     width: "40%",
     backgroundColor: "rgb(244, 245, 244)",
     fontSize: 16,
