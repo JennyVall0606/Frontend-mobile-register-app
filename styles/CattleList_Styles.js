@@ -1,62 +1,79 @@
-import { StyleSheet } from 'react-native';
+// styles/CattleList_Styles.js
+
+import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f2f2f2',
-    paddingHorizontal: 20,
-    paddingTop: 20,
+    padding: 16,
+    backgroundColor: "#ffffff",
   },
   backButton: {
     marginBottom: 10,
+    alignSelf: "flex-start",
   },
   icon: {
     fontSize: 24,
+    color: "#333",
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+    textAlign: "center",
+    color: "#2c3e50",
   },
   subtitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 8,
+    fontWeight: "600",
+    color: "#2c3e50",
   },
   scrollContainer: {
-    flex: 1,
+    marginTop: 10,
   },
   card: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 15,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 16,
+    gap: 10,
   },
   cardContent: {
     width: '48%',
     backgroundColor: '#fff',
     borderRadius: 10,
     padding: 10,
-    elevation: 3,
-    shadowColor: '#000',
+    elevation: 3, // Sombra para Android
+    shadowColor: '#000', // Sombra para iOS
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'black', // Verde
   },
   cardImage: {
     width: '100%',
-    height: 100,
-    borderRadius: 10,
-    marginBottom: 10,
+  height: 110,
+  borderRadius: 10,        // Bordes redondeados
+  marginBottom: 0,
+  borderWidth: 1,          // Grosor del borde
+  borderColor: 'black',
   },
   cardText: {
     fontSize: 14,
-    marginBottom: 5,
+    color: "#333",
+    marginBottom: 4,
+    textAlign: "center",
   },
   totalCount: {
-    fontSize: 14,
-  color: '#333',
-  marginBottom: 10,
-  textAlign: 'center', 
+    fontSize: 16,
+    fontWeight: "600",
+    textAlign: "center",
+    marginTop: 20,
+    color: "#444",
   },
 });
+
+
 
