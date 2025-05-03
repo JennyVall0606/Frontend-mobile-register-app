@@ -6,7 +6,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: "#ffffff",
+
   },
   backButton: {
     marginBottom: 10,
@@ -40,7 +40,7 @@ export const styles = StyleSheet.create({
   },
   cardContent: {
     width: '48%',
-    backgroundColor: '#fff',
+    backgroundColor: 'rgb(238, 238, 238)',
     borderRadius: 10,
     padding: 10,
     elevation: 3, // Sombra para Android

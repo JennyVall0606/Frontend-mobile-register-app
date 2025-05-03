@@ -1,186 +1,90 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native';
 
-export const styles = StyleSheet.create({
+export const styles = {
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "flex-start",
-    paddingHorizontal: 20, 
-    paddingTop: 10, 
+    padding: 10,
+    backgroundColor: "#f2f2f2",
+  },
+  iconFecha: {
+    fontSize: 24,
+    color: "rgb(53, 51, 51)",
+    marginRight: 10, 
+  },
+
+  image: {
+    width: 300,
+    height: 150,
+    borderRadius: 10,
+    marginBottom: 20,
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    alignSelf: "center",
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  arrowButton: {
+    marginBottom: 20,
+  },
+  subtitle: {
+    fontSize: 18,
+    fontWeight: "bold",
     marginBottom: 10,
   },
-
-  backButton: {
-    position: "absolute",
-    top: -15, 
-    left: 8, 
+  card: {
     padding: 10,
-    alignItems: "center",
-    justifyContent: "center",
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    marginBottom: 50,
+    
   },
-
-  icon: {
-    fontSize: 30, 
-    color: "rgb(53, 51, 51)", 
-  },
-
-  title: {
-    fontSize: 29,
-    fontWeight: "bold",
-    marginTop: 20, 
-    marginBottom: 20,
-    color: "rgb(6, 97, 59)",
-    textAlign: "center",
-    width: "100%", 
-  },
-
-  searchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "rgb(192, 197, 194)",
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 20,
-    marginBottom: 20, 
-  },
-
-  searchIcon: {
-    fontSize: 20,
-    color: "rgb(53, 51, 51)",
-    marginRight: 5,
-  },
-
-  input: {
-    marginLeft: 10,
-    flex: 1,
-    fontSize: 15,
-  },
-
-  scrollContainer: {
-    marginTop: 10,
-  },
-
-  subtitle: {
-    fontSize: 24,
-    fontWeight: "600",
-    marginTop: 20,
-    marginBottom: 30,
-    color: "rgb(6, 97, 59)",
-    textAlign: "center", 
-  },
-
   table: {
-    width: "100%", 
-    marginHorizontal: 0, 
-    borderWidth: 1,
-    borderColor: "rgb(53, 51, 51)",
-    borderRadius: 5,
-    overflow: "hidden",
-    marginBottom: 20, 
+    marginTop: 10,
+    width: '100%',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
   },
-
   tableHeader: {
     flexDirection: "row",
-    backgroundColor: "rgb(70, 136, 84)",
+    backgroundColor: "red",
+    paddingVertical: 10,
+    paddingHorizontal: 5,
     borderBottomWidth: 1,
-    borderColor: "rgb(53, 51, 51)",
+    borderBottomColor: "#ddd",
   },
-
-  cellHeaderId: {
-    flex: 15, 
-    padding: 6,
+  tableHeaderText: {
+    flex: 1,
     fontWeight: "bold",
-    fontSize: 12,
-    color: "rgb(41, 41, 39)",
     textAlign: "center",
   },
-  
-  cellHeader: {
-    flex: 40, 
-    padding: 6,
-    fontWeight: "bold",
-    fontSize: 12,
-    color: "rgb(41, 41, 39)",
-    textAlign: "center", 
-  },
-  
   tableRow: {
-    flexDirection: "row",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 5,
     borderBottomWidth: 1,
-    borderColor: "rgb(53, 51, 51)",
-    backgroundColor: "rgb(192, 197, 194)",
+    borderBottomColor: '#ddd',
   },
-  
-  cellId: {
-    flex: 15,
-    padding: 6,
-    fontSize: 10,
-    textAlign: "center",
-    color: "rgb(46, 39, 45)",
+  tableCell: {
+    flex: 1,
+    fontSize: 16,
+    paddingHorizontal: 5,
   },
-  
-  cell: {
-    flex: 35, 
-    padding: 6,
-    fontSize: 10,
-    textAlign: "center",
-    color: "rgb(46, 39, 45)",
+  editButton: {
+    marginTop: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    backgroundColor: '#4CAF50',
+    borderRadius: 5,
+    alignItems: 'center',
   },
-  
-  actionsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%", 
-    alignItems: "center",
-    paddingHorizontal: 0, 
-    marginBottom: 20, 
+  editButtonText: {
+    color: "#fff",
   },
+};
 
-  link: {
-    color: "rgb(41, 41, 39)",
-    fontWeight: "bold",
-    fontSize: 15,
-    marginBottom: 50,
-  },
 
-  addIcon: {
-    fontSize: 30,
-    color: "rgb(19, 150, 29)",
-    marginBottom: 50,
-  },
-
-  cellHeaderNombre: {
-    flex: 50, 
-    padding: 6,
-    fontWeight: "bold",
-    fontSize: 12,
-    color: "rgb(41, 41, 39)",
-    textAlign: "center",
-  },
-
-  cellHeaderDosis: {
-    flex: 50, 
-    padding: 6,
-    fontWeight: "bold",
-    fontSize: 12,
-    color: "rgb(41, 41, 39)",
-    textAlign: "center",
-  },
-  
-  cellNombre: {
-    flex: 50,
-    padding: 6,
-    fontSize: 11,
-    textAlign: "center",
-    color: "rgb(46, 39, 45)",
-  },
-  
-  cellDosis: {
-    flex: 50,
-    padding: 6,
-    fontSize: 11,
-    textAlign: "center",
-    color: "rgb(46, 39, 45)",
-  },
-  
-});

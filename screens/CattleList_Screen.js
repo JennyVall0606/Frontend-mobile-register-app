@@ -86,29 +86,34 @@ export default function CattleScreen({ navigation }) {
         <Text style={styles.title}>Resumen del Ganado</Text>
 
         <ScrollView style={styles.scrollContainer}>
-          <Text style={styles.subtitle}>Animales registrados</Text>
+         
         
         
 
           {agruparEnPares(ganado).map((par, index) => (
             <View key={index} style={styles.card}>
               {par.map((animal) => (
-                <View key={animal.id} style={styles.cardContent}>
+                <TouchableOpacity
+                key={animal.id}
+                style={styles.cardContent}
+                onPress={() => navigation.navigate("ControlScreen", { chip: animal.chip_animal })}
+              >
                 <Image
-  source={{
-    uri: `http://192.168.1.4:3000/uploads/${animal.foto}` || "https://via.placeholder.com/100",
-  }}
-  style={styles.cardImage}
-/>
+                  source={{
+                    uri: `http://192.168.1.4:3000/uploads/${animal.foto}` || "https://via.placeholder.com/100",
+                  }}
+                  style={styles.cardImage}
+                />
                 <Text style={styles.cardText}>Chip: {animal.chip_animal || "Sin chip"}</Text>
                 <Text style={styles.cardText}>Estado: {animal.estado || "Desconocido"}</Text>
                 <Text style={styles.cardText}>
-                  Nacimiento:{" "}
-                  {new Date(animal.fecha_nacimiento).toLocaleDateString()}
+                  Nacimiento: {new Date(animal.fecha_nacimiento).toLocaleDateString()}
                 </Text>
-                <Text style={styles.cardText}>Peso: {animal.peso_nacimiento ? `${animal.peso_nacimiento} kg` : "Sin dato"}</Text>
-
-              </View>
+                <Text style={styles.cardText}>
+                  Peso: {animal.peso_nacimiento ? `${animal.peso_nacimiento} kg` : "Sin dato"}
+                </Text>
+              </TouchableOpacity>
+              
               ))}
             </View>
           ))}

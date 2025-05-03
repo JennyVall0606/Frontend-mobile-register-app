@@ -4,8 +4,6 @@ import LoginScreen from "../screens/login_screen";
 import HomeScreen from "../screens/home_screen";
 import RegisterCattleScreen from "../screens/register_cattle_screen"; // Asegúrate de que esté bien importado
 import ControlScreen from "../screens/controlsH_screen"; // Asegúrate de que esté bien importado
-import WeightScreen from "../screens/weight_history_screen";
-import VaccinesScreen from "../screens/vaccines_history_screen";
 import FormScreen from "../screens/forms_screen";
 import CattleScreen from "../screens/CattleList_Screen"
 
@@ -40,16 +38,7 @@ export default function AppNavigator() {
         component={ControlScreen}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
-        name="WeightScreen"
-        component={WeightScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="VaccinesScreen"
-        component={VaccinesScreen}
-        options={{ headerShown: false }}
-      />
+ 
       <Stack.Screen
         name="FormScreen"
         component={FormScreen}
