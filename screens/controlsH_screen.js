@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ScrollView, Image, TouchableOpacity, Button, Dimensions } from "react-native";
+import { View, Text,  ScrollView, Image, TouchableOpacity, Button, Dimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Layout from "../components/layout";
 import { styles } from "../styles/ControlH_styles";
 import axios from "axios";
-const { width, height } = Dimensions.get('window');
+
 export default function ControlH_Screen({ navigation, route }) {
   const { chip } = route.params || {}; // Recibimos el chip del animal
   const [animalInfo, setAnimalInfo] = useState(null);
   const [historicoPesaje, setHistoricoPesaje] = useState([]);
   const [historicoVacunas, setHistoricoVacunas] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const { width, height } = Dimensions.get('window');
   useEffect(() => {
     if (chip) {
       axios
@@ -175,7 +175,7 @@ export default function ControlH_Screen({ navigation, route }) {
         )}
 
         {/* Botón de nuevo registro */}
-        <Button title="Realiza un nuevo registro" onPress={() => navigation.navigate('FormScreen', { chip })} />
+        <Button title="Realiza un nuevo control" onPress={() => navigation.navigate('FormScreen', { chip })} />
 
       </ScrollView>
     </Layout>

@@ -10,6 +10,7 @@ import {
   Platform,
   SafeAreaView,
   ScrollView,
+  Dimensions,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
@@ -19,21 +20,20 @@ import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker"; // Asegúrate de importarlo
 import styles from "../styles/register_cattle_styles";
 import axios from "axios";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function RegisterCattleScreen() {
   const navigation = useNavigation();
-  
+  const { width, height } = Dimensions.get("window");
   const [imagenes, setImagenes] = useState([]);
-  
+
   const [image, setImage] = useState(null);
   const [birthDate, setBirthDate] = useState("");
   const [weight, setWeight] = useState("");
   const [chip, setChip] = useState("");
   const [father, setFather] = useState("");
   const [mother, setMother] = useState("");
-  const [disease, setDisease] = useState([]); 
+  const [disease, setDisease] = useState([]);
 
   const [observations, setObservations] = useState("");
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -51,7 +51,10 @@ export default function RegisterCattleScreen() {
     { label: "Diarrea viral bovina (BVD)", value: "diarrea viral bovina" },
     { label: "Paratuberculosis (Johne)", value: "paratuberculosis" },
     { label: "Neosporosis", value: "neosporosis" },
-    { label: "Enfermedad respiratoria bovina", value: "enfermedad respiratoria bovina" },
+    {
+      label: "Enfermedad respiratoria bovina",
+      value: "enfermedad respiratoria bovina",
+    },
     { label: "Fiebre del transporte", value: "fiebre del transporte" },
     { label: "Dermatitis digital", value: "dermatitis digital" },
     { label: "Rabia", value: "rabia" },
@@ -65,7 +68,9 @@ export default function RegisterCattleScreen() {
   useEffect(() => {
     const fetchRazas = async () => {
       try {
-        const response = await axios.get("http://192.168.1.4:3000/register/razas");
+        const response = await axios.get(
+          "http://192.168.1.4:3000/register/razas"
+        );
         const razaItems = response.data.map((raza) => ({
           label: raza.nombre_raza,
           value: raza.id_raza,
@@ -81,7 +86,8 @@ export default function RegisterCattleScreen() {
 
   useEffect(() => {
     const requestPermission = async () => {
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== "granted") {
         alert("Se requieren permisos para acceder a la galería de imágenes.");
       }
@@ -104,12 +110,25 @@ export default function RegisterCattleScreen() {
   };
 
   const handleConfirmDate = (date) => {
-    const formattedDate = date.toISOString().split("T")[0];
-    if (currentDateType === "fechaNacimiento") {
-      setBirthDate(formattedDate);
-    } else {
-      setWeight(formattedDate);
+    // Ajustar manualmente a UTC-5 (hora Colombia)
+    const colombiaDate = new Date(date.getTime() - 5 * 60 * 60 * 1000);
+    const formattedDate = colombiaDate.toISOString().split("T")[0];
+
+    const today = new Date(new Date().getTime() - 5 * 60 * 60 * 1000)
+      .toISOString()
+      .split("T")[0];
+
+    if (formattedDate > today) {
+      Alert.alert("Fecha inválida", "No puedes seleccionar una fecha futura.");
+      return;
     }
+
+    if (currentDateType === "peso") {
+      setFechaPeso(formattedDate);
+    } else {
+      setFechaVacuna(formattedDate);
+    }
+
     setDatePickerVisibility(false);
   };
 
@@ -126,245 +145,250 @@ export default function RegisterCattleScreen() {
   };
 
   const handleRegister = async () => {
-
     try {
       // Obtener el token
       const token = await AsyncStorage.getItem("token");
-  
+
       // Verificar si el token existe
       if (!token) {
-        Alert.alert("❌ Error", "Token no encontrado. Inicia sesión nuevamente.");
+        Alert.alert(
+          "❌ Error",
+          "Token no encontrado. Inicia sesión nuevamente."
+        );
         return;
       }
-  
+
       // Validar si los campos obligatorios están completos
       if (!chip || !breed || !birthDate || !weight) {
-        Alert.alert("⚠️ Datos incompletos", "Por favor completa los campos obligatorios.");
+        Alert.alert(
+          "⚠️ Datos incompletos",
+          "Por favor completa los campos obligatorios."
+        );
         return;
       }
-  
+
       // Crear el FormData
       const formData = new FormData();
-  
-  
+
       // Agregar solo la imagen principal
       if (image) {
-        formData.append('foto', {
+        formData.append("foto", {
           uri: image,
-          type: 'image/jpeg',
-          name: 'foto.jpg',
+          type: "image/jpeg",
+          name: "foto.jpg",
         });
-      
       } else {
         Alert.alert("⚠️ Error", "Por favor sube una imagen");
         return;
       }
-  
-      formData.append('chip_animal', chip);
-      formData.append('raza_id_raza', parseInt(breed) || 25);
-      formData.append('fecha_nacimiento', birthDate);
-      formData.append('peso_nacimiento', parseFloat(weight));
-      formData.append('id_padre', father || null);
-      formData.append('id_madre', mother || null);
-      formData.append('enfermedades', disease.length > 0 ? disease : []);
 
-      formData.append('observaciones', observations || "");
+      formData.append("chip_animal", chip);
+      formData.append("raza_id_raza", parseInt(breed) || 25);
+      formData.append("fecha_nacimiento", birthDate);
+      formData.append("peso_nacimiento", parseFloat(weight));
+      formData.append("id_padre", father || null);
+      formData.append("id_madre", mother || null);
+      formData.append("enfermedades", disease.length > 0 ? disease : []);
 
-      console.log("Enviando solicitud a:", "http://192.168.1.4:3000/register/add");
-  
-      const response = await axios.post("http://192.168.1.4:3000/register/add", formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}`, // Agregar el token en el header
-        },
-      });
-      
+      formData.append("observaciones", observations || "");
 
-       // Verificar si la respuesta es exitosa
-       if (response.status === 200 || response.status === 201) {
-        Alert.alert("✅ Registro exitoso", "El ganado ha sido registrado correctamente");
+      console.log(
+        "Enviando solicitud a:",
+        "http://192.168.1.4:3000/register/add"
+      );
+
+      const response = await axios.post(
+        "http://192.168.1.4:3000/register/add",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`, // Agregar el token en el header
+          },
+        }
+      );
+
+      // Verificar si la respuesta es exitosa
+      if (response.status === 200 || response.status === 201) {
+        Alert.alert(
+          "✅ Registro exitoso",
+          "El ganado ha sido registrado correctamente"
+        );
         resetForm(); // Limpiar el formulario
       }
-       
-  } catch (error) {
-    // Manejo de errores
-    console.error("Error al registrar:", error);
-    if (error.response && error.response.data) {
-      console.log("Detalles del error:", error.response.data);
-      const mensaje = error.response.data.message || error.response.data.error || "No se pudo registrar el ganado.";
-      Alert.alert("❌ Error", mensaje);
-    } else {
-      Alert.alert("❌ Error", "No se pudo registrar el ganado.");
+    } catch (error) {
+      // Manejo de errores
+      console.error("Error al registrar:", error);
+      if (error.response && error.response.data) {
+        console.log("Detalles del error:", error.response.data);
+        const mensaje =
+          error.response.data.message ||
+          error.response.data.error ||
+          "No se pudo registrar el ganado.";
+        Alert.alert("❌ Error", mensaje);
+      } else {
+        Alert.alert("❌ Error", "No se pudo registrar el ganado.");
+      }
     }
-  }
-};
-
-
+  };
 
   return (
     <Layout>
-      <SafeAreaView style={styles.container}>
-        <KeyboardAvoidingView
-          style={styles.keyboardView}
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
+      <ScrollView
+        style={[styles.container, { width, height }]} // Ajustamos el ancho y alto al de la pantalla
+      >
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
         >
-          <ScrollView
-            contentContainerStyle={styles.scrollContent}
-            keyboardShouldPersistTaps="handled"
+          <Text style={styles.backArrow}>←</Text>
+        </TouchableOpacity>
+
+        <Text style={styles.title}>Formulario de Registro de Ganado</Text>
+
+        {/* Muestra la imagen si se ha seleccionado */}
+        {!image ? (
+          <TouchableOpacity
+            onPress={handleImagePick}
+            style={styles.imagePicker}
           >
+            <Text style={styles.imagePickerText}>🐄 Subir imagen 📸</Text>
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.imageContainer}>
+            <Image source={{ uri: image }} style={styles.imagePreview} />
             <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              style={styles.backButton}
+              onPress={() => setImage(null)}
+              style={styles.deleteButton}
             >
-              <Text style={styles.backArrow}>←</Text>
+              <Ionicons
+                name="trash-bin"
+                size={20}
+                style={styles.deleteButtonIcon}
+              />
             </TouchableOpacity>
+          </View>
+        )}
 
-            <Text style={styles.title}>Formulario de Registro de Ganado</Text>
+        {/* Selección de raza */}
+        <DropDownPicker
+          open={openRaza}
+          setOpen={setOpenRaza}
+          items={itemsRaza}
+          setItems={setItemsRaza}
+          value={breed}
+          setValue={setBreed}
+          placeholder="Selecciona una raza"
+          style={styles.dropdown}
+          textStyle={styles.dropdownText}
+          listMode="SCROLLVIEW"
+        />
 
-            {/* Muestra la imagen si se ha seleccionado */}
-            {!image ? (
-              <TouchableOpacity
-                onPress={handleImagePick}
-                style={styles.imagePicker}
-              >
-                <Text style={styles.imagePickerText}>🐄 Subir imagen 📸</Text>
-              </TouchableOpacity>
-            ) : (
-              <View style={styles.imageContainer}>
-                <Image source={{ uri: image }} style={styles.imagePreview} />
-                <TouchableOpacity
-                  onPress={() => setImage(null)}
-                  style={styles.deleteButton}
-                >
-                  <Ionicons
-                    name="trash-bin"
-                    size={20}
-                    style={styles.deleteButtonIcon}
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
+        {/* Botón para seleccionar la fecha de nacimiento */}
+        <TouchableOpacity
+          style={styles.dateButton}
+          onPress={() => {
+            setCurrentDateType("fechaNacimiento");
+            setDatePickerVisibility(true);
+          }}
+        >
+          <View style={styles.rowContainer}>
+            <Ionicons name="calendar" style={styles.iconStyle} />
+            <Text style={styles.dateButtonText}>
+              {birthDate ? birthDate : "Fecha de nacimiento"}
+            </Text>
+          </View>
+        </TouchableOpacity>
 
-            {/* Selección de raza */}
-            <DropDownPicker
-              open={openRaza}
-              setOpen={setOpenRaza}
-              items={itemsRaza}
-              setItems={setItemsRaza}
-              value={breed}
-              setValue={setBreed}
-              placeholder="Selecciona una raza"
-              style={styles.dropdown}
-              textStyle={styles.dropdownText}
-              listMode="SCROLLVIEW"
-            />
+        {/* DateTimePickerModal */}
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode="date"
+          onConfirm={handleConfirmDate}
+          themeVariant="light"
+          onCancel={() => setDatePickerVisibility(false)}
+        />
 
-            {/* Botón para seleccionar la fecha de nacimiento */}
-            <TouchableOpacity
-              style={styles.dateButton}
-              onPress={() => {
-                setCurrentDateType("fechaNacimiento");
-                setDatePickerVisibility(true);
-              }}
-            >
-              <View style={styles.rowContainer}>
-                <Ionicons name="calendar" style={styles.iconStyle} />
-                <Text style={styles.dateButtonText}>
-                  {birthDate ? birthDate : "Fecha de nacimiento"}
-                </Text>
-              </View>
-            </TouchableOpacity>
+        <View style={styles.weightContainer}>
+          <TextInput
+            style={styles.weightInput}
+            placeholder="Peso"
+            keyboardType="numeric"
+            value={weight}
+            onChangeText={setWeight}
+          />
+          <Text style={styles.weightUnit}>kg</Text>
+        </View>
 
-            {/* DateTimePickerModal */}
-            <DateTimePickerModal
-              isVisible={isDatePickerVisible}
-              mode="date"
-              onConfirm={handleConfirmDate}
-              themeVariant="light"
-              onCancel={() => setDatePickerVisibility(false)}
-            />
+        <TextInput
+          style={styles.input}
+          placeholder="Chip de registro vacuno"
+          value={chip}
+          onChangeText={setChip}
+        />
 
-<View style={styles.weightContainer}>
-  <TextInput
-    style={styles.weightInput}
-    placeholder="Peso"
-    keyboardType="numeric"
-    value={weight}
-    onChangeText={setWeight}
-  />
-  <Text style={styles.weightUnit}>kg</Text>
-</View>
+        <TextInput
+          style={styles.input}
+          placeholder="Registro del padre"
+          value={father}
+          onChangeText={setFather}
+        />
 
-            <TextInput
-              style={styles.input}
-              placeholder="Chip de registro vacuno"
-              value={chip}
-              onChangeText={setChip}
-            />
+        <TextInput
+          style={styles.input}
+          placeholder="Registro de la madre"
+          value={mother}
+          onChangeText={setMother}
+        />
 
-            <TextInput
-              style={styles.input}
-              placeholder="Registro del padre"
-              value={father}
-              onChangeText={setFather}
-            />
+        <DropDownPicker
+          multiple={true}
+          min={0}
+          max={20}
+          open={openEnfermedad}
+          setOpen={setOpenEnfermedad}
+          items={itemsEnfermedad}
+          setItems={setItemsEnfermedad}
+          value={disease}
+          setValue={setDisease}
+          placeholder="Selecciona una o más enfermedades"
+          style={styles.dropdown}
+          textStyle={styles.dropdownText}
+          listMode="SCROLLVIEW"
+          multipleText={`${
+            Array.isArray(disease) && disease.length
+          } enfermedad${
+            Array.isArray(disease) && disease.length === 1 ? "" : "es"
+          } seleccionada${
+            Array.isArray(disease) && disease.length === 1 ? "" : "s"
+          }`}
+        />
 
-            <TextInput
-              style={styles.input}
-              placeholder="Registro de la madre"
-              value={mother}
-              onChangeText={setMother}
-            />
+        <Text style={styles.selectedDiseases}>
+          {Array.isArray(disease) && disease.length > 0
+            ? `Enfermedades seleccionadas: ${disease.join(", ")}`
+            : "Selecciona las enfermedades"}
+        </Text>
 
-<DropDownPicker
-  multiple={true}
-  min={0}
-  max={20}
-  open={openEnfermedad}
-  setOpen={setOpenEnfermedad}
-  items={itemsEnfermedad}
-  setItems={setItemsEnfermedad}
-  value={disease}
-  setValue={setDisease}
-  placeholder="Selecciona una o más enfermedades"
-  style={styles.dropdown}
-  textStyle={styles.dropdownText}
-  listMode="SCROLLVIEW"
-  multipleText={`${Array.isArray(disease) && disease.length} enfermedad${Array.isArray(disease) && disease.length === 1 ? '' : 'es'} seleccionada${Array.isArray(disease) && disease.length === 1 ? '' : 's'}`}
-/>
+        <View style={styles.inputWrapper}>
+          <TextInput
+            style={styles.inputobs}
+            placeholder="Observaciones"
+            value={observations}
+            onChangeText={setObservations}
+            multiline
+            textAlignVertical="top"
+            maxLength={500} // Puedes ajustar el límite según necesidad
+          />
+        </View>
 
-<Text style={styles.selectedDiseases}>
-  {Array.isArray(disease) && disease.length > 0 
-    ? `Enfermedades seleccionadas: ${disease.join(', ')}`
-    : 'Selecciona las enfermedades'}
-</Text>
-
-
-
-
-<View style={styles.inputWrapper}>
-  <TextInput
-    style={styles.inputobs}
-    placeholder="Observaciones"
-    value={observations}
-    onChangeText={setObservations}
-    multiline
-    textAlignVertical="top"
-    maxLength={500} // Puedes ajustar el límite según necesidad
-  />
-</View>
-
-
-            <TouchableOpacity
-              onPress={handleRegister}
-              style={styles.registerButton}
-            >
-              <Text style={styles.registerButtonText}>Registrar Ganado</Text>
-            </TouchableOpacity>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
+        <TouchableOpacity
+          onPress={handleRegister}
+          style={styles.registerButton}
+        >
+          <Text style={styles.registerButtonText}>Registrar Ganado</Text>
+        </TouchableOpacity>
+      </ScrollView>
     </Layout>
   );
 }
-

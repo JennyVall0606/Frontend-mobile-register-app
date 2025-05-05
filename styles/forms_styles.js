@@ -2,8 +2,9 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   container: {
-    padding: 20,
-   
+    flex: 1,
+    padding: 10,
+    backgroundColor: "#f2f2f2",
   },
 
   backButton: {
@@ -71,6 +72,24 @@ export default StyleSheet.create({
     marginBottom: 10,
     backgroundColor: 'rgb(253, 253, 253)',
   },
+  inputWrapper: {
+    width: "100%",
+    alignSelf: "center",
+    marginBottom: 20,
+  },
+
+  inputobs: {
+    borderColor: "rgb(8, 43, 28)",
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingTop: 10,
+    height: 130,
+    maxHeight: 200,
+    backgroundColor: "rgb(244, 245, 244)",
+    fontSize: 16,
+    textAlignVertical: "top",
+  },
   
   dateButton: {
     flexDirection: 'row',
@@ -127,6 +146,69 @@ export default StyleSheet.create({
   },
   
   dropdownBelow: {
+    zIndex: 5, 
+  },
+
+ 
+
+  weightContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  
+  weightInput: {
+    borderColor: "rgb(8, 43, 28)",
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    height: 40,
+    width: "40%",
+    backgroundColor: "rgb(244, 245, 244)",
+    fontSize: 16,
+    marginRight: 10, // espacio entre el input y la unidad de peso
+  },
+  
+  weightUnit: {
+    fontSize: 16,
+    color: "#333",
+  },
+  
+  labelDosis: {
+    fontSize: 16,
+    marginBottom: 10,
+    fontWeight: 'bold',
+  },
+  
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
+    
+  },
+  
+  inputD: {
+    width: '40%', // Más ancho
+    borderWidth: 1,
+    borderColor: 'rgb(20, 20, 20)', // Mismo color de borde que el resto de los inputs
+    borderRadius: 8, // Mismo radio de borde que el input común
+    padding: 10, // Agregar padding para igualar el estilo
+    backgroundColor: 'rgb(253, 253, 253)', // Fondo blanco como en otros inputs
+    marginRight: 10,
+    height: 50, // Altura igual al picker
+    marginBottom: 20,
+  },
+  
+  
+  dropdownContainerUnidad: {
+    marginBottom: 20, 
+    zIndex: 10, 
+    marginRight: 80,
+    width: '35%'
+  },
+  
+  dropdownBelowUnidad: {
     zIndex: 5, 
   },
   

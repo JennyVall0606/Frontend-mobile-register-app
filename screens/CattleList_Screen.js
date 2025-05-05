@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Image,
+  Dimensions
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Layout from "../components/layout";
@@ -17,7 +18,7 @@ export default function CattleScreen({ navigation }) {
   const [search, setSearch] = useState("");
   const [ganado, setGanado] = useState([]);
   const [loading, setLoading] = useState(true);
-
+const { width, height } = Dimensions.get('window');
   useEffect(() => {
     const fetchAnimals = async () => {
       try {
@@ -75,7 +76,10 @@ export default function CattleScreen({ navigation }) {
 
   return (
     <Layout>
-      <View style={styles.container}>
+      
+      <ScrollView
+              style={[styles.container, { width, height }]} // Ajustamos el ancho y alto al de la pantalla
+            >
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
@@ -85,7 +89,7 @@ export default function CattleScreen({ navigation }) {
 
         <Text style={styles.title}>Resumen del Ganado</Text>
 
-        <ScrollView style={styles.scrollContainer}>
+        
          
         
         
@@ -120,9 +124,8 @@ export default function CattleScreen({ navigation }) {
           <Text style={styles.totalCount}>
             Total de registros: {ganado.length}
           </Text>
-        </ScrollView>
         
-      </View>
+      </ScrollView>
     </Layout>
   );
 }

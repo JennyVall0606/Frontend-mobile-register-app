@@ -1,15 +1,17 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Image, Dimensions } from 'react-native';
 import Layout from '../components/layout';
 import styles from '../styles/home_styles';
 import { useNavigation } from '@react-navigation/native';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
-
+ const { width, height } = Dimensions.get('window');
   return (
     <Layout>
-      <View style={styles.container}>
+      <ScrollView
+              style={[styles.container, { width, height }]} // Ajustamos el ancho y alto al de la pantalla
+            >
         <Text style={styles.title}>AgroGestor</Text>
 
         <Image
@@ -33,7 +35,7 @@ export default function HomeScreen() {
             <Text style={styles.buttonText}>Ver mi ganado</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </ScrollView>
     </Layout>
   );
 }
