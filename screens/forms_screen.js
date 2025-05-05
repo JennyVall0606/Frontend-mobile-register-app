@@ -187,14 +187,7 @@ export default function FormsScreen({ route }) {
       Alert.alert("Error", "No se pudo guardar la vacuna");
     }
   };
-    console.log({
-    chipVacuna,
-    tipoVacuna,
-    nombreVacuna,
-    dosisFinal,
-    observacion: observations, // <--- este cambio es importante
-    fechaVacuna,
-  });
+    
 
   const handleSelectCattle = (cattle) => {
     if (pesoChecked) {

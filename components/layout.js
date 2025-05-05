@@ -142,9 +142,6 @@ export default function Layout({ children }) {
           <TouchableOpacity onPress={() => handleNavigate("CattleScreen")}>
             <Text style={globalStyles.dropdownItem}>Ver ganado</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleNavigate("FormScreen")}>
-            <Text style={globalStyles.dropdownItem}>Formulario</Text>
-          </TouchableOpacity>
         </View>
       )}
 
