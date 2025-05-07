@@ -4,7 +4,7 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: "#f2f2f2",
+   
   },
 
   title: {
@@ -12,24 +12,27 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 50,
     color: 'rgb(6, 97, 59)',
+    textAlign: 'center',
   },
+  
 
   logo: {
     width: 200,
     height: 200,
     marginBottom: 50,
+    alignSelf: 'center',
   },
 
   buttonRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 20,
+    justifyContent: 'center',
+    gap: 50, 
   },
 
   squareButton: {
     backgroundColor: 'rgb(160, 159, 159)',
-    width: 130,
-    height: 130,
+    width: 150,
+    height: 150,
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
@@ -37,7 +40,7 @@ export default StyleSheet.create({
   
   buttonText: {
     color: 'rgb(3, 44, 3)',
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
     textAlign: 'center',
   },

@@ -6,35 +6,32 @@ import {
   TouchableOpacity,
   Alert,
   Image,
-  KeyboardAvoidingView,
-  Platform,
-  SafeAreaView,
   ScrollView,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import Layout from "../components/layout";
 import { Ionicons } from "@expo/vector-icons";
 import DropDownPicker from "react-native-dropdown-picker";
-import DateTimePickerModal from "react-native-modal-datetime-picker"; // Asegúrate de importarlo
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import styles from "../styles/register_cattle_styles";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function RegisterCattleScreen() {
-  const navigation = useNavigation();
-  const { width, height } = Dimensions.get("window");
+export default function RegisterCattleScreen({ route }) {
+  const { chip: chipFromParams, isEditing } = route.params || {};
+  const [chip, setChip] = useState(chipFromParams || "");
+  const [animalData, setAnimalData] = useState(null);
+  const [loading, setLoading] = useState(!!chipFromParams);
   const [imagenes, setImagenes] = useState([]);
-
   const [image, setImage] = useState(null);
   const [birthDate, setBirthDate] = useState("");
   const [weight, setWeight] = useState("");
-  const [chip, setChip] = useState("");
   const [father, setFather] = useState("");
   const [mother, setMother] = useState("");
   const [disease, setDisease] = useState([]);
-
   const [observations, setObservations] = useState("");
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [currentDateType, setCurrentDateType] = useState("");
@@ -42,6 +39,8 @@ export default function RegisterCattleScreen() {
   const [itemsRaza, setItemsRaza] = useState([]);
   const [breed, setBreed] = useState("");
   const [openEnfermedad, setOpenEnfermedad] = useState(false);
+  const [pendingBreedId, setPendingBreedId] = useState(null);
+
   const [itemsEnfermedad, setItemsEnfermedad] = useState([
     { label: "Brucelosis", value: "brucelosis" },
     { label: "Fiebre aftosa", value: "fiebre aftosa" },
@@ -51,10 +50,7 @@ export default function RegisterCattleScreen() {
     { label: "Diarrea viral bovina (BVD)", value: "diarrea viral bovina" },
     { label: "Paratuberculosis (Johne)", value: "paratuberculosis" },
     { label: "Neosporosis", value: "neosporosis" },
-    {
-      label: "Enfermedad respiratoria bovina",
-      value: "enfermedad respiratoria bovina",
-    },
+    { label: "Enfermedad respiratoria bovina", value: "enfermedad respiratoria bovina" },
     { label: "Fiebre del transporte", value: "fiebre del transporte" },
     { label: "Dermatitis digital", value: "dermatitis digital" },
     { label: "Rabia", value: "rabia" },
@@ -65,29 +61,88 @@ export default function RegisterCattleScreen() {
     { label: "OTRA", value: "OTRA" },
   ]);
 
+  const navigation = useNavigation();
+  const { width, height } = Dimensions.get("window");
+
   useEffect(() => {
     const fetchRazas = async () => {
       try {
-        const response = await axios.get(
-          "http://192.168.1.4:3000/register/razas"
-        );
+        const response = await axios.get("http://192.168.1.4:3000/register/razas");
         const razaItems = response.data.map((raza) => ({
           label: raza.nombre_raza,
-          value: raza.id_raza,
+          value: raza.id_raza.toString(),
         }));
-        console.log("Razas:", razaItems);
         setItemsRaza(razaItems);
       } catch (error) {
         console.error("Error al obtener las razas:", error);
       }
     };
+    
     fetchRazas();
   }, []);
+  useEffect(() => {
+    if (itemsRaza.length > 0 && pendingBreedId) {
+      const exists = itemsRaza.find(item => item.value === pendingBreedId);
+      if (exists) {
+        setBreed(pendingBreedId);
+      }
+    }
+  }, [itemsRaza, pendingBreedId]);
+  useEffect(() => {
+    const fetchAnimalData = async () => {
+      if (!chipFromParams || itemsRaza.length === 0) return; // <- aquí nos aseguramos
+  
+      try {
+        console.log("chipFromParams:", chipFromParams);
+        console.log("itemsRaza en fetch:", itemsRaza);
+  
+        const response = await axios.get(`http://192.168.1.4:3000/register/animal/${chipFromParams}`);
+        setAnimalData(response.data);
+  
+        if (response.data) {
+          const fechaBD = response.data.fecha_nacimiento;
+          let fechaFormateada = fechaBD;
+  
+          if (fechaBD && fechaBD.includes('T')) {
+            fechaFormateada = fechaBD.split('T')[0];
+          } else if (fechaBD && fechaBD.includes(' ')) {
+            fechaFormateada = fechaBD.split(' ')[0];
+          }
+  
+          setBirthDate(fechaFormateada || "");
+          setWeight(response.data.peso_nacimiento?.toString() || "");
+          setFather(response.data.id_madre?.toString() || "");
+          setMother(response.data.id_padre?.toString() || "");
+          setObservations(response.data.observaciones || "");
+          setPendingBreedId(response.data.raza_id_raza?.toString() || "");
+
+          if (response.data.enfermedades) {
+            setDisease(Array.isArray(response.data.enfermedades) 
+              ? response.data.enfermedades 
+              : [response.data.enfermedades]);
+          }
+  
+          if (response.data.foto) {
+            setImage(`http://192.168.1.4:3000/uploads/${response.data.foto}`);
+          }
+        }
+      } catch (error) {
+        console.error("Error al cargar datos del animal:", error);
+        Alert.alert("Error", "No se pudieron cargar los datos del animal");
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchAnimalData();
+  }, [chipFromParams, itemsRaza]); // <- agregamos itemsRaza como dependencia
+  
+  
+
 
   useEffect(() => {
     const requestPermission = async () => {
-      const { status } =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== "granted") {
         alert("Se requieren permisos para acceder a la galería de imágenes.");
       }
@@ -110,25 +165,22 @@ export default function RegisterCattleScreen() {
   };
 
   const handleConfirmDate = (date) => {
-    // Ajustar manualmente a UTC-5 (hora Colombia)
-    const colombiaDate = new Date(date.getTime() - 5 * 60 * 60 * 1000);
-    const formattedDate = colombiaDate.toISOString().split("T")[0];
-
-    const today = new Date(new Date().getTime() - 5 * 60 * 60 * 1000)
-      .toISOString()
-      .split("T")[0];
-
-    if (formattedDate > today) {
+    // Formatear directamente como YYYY-MM-DD (sin ajuste horario)
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
+  
+    // Fecha actual local
+    const today = new Date();
+    const todayFormatted = today.toISOString().split('T')[0];
+  
+    if (formattedDate > todayFormatted) {
       Alert.alert("Fecha inválida", "No puedes seleccionar una fecha futura.");
       return;
     }
-
-    if (currentDateType === "peso") {
-      setFechaPeso(formattedDate);
-    } else {
-      setFechaVacuna(formattedDate);
-    }
-
+  
+    setBirthDate(formattedDate);
     setDatePickerVisibility(false);
   };
 
@@ -140,103 +192,98 @@ export default function RegisterCattleScreen() {
     setChip("");
     setFather("");
     setMother("");
-    setDisease(null);
+    setDisease([]);
     setObservations("");
   };
 
   const handleRegister = async () => {
     try {
-      // Obtener el token
       const token = await AsyncStorage.getItem("token");
-
-      // Verificar si el token existe
       if (!token) {
-        Alert.alert(
-          "❌ Error",
-          "Token no encontrado. Inicia sesión nuevamente."
-        );
+        Alert.alert("❌ Error", "Token no encontrado. Inicia sesión nuevamente.");
         return;
       }
 
-      // Validar si los campos obligatorios están completos
       if (!chip || !breed || !birthDate || !weight) {
-        Alert.alert(
-          "⚠️ Datos incompletos",
-          "Por favor completa los campos obligatorios."
-        );
+        Alert.alert("⚠️ Datos incompletos", "Por favor completa los campos obligatorios.");
         return;
       }
+      const fechaFormateada = birthDate.split('T')[0];
+      const enfermedadesFormateadas = disease.length > 0 ? disease.join(',') : null;
 
-      // Crear el FormData
       const formData = new FormData();
-
-      // Agregar solo la imagen principal
-      if (image) {
+      
+      
+      // Solo adjuntar imagen si es nueva (no la que ya estaba)
+      if (image && !image.startsWith('http')) {
         formData.append("foto", {
           uri: image,
           type: "image/jpeg",
           name: "foto.jpg",
         });
-      } else {
-        Alert.alert("⚠️ Error", "Por favor sube una imagen");
-        return;
       }
 
       formData.append("chip_animal", chip);
-      formData.append("raza_id_raza", parseInt(breed) || 25);
-      formData.append("fecha_nacimiento", birthDate);
-      formData.append("peso_nacimiento", parseFloat(weight));
-      formData.append("id_padre", father || null);
-      formData.append("id_madre", mother || null);
-      formData.append("enfermedades", disease.length > 0 ? disease : []);
+      formData.append("raza_id_raza", breed);
+      formData.append("peso_nacimiento", weight);
+      formData.append("fecha_nacimiento", fechaFormateada);
+      if (father) formData.append("id_madre", father);
+      if (mother) formData.append("id_padre", mother);
+      if (enfermedadesFormateadas) formData.append("enfermedades", enfermedadesFormateadas);
+      if (observations) formData.append("observaciones", observations);
 
-      formData.append("observaciones", observations || "");
+      // Determinar si es una actualización o creación nueva
+      const url = animalData 
+        ? `http://192.168.1.4:3000/register/update/${chip}`
+        : "http://192.168.1.4:3000/register/add";
 
-      console.log(
-        "Enviando solicitud a:",
-        "http://192.168.1.4:3000/register/add"
-      );
+      const method = animalData ? 'put' : 'post';
 
-      const response = await axios.post(
-        "http://192.168.1.4:3000/register/add",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`, // Agregar el token en el header
-          },
-        }
-      );
+      const response = await axios({
+        method,
+        url,
+        data: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-      // Verificar si la respuesta es exitosa
       if (response.status === 200 || response.status === 201) {
         Alert.alert(
-          "✅ Registro exitoso",
-          "El ganado ha sido registrado correctamente"
+          "✅ Operación exitosa",
+          animalData 
+            ? "Los datos del animal han sido actualizados correctamente"
+            : "El ganado ha sido registrado correctamente"
         );
-        resetForm(); // Limpiar el formulario
+        navigation.goBack();
       }
     } catch (error) {
-      // Manejo de errores
-      console.error("Error al registrar:", error);
+      console.error("Error al registrar/actualizar:", error);
       if (error.response && error.response.data) {
         console.log("Detalles del error:", error.response.data);
-        const mensaje =
-          error.response.data.message ||
-          error.response.data.error ||
-          "No se pudo registrar el ganado.";
+        const mensaje = error.response.data.message || error.response.data.error || "No se pudo completar la operación.";
         Alert.alert("❌ Error", mensaje);
       } else {
-        Alert.alert("❌ Error", "No se pudo registrar el ganado.");
+        Alert.alert("❌ Error", "No se pudo completar la operación.");
       }
     }
   };
 
+  if (loading && chipFromParams) {
+    return (
+      <Layout>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#0000ff" />
+          <Text>Cargando datos del animal...</Text>
+        </View>
+      </Layout>
+    );
+  }
+
   return (
     <Layout>
-      <ScrollView
-        style={[styles.container, { width, height }]} // Ajustamos el ancho y alto al de la pantalla
-      >
+      <ScrollView style={[styles.container, { width, height }]}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.backButton}
@@ -244,9 +291,10 @@ export default function RegisterCattleScreen() {
           <Text style={styles.backArrow}>←</Text>
         </TouchableOpacity>
 
-        <Text style={styles.title}>Formulario de Registro de Ganado</Text>
+        <Text style={styles.title}>
+          {isEditing ? "Editar Registro de Ganado" : "Formulario de Registro de Ganado"}
+        </Text>
 
-        {/* Muestra la imagen si se ha seleccionado */}
         {!image ? (
           <TouchableOpacity
             onPress={handleImagePick}
@@ -270,7 +318,6 @@ export default function RegisterCattleScreen() {
           </View>
         )}
 
-        {/* Selección de raza */}
         <DropDownPicker
           open={openRaza}
           setOpen={setOpenRaza}
@@ -278,13 +325,12 @@ export default function RegisterCattleScreen() {
           setItems={setItemsRaza}
           value={breed}
           setValue={setBreed}
-          placeholder="Selecciona una raza"
+          placeholder={breed ? "" : "Selecciona una raza"}
           style={styles.dropdown}
           textStyle={styles.dropdownText}
           listMode="SCROLLVIEW"
         />
 
-        {/* Botón para seleccionar la fecha de nacimiento */}
         <TouchableOpacity
           style={styles.dateButton}
           onPress={() => {
@@ -300,7 +346,6 @@ export default function RegisterCattleScreen() {
           </View>
         </TouchableOpacity>
 
-        {/* DateTimePickerModal */}
         <DateTimePickerModal
           isVisible={isDatePickerVisible}
           mode="date"
@@ -325,6 +370,7 @@ export default function RegisterCattleScreen() {
           placeholder="Chip de registro vacuno"
           value={chip}
           onChangeText={setChip}
+          editable={!isEditing}
         />
 
         <TextInput
@@ -378,7 +424,7 @@ export default function RegisterCattleScreen() {
             onChangeText={setObservations}
             multiline
             textAlignVertical="top"
-            maxLength={500} // Puedes ajustar el límite según necesidad
+            maxLength={500}
           />
         </View>
 
@@ -386,7 +432,9 @@ export default function RegisterCattleScreen() {
           onPress={handleRegister}
           style={styles.registerButton}
         >
-          <Text style={styles.registerButtonText}>Registrar Ganado</Text>
+          <Text style={styles.registerButtonText}>
+            {isEditing ? "Actualizar Datos" : "Registrar Ganado"}
+          </Text>
         </TouchableOpacity>
       </ScrollView>
     </Layout>
