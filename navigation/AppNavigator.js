@@ -1,18 +1,19 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import LoginScreen from "../screens/login_screen";
-import HomeScreen from "../screens/home_screen";
-import RegisterCattleScreen from "../screens/register_cattle_screen"; // Asegúrate de que esté bien importado
-import ControlScreen from "../screens/controlsH_screen"; // Asegúrate de que esté bien importado
+
+// Screens
+import CattleScreen from "../screens/CattleList_Screen";
+import ControlScreen from "../screens/controlsH_screen";
 import FormScreen from "../screens/forms_screen";
-import CattleScreen from "../screens/CattleList_Screen"
+import HomeScreen from "../screens/home_screen";
+import LoginScreen from "../screens/login_screen";
+import RegisterCattleScreen from "../screens/register_cattle_screen";
 
 const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
   return (
     <Stack.Navigator initialRouteName="Login">
-      
       <Stack.Screen
         name="Login"
         component={LoginScreen}
@@ -38,7 +39,6 @@ export default function AppNavigator() {
         component={ControlScreen}
         options={{ headerShown: false }}
       />
- 
       <Stack.Screen
         name="FormScreen"
         component={FormScreen}

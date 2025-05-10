@@ -28,34 +28,6 @@ export default function FormsScreen({ route }) {
   const [unidad, setUnidad] = useState('');
   const [dosisFinal, setDosisFinal] = useState('');
 
-  useEffect(() => {
-    if (cantidad && unidad) {
-      setDosisFinal(`${cantidad} ${unidad}`);
-    } else {
-      setDosisFinal('');
-    }
-  }, [cantidad, unidad]);
-  // Estados para formulario de peso
-  const [observations, setObservations] = useState("");
-  const [chipPeso, setChipPeso] = useState("");
-
-  const [peso, setPeso] = useState("");
-  const [fechaPeso, setFechaPeso] = useState("");
-
-  // Estados para formulario de vacunas
-  const [chipVacuna, setChipVacuna] = useState("");
-
-  useEffect(() => {
-    if (chip) {
-      setChipPeso(chip);
-      setChipVacuna(chip);
-    }
-  }, [chip]);
-
- 
-  const [observacion, setObservacion] = useState("");
-  const [fechaVacuna, setFechaVacuna] = useState("");
-
   // DropDownPicker estados
   const [openTipoVacuna, setOpenTipoVacuna] = useState(false);
   const [openVacunaNombre, setOpenVacunaNombre] = useState(false);
@@ -68,6 +40,16 @@ export default function FormsScreen({ route }) {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [currentDateType, setCurrentDateType] = useState("");
   const [filteredCattle, setFilteredCattle] = useState([]);
+  const [observacion, setObservacion] = useState("");
+  const [fechaVacuna, setFechaVacuna] = useState("");
+  // Estados para formulario de peso
+  const [observations, setObservations] = useState("");
+  const [chipPeso, setChipPeso] = useState("");
+  const [peso, setPeso] = useState("");
+  const [fechaPeso, setFechaPeso] = useState("");
+  // Estados para formulario de vacunas
+  const [chipVacuna, setChipVacuna] = useState("");
+
 
   useEffect(() => {
     axios
@@ -104,11 +86,45 @@ export default function FormsScreen({ route }) {
     setDatePickerVisibility(false);
   };
 
+  useEffect(() => {
+    if (chip) {
+      setChipPeso(chip);
+      setChipVacuna(chip);
+    }
+  }, [chip]);
+
+
   const resetPesoFields = () => {
     setCattlePeso(null);
     setPeso("");
     setFechaPeso("");
   };
+
+  const guardarPeso = async () => {
+    try {
+      const response = await axios.post(
+        "http://192.168.1.4:3000/weighing/add",
+        {
+          chip_animal: chipPeso,
+          fecha_pesaje: fechaPeso,
+          peso_kg: parseFloat(peso)
+        }
+      );
+      Alert.alert("Éxito", "Pesaje guardado");
+      resetPesoFields();
+      navigation.navigate('ControlScreen', {
+        chip,
+        shouldRefresh: true,
+        nuevoPeso: response.data 
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+  
+  
+
 
   const resetVacunaFields = () => {
     setCattleVacuna(null);
@@ -121,73 +137,52 @@ export default function FormsScreen({ route }) {
     setCantidad("");
   };
 
-  
-  
-  const guardarPeso = async () => {
-    if (!chipPeso || !peso || !fechaPeso) {
-      Alert.alert("Error", "Completa todos los campos.");
-      return;
+  useEffect(() => {
+    if (cantidad && unidad) {
+      setDosisFinal(`${cantidad} ${unidad}`);
+    } else {
+      setDosisFinal('');
     }
-
-    try {
-      const response = await axios.post(
-        "http://192.168.1.4:3000/weighing/add",
-        {
-          chip_animal: chipPeso,
-          fecha_pesaje: fechaPeso,
-          peso_kg: peso,
-        }
-      );
-
-      Alert.alert(
-        "Éxito",
-        response.data.message || "Pesaje guardado correctamente"
-      );
-      resetPesoFields();
-    } catch (error) {
-      console.error("Error al guardar el pesaje:", error);
-      Alert.alert("Error", "No se pudo guardar el pesaje");
-    }
-  };
+  }, [cantidad, unidad]);
 
 
   const guardarVacuna = async () => {
-    if (
-      !chipVacuna ||
-      !tipoVacuna ||
-      !nombreVacuna ||
-      !dosisFinal ||
-      !observations ||
-      !fechaVacuna
-    ) {
-      Alert.alert("Error", "Completa todos los campos.");
-      return;
-    }
-
     try {
       const response = await axios.post(
         "http://192.168.1.4:3000/vaccines/add",
         {
+          chip_animal: chipVacuna,
           fecha_vacuna: fechaVacuna,
           tipo_vacunas_id_tipo_vacuna: tipoVacuna,
-          chip_animal: chipVacuna,
           nombre_vacunas_id_vacuna: nombreVacuna,
           dosis_administrada: dosisFinal,
-          observaciones: observations,
+          observaciones: observations
         }
       );
-
-      Alert.alert(
-        "Éxito",
-        response.data.message || "vacuna guardada correctamente"
-      );
+      Alert.alert("Éxito", "Vacuna guardada");
       resetVacunaFields();
+      navigation.navigate('ControlScreen', {
+        chip,
+        shouldRefresh: true,
+        nuevaVacuna: response.data 
+      });
     } catch (error) {
-      console.error("Error al guardar la vacuna:", error);
-      Alert.alert("Error", "No se pudo guardar la vacuna");
+      // Mostrar mensaje claro al usuario
+      if (error.response && error.response.data) {
+        // Si el backend envía un mensaje de error específico
+        Alert.alert(
+          "Error",
+          error.response.data.error || JSON.stringify(error.response.data)
+        );
+      } else {
+        // Error de red u otro error desconocido
+        Alert.alert("Error", "No se pudo guardar la vacuna. Intenta de nuevo.");
+      }
+      console.error(error);
     }
   };
-    
+  
+  
 
   const handleSelectCattle = (cattle) => {
     if (pesoChecked) {
@@ -226,6 +221,7 @@ export default function FormsScreen({ route }) {
   ]);
 
 
+  
 
   return (
     <Layout>

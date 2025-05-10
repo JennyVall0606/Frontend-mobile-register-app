@@ -12,6 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 import globalStyles from "../styles/global_styles";
 
 export default function Layout({ children }) {
+  // -------------------- Estados --------------------
   const [showMenu, setShowMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -29,71 +30,55 @@ export default function Layout({ children }) {
     { id: "5", label: "VerGanado", screen: "CattleScreen" },
   ];
 
-  const handleSearch = () => {
-    console.log("Search triggered");
-    // Aseguramos que searchQuery no sea undefined ni null
-    const query = (searchQuery || "").toLowerCase();
-
-    // Verificación de lo que contiene searchQuery para debugging
-    console.log("searchQuery:", query); // Imprimimos el valor de query
-
-    // Si no hay query o es una cadena vacía, no ejecutamos la búsqueda
-    if (!query) {
-      setSearchResults([]); // Limpiar los resultados
-      setHasSearched(false); // Establecer que no ha buscado
-      setNoResultsVisible(true); // Mostrar el mensaje de "sin resultados"
-
-      setTimeout(() => setNoResultsVisible(false), 3000); // Ocultar el mensaje después de 3 segundos
-      return;
-    }
-
-    // Redirección personalizada por palabra clave
-    if (query.includes("registro")) {
-      handleNavigate("RegisterCattleScreen");
-      return;
-    }
-    if (query.includes("historiales")) {
-      handleNavigate("ControlScreen");
-      return;
-    }if (query.includes("VerGanado")) {
-      handleNavigate("CattleScreen");
-      return;
-    }
-    if (query.includes("formulario")) {
-      handleNavigate("FormScreen");
-      return;
-    }
-
-    // Búsqueda general: filtra según el contenido
-    const results = appContent.filter(
-      (item) => item.label && item.label.toLowerCase().includes(query) // Verifica que item.label exista antes de usar toLowerCase()
-    );
-
-    // Actualizamos el estado con los resultados encontrados
-    setSearchResults(results);
-    setHasSearched(true);
-    setNoResultsVisible(results.length === 0);
-
-    // Después de 3 segundos, limpiamos los estados de búsqueda
-    setTimeout(() => {
-      setHasSearched(false);
-      setNoResultsVisible(false);
-    }, 4000);
-  };
+  // -------------------- Funciones --------------------
 
   const handleNavigate = (screenName) => {
-    console.log("Navigating to:", screenName); // Verificar el valor de screenName
+    console.log("Navigating to:", screenName);
     if (screenName) {
       setSearchQuery("");
       setSearchResults([]);
       setHasSearched(false);
       setNoResultsVisible(false);
       setTimeout(() => {
-        navigation.navigate(screenName); // Navegar con el nombre de la pantalla
+        navigation.navigate(screenName);
       }, 100);
     } else {
-      console.error("No screenName provided"); // Si no se proporciona screenName, mostrar un error
+      console.error("No screenName provided");
     }
+  };
+
+  const handleSearch = () => {
+    console.log("Search triggered");
+    const query = (searchQuery || "").toLowerCase();
+    console.log("searchQuery:", query);
+
+    if (!query) {
+      setSearchResults([]);
+      setHasSearched(false);
+      setNoResultsVisible(true);
+      setTimeout(() => setNoResultsVisible(false), 3000);
+      return;
+    }
+
+    // Redirección por palabra clave
+    if (query.includes("registro")) return handleNavigate("RegisterCattleScreen");
+    if (query.includes("historiales")) return handleNavigate("ControlScreen");
+    if (query.includes("VerGanado")) return handleNavigate("CattleScreen");
+    if (query.includes("formulario")) return handleNavigate("FormScreen");
+
+    // Búsqueda general
+    const results = appContent.filter(
+      (item) => item.label && item.label.toLowerCase().includes(query)
+    );
+
+    setSearchResults(results);
+    setHasSearched(true);
+    setNoResultsVisible(results.length === 0);
+
+    setTimeout(() => {
+      setHasSearched(false);
+      setNoResultsVisible(false);
+    }, 4000);
   };
 
   return (
@@ -101,6 +86,7 @@ export default function Layout({ children }) {
       source={require("../assets/acuarela.jpg")}
       style={globalStyles.background}
     >
+      {/* Top bar */}
       <View style={[globalStyles.topBar, globalStyles.topBarContainer]}>
         <TouchableOpacity
           onPress={() => {
@@ -131,6 +117,7 @@ export default function Layout({ children }) {
         </TouchableOpacity>
       </View>
 
+      {/* Menú lateral */}
       {showMenu && (
         <View style={globalStyles.dropdownMenuLeft}>
           <TouchableOpacity onPress={() => handleNavigate("Home")}>
@@ -145,6 +132,7 @@ export default function Layout({ children }) {
         </View>
       )}
 
+      {/* Menú de usuario */}
       {showUserMenu && (
         <View style={globalStyles.dropdownMenuRight}>
           <TouchableOpacity onPress={() => handleNavigate("Login")}>
@@ -153,6 +141,7 @@ export default function Layout({ children }) {
         </View>
       )}
 
+      {/* Contenido principal */}
       <ScrollView contentContainerStyle={globalStyles.content}>
         {children}
       </ScrollView>

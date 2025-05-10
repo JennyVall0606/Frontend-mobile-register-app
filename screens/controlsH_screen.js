@@ -6,6 +6,8 @@ import {
   Image,
   Modal,
   TextInput,
+  Platform,
+   Pressable,
   TouchableOpacity,
   Button,
   Dimensions,
@@ -16,6 +18,8 @@ import { styles } from "../styles/ControlH_styles";
 import axios from "axios";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useNavigation } from "@react-navigation/native";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function ControlH_Screen({ navigation, route }) {
   const { chip } = route.params || {};
@@ -39,11 +43,14 @@ export default function ControlH_Screen({ navigation, route }) {
   const [nombreVacuna, setNombreVacuna] = useState(null);
   const [openTipoVacuna, setOpenTipoVacuna] = useState(false);
   const [openNombreVacuna, setOpenNombreVacuna] = useState(false);
+  const [showPesoDatePicker, setShowPesoDatePicker] = useState(false);
+
+const [showVacunaDatePicker, setShowVacunaDatePicker] = useState(false);
 
   // Función para formatear fecha
   const formatDate = (dateString) => {
     if (!dateString) return "";
-    return dateString.split("T")[0]; // Extrae solo la parte de la fecha
+    return dateString.split("T")[0];
   };
 
   // Función para formatear peso
@@ -52,6 +59,18 @@ export default function ControlH_Screen({ navigation, route }) {
     const weightNum = parseFloat(weight);
     return weightNum % 1 === 0 ? weightNum.toString() : weightNum.toFixed(2);
   };
+  const formatDateDisplay = (dateString) => {
+    if (!dateString) return "";
+    const d = new Date(dateString);
+    return d.toISOString().substring(0, 10);
+  };
+  
+  useEffect(() => {
+    if (route.params?.nuevaVacuna) {
+      setHistoricoVacunas(prev => [route.params.nuevaVacuna, ...prev]);
+    }
+  }, [route.params]);
+  
 
   useEffect(() => {
     if (chip) {
@@ -67,33 +86,39 @@ export default function ControlH_Screen({ navigation, route }) {
     }
   }, [chip]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [pesosRes, vacunasRes] = await Promise.all([
-          axios.get("http://192.168.1.4:3000/weighing/historico-pesaje"),
-          axios.get("http://192.168.1.4:3000/vaccines/historico-vacunas"),
-        ]);
 
-        const pesosFiltrados = pesosRes.data
-          .filter((item) => item.chip === chip)
-          .sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 
-        const vacunasFiltradas = vacunasRes.data
-          .filter((item) => item.chip === chip)
-          .sort((a, b) => new Date(b.fecha_vacuna) - new Date(a.fecha_vacuna));
-
-        setHistoricoPesaje(pesosFiltrados);
-        setHistoricoVacunas(vacunasFiltradas);
-      } catch (error) {
-        console.error("Error al obtener datos:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [chip]);
+  // Reemplaza el useEffect actual por:
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchData = async () => {
+        try {
+          const [pesosRes, vacunasRes] = await Promise.all([
+            axios.get("http://192.168.1.4:3000/weighing/historico-pesaje"),
+            axios.get("http://192.168.1.4:3000/vaccines/historico-vacunas"),
+          ]);
+  
+          const pesosFiltrados = pesosRes.data
+            .filter((item) => item.chip === chip)
+            .sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+  
+          const vacunasFiltradas = vacunasRes.data
+            .filter((item) => item.chip === chip)
+            .sort((a, b) => new Date(b.fecha_vacuna) - new Date(a.fecha_vacuna));
+  
+          setHistoricoPesaje(pesosFiltrados);
+          setHistoricoVacunas(vacunasFiltradas);
+        } catch (error) {
+          console.error("Error al obtener datos:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      fetchData();
+    }, [chip]) // Añade chip como dependencia
+  );
+  
 
   useEffect(() => {
     axios
@@ -112,29 +137,42 @@ export default function ControlH_Screen({ navigation, route }) {
     if (pesoSeleccionado) {
       setSelectedPeso(pesoSeleccionado);
       setNuevoPeso(pesoSeleccionado.peso.toString());
-      setNuevaFecha(pesoSeleccionado.fecha);
+      // Recorta la fecha a los primeros 10 caracteres
+      setNuevaFecha(pesoSeleccionado.fecha.substring(0, 10));
       setModalVisible(true);
     }
   };
+  
 
   const handleGuardarCambiosPeso = async () => {
     try {
-      await axios.put(`http://192.168.1.4:3000/weighing/${selectedPeso.id}`, {
-        peso: nuevoPeso,
-        fecha: nuevaFecha,
-      });
+      const payload = {
+        fecha_pesaje: nuevaFecha.split("T")[0],
+        peso_kg: parseFloat(nuevoPeso)
+      };
 
-      const updatedPesos = historicoPesaje.map((p) =>
-        p.id === selectedPeso.id
-          ? { ...p, peso: nuevoPeso, fecha: nuevaFecha }
-          : p
+      await axios.put(`http://192.168.1.4:3000/weighing/${selectedPeso.id}`, payload);
+
+      const updatedPesos = historicoPesaje.map(p => 
+        p.id === selectedPeso.id ? {
+          ...p,
+          peso: payload.peso_kg,
+          fecha: payload.fecha_pesaje
+        } : p
       );
+      
       setHistoricoPesaje(updatedPesos);
       setModalVisible(false);
       alert("Peso actualizado");
+      
     } catch (error) {
-      console.error("Error al actualizar el peso:", error);
-      alert("Error al actualizar");
+      if (error.response) {
+        console.log("Detalles del error:", error.response.data);
+        alert(`Error: ${error.response.data.error || "Datos inválidos"}`);
+      } else {
+        console.error("Error de red:", error);
+        alert("Error de conexión");
+      }
     }
   };
 
@@ -185,7 +223,9 @@ export default function ControlH_Screen({ navigation, route }) {
           tipo: tipoLabel || v.tipo,
           nombre: nombreLabel || v.nombre,
           dosis: datosParaApi.dosis_administrada,
-          observaciones: datosParaApi.observaciones,
+          observaciones: datosParaApi.observaciones, // <- El campo correcto
+          obs: datosParaApi.observaciones,         
+
         };
       })
     );
@@ -193,6 +233,7 @@ export default function ControlH_Screen({ navigation, route }) {
     setModalVacunaVisible(false);
     alert("Vacuna actualizada");
   };
+
 
   return (
     <Layout>
@@ -294,7 +335,8 @@ export default function ControlH_Screen({ navigation, route }) {
             {historicoPesaje.map((peso, index) => (
               <View key={index} style={styles.tableRow}>
                 <Text style={styles.tableCell}>
-                  {peso.fecha.substring(0, 10)}
+                {peso.fecha ? peso.fecha.substring(0, 10) : ""}
+
                 </Text>
                 <Text style={styles.tableCell}>{peso.peso}</Text>
                 <TouchableOpacity
@@ -321,12 +363,28 @@ export default function ControlH_Screen({ navigation, route }) {
                 keyboardType="numeric"
                 style={styles.input}
               />
-              <TextInput
-                value={nuevaFecha}
-                onChangeText={setNuevaFecha}
-                placeholder="Fecha (YYYY-MM-DD)"
-                style={styles.input}
-              />
+              <Pressable onPress={() => setShowPesoDatePicker(true)}>
+  <TextInput
+    value={formatDateDisplay(nuevaFecha)}
+    placeholder="Fecha (YYYY-MM-DD)"
+    style={styles.input}
+    editable={false}
+    pointerEvents="none"
+  />
+</Pressable>
+<DateTimePickerModal
+  isVisible={showPesoDatePicker}
+  mode="date"
+  date={nuevaFecha ? new Date(nuevaFecha) : new Date()}
+  onConfirm={(date) => {
+    setNuevaFecha(date.toISOString().substring(0, 10));
+    setShowPesoDatePicker(false);
+    
+  }}
+  themeVariant="light"
+  onCancel={() => setShowPesoDatePicker(false)}
+/>
+
               <Button
                 title="Guardar cambios"
                 onPress={handleGuardarCambiosPeso}
@@ -355,7 +413,8 @@ export default function ControlH_Screen({ navigation, route }) {
             {historicoVacunas.map((vacuna, index) => (
               <View key={index} style={styles.tableRow}>
                 <Text style={styles.tableCellVV}>
-                  {vacuna.fecha.substring(0, 10)}
+                {vacuna.fecha ? vacuna.fecha.substring(0, 10) : ""}
+
                 </Text>
                 <Text style={styles.tableCellV}>{vacuna.nombre}</Text>
                 <Text style={styles.tableCellV}>{vacuna.tipo}</Text>
@@ -380,12 +439,28 @@ export default function ControlH_Screen({ navigation, route }) {
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
               <Text style={styles.modalTitle}>Editar Vacuna</Text>
-              <TextInput
-                value={nuevaFechaVacuna}
-                onChangeText={setNuevaFechaVacuna}
-                placeholder="YYYY-MM-DD"
-                style={styles.input}
-              />
+              <Pressable onPress={() => setShowVacunaDatePicker(true)}>
+  <TextInput
+    value={formatDateDisplay(nuevaFechaVacuna)}
+    placeholder="YYYY-MM-DD"
+    style={styles.input}
+    editable={false}
+    pointerEvents="none"
+  />
+</Pressable>
+<DateTimePickerModal
+  isVisible={showVacunaDatePicker}
+  mode="date"
+  date={nuevaFechaVacuna ? new Date(nuevaFechaVacuna) : new Date()}
+  onConfirm={(date) => {
+    setNuevaFechaVacuna(date.toISOString().substring(0, 10));
+    setShowVacunaDatePicker(false);
+    
+  }}
+   themeVariant="light"
+  onCancel={() => setShowVacunaDatePicker(false)}
+/>
+
 
               <DropDownPicker
                 open={openTipoVacuna}

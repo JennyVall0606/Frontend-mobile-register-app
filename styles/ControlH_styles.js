@@ -25,6 +25,7 @@ export const styles = {
     borderRadius: 10,
     marginBottom: 16,
   },
+  
   card: {
     backgroundColor: "rgba(197, 224, 235, 0.23)",
     borderRadius: 8,
