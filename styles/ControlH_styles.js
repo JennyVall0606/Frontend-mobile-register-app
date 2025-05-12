@@ -154,6 +154,7 @@ export const styles = {
     justifyContent: "center",
     backgroundColor: "rgba(0,0,0,0.5)",
     paddingHorizontal: 16,
+    alignItems: "center",
   },
   modalContent: {
     backgroundColor: "#fff",
@@ -178,7 +179,21 @@ export const styles = {
     marginBottom: 12,
     zIndex: 1000,
   },
+
+   pickerContainer: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 6,
+    marginBottom: 6,
+    overflow: "hidden",
+  },
+  picker: {
+    height: 40,
+    width: "100%",
+  },
   dropdownBelow: {
     marginTop: 40,
   },
+
+
 };

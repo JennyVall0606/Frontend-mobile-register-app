@@ -24,9 +24,9 @@ export default function FormsScreen({ route }) {
   const { width, height } = Dimensions.get("window");
   const [pesoChecked, setPesoChecked] = useState(false);
   const [vacunaChecked, setVacunaChecked] = useState(false);
-  const [cantidad, setCantidad] = useState('');
-  const [unidad, setUnidad] = useState('');
-  const [dosisFinal, setDosisFinal] = useState('');
+  const [cantidad, setCantidad] = useState("");
+  const [unidad, setUnidad] = useState("");
+  const [dosisFinal, setDosisFinal] = useState("");
 
   // DropDownPicker estados
   const [openTipoVacuna, setOpenTipoVacuna] = useState(false);
@@ -49,7 +49,6 @@ export default function FormsScreen({ route }) {
   const [fechaPeso, setFechaPeso] = useState("");
   // Estados para formulario de vacunas
   const [chipVacuna, setChipVacuna] = useState("");
-
 
   useEffect(() => {
     axios
@@ -93,7 +92,6 @@ export default function FormsScreen({ route }) {
     }
   }, [chip]);
 
-
   const resetPesoFields = () => {
     setCattlePeso(null);
     setPeso("");
@@ -107,24 +105,20 @@ export default function FormsScreen({ route }) {
         {
           chip_animal: chipPeso,
           fecha_pesaje: fechaPeso,
-          peso_kg: parseFloat(peso)
+          peso_kg: parseFloat(peso),
         }
       );
       Alert.alert("Éxito", "Pesaje guardado");
       resetPesoFields();
-      navigation.navigate('ControlScreen', {
+      navigation.navigate("ControlScreen", {
         chip,
         shouldRefresh: true,
-        nuevoPeso: response.data 
+        nuevoPeso: response.data,
       });
     } catch (error) {
       console.error(error);
     }
   };
-  
-  
-  
-
 
   const resetVacunaFields = () => {
     setCattleVacuna(null);
@@ -133,7 +127,7 @@ export default function FormsScreen({ route }) {
     setDosisFinal("");
     setObservations("");
     setFechaVacuna("");
-    setUnidad(""); 
+    setUnidad("");
     setCantidad("");
   };
 
@@ -141,10 +135,9 @@ export default function FormsScreen({ route }) {
     if (cantidad && unidad) {
       setDosisFinal(`${cantidad} ${unidad}`);
     } else {
-      setDosisFinal('');
+      setDosisFinal("");
     }
   }, [cantidad, unidad]);
-
 
   const guardarVacuna = async () => {
     try {
@@ -156,15 +149,15 @@ export default function FormsScreen({ route }) {
           tipo_vacunas_id_tipo_vacuna: tipoVacuna,
           nombre_vacunas_id_vacuna: nombreVacuna,
           dosis_administrada: dosisFinal,
-          observaciones: observations
+          observaciones: observations,
         }
       );
       Alert.alert("Éxito", "Vacuna guardada");
       resetVacunaFields();
-      navigation.navigate('ControlScreen', {
+      navigation.navigate("ControlScreen", {
         chip,
         shouldRefresh: true,
-        nuevaVacuna: response.data 
+        nuevaVacuna: response.data,
       });
     } catch (error) {
       // Mostrar mensaje claro al usuario
@@ -181,8 +174,6 @@ export default function FormsScreen({ route }) {
       console.error(error);
     }
   };
-  
-  
 
   const handleSelectCattle = (cattle) => {
     if (pesoChecked) {
@@ -195,33 +186,27 @@ export default function FormsScreen({ route }) {
       setCattleVacuna(cattle);
       setTipoVacuna(cattle.tipoVacuna || null);
       setNombreVacuna(cattle.nombreVacuna || null);
-  
+
       // Asignar dosisFinal directamente desde cattle.dosis (si existe)
-      setDosisFinal(cattle.dosis || ""); 
-  
+      setDosisFinal(cattle.dosis || "");
+
       setObservacion(cattle.observacion || null);
       setFechaVacuna(cattle.fechaNacimiento || "");
     }
     setFilteredCattle([]);
   };
-  
-  
 
   const [open, setOpen] = useState(false);
 
   const [items, setItems] = useState([
-    { label: 'ml', value: 'ml' },
-    { label: 'cc', value: 'cc' },
-    { label: 'mg', value: 'mg' },
-    { label: 'mg/kg', value: 'mg_kg' },
-    { label: 'ml/kg', value: 'ml_kg' },
-    { label: 'ml/100kg', value: 'ml_100kg' },
-    { label: 'UI', value: 'ui' }
-    
+    { label: "ml", value: "ml" },
+    { label: "cc", value: "cc" },
+    { label: "mg", value: "mg" },
+    { label: "mg/kg", value: "mg_kg" },
+    { label: "ml/kg", value: "ml_kg" },
+    { label: "ml/100kg", value: "ml_100kg" },
+    { label: "UI", value: "ui" },
   ]);
-
-
-  
 
   return (
     <Layout>
@@ -353,7 +338,7 @@ export default function FormsScreen({ route }) {
               setOpen={() => {
                 setOpenVacunaNombre(false);
                 setOpenTipoVacuna(true);
-                setOpen(false); 
+                setOpen(false);
               }}
               value={tipoVacuna}
               items={itemsTipoVacuna}
@@ -362,7 +347,6 @@ export default function FormsScreen({ route }) {
               containerStyle={[
                 styles.dropdownContainer,
                 openVacunaNombre && styles.dropdownBelow,
-                
               ]}
               listMode="SCROLLVIEW"
               onChangeValue={() => setOpenTipoVacuna(false)}
@@ -373,7 +357,7 @@ export default function FormsScreen({ route }) {
               setOpen={() => {
                 setOpenTipoVacuna(false);
                 setOpenVacunaNombre(true);
-                setOpen(false); 
+                setOpen(false);
               }}
               value={nombreVacuna}
               items={itemsVacunaNombre}
@@ -387,37 +371,35 @@ export default function FormsScreen({ route }) {
               onChangeValue={() => setOpenVacunaNombre(false)}
             />
 
-      <View style={styles.row}>
-        <TextInput
-          style={styles.inputD}
-          value={cantidad}
-          onChangeText={setCantidad}
-          placeholder="Dosis"
-          keyboardType="numeric"
-        />
-        <DropDownPicker
-          open={open}
-          value={unidad}
-          items={items}
-          setOpen={() => {
-            setOpenTipoVacuna(false);
-            setOpenVacunaNombre(false);
-            setOpen(true); 
-          }}
-          setValue={setUnidad}
-          setItems={setItems}
-          placeholder="Unidad"
-          containerStyle={[
-            styles.dropdownContainerUnidad,
-            open && styles.dropdownBelowUnidad,
-            { zIndex: open ? 10 : 1 },
-          ]}
-          listMode="SCROLLVIEW"
-          onChangeValue={() => setOpen(false)} 
-        />
-      </View>
-
-     
+            <View style={styles.row}>
+              <TextInput
+                style={styles.inputD}
+                value={cantidad}
+                onChangeText={setCantidad}
+                placeholder="Dosis"
+                keyboardType="numeric"
+              />
+              <DropDownPicker
+                open={open}
+                value={unidad}
+                items={items}
+                setOpen={() => {
+                  setOpenTipoVacuna(false);
+                  setOpenVacunaNombre(false);
+                  setOpen(true);
+                }}
+                setValue={setUnidad}
+                setItems={setItems}
+                placeholder="Unidad"
+                containerStyle={[
+                  styles.dropdownContainerUnidad,
+                  open && styles.dropdownBelowUnidad,
+                  { zIndex: open ? 10 : 1 },
+                ]}
+                listMode="SCROLLVIEW"
+                onChangeValue={() => setOpen(false)}
+              />
+            </View>
 
             <TouchableOpacity
               style={styles.dateButton}

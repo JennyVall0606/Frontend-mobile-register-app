@@ -7,7 +7,7 @@ import {
   Modal,
   TextInput,
   Platform,
-   Pressable,
+  Pressable,
   TouchableOpacity,
   Button,
   Dimensions,
@@ -19,7 +19,7 @@ import axios from "axios";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useNavigation } from "@react-navigation/native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function ControlH_Screen({ navigation, route }) {
   const { chip } = route.params || {};
@@ -44,8 +44,7 @@ export default function ControlH_Screen({ navigation, route }) {
   const [openTipoVacuna, setOpenTipoVacuna] = useState(false);
   const [openNombreVacuna, setOpenNombreVacuna] = useState(false);
   const [showPesoDatePicker, setShowPesoDatePicker] = useState(false);
-
-const [showVacunaDatePicker, setShowVacunaDatePicker] = useState(false);
+  const [showVacunaDatePicker, setShowVacunaDatePicker] = useState(false);
 
   // Función para formatear fecha
   const formatDate = (dateString) => {
@@ -59,18 +58,18 @@ const [showVacunaDatePicker, setShowVacunaDatePicker] = useState(false);
     const weightNum = parseFloat(weight);
     return weightNum % 1 === 0 ? weightNum.toString() : weightNum.toFixed(2);
   };
+
   const formatDateDisplay = (dateString) => {
     if (!dateString) return "";
     const d = new Date(dateString);
     return d.toISOString().substring(0, 10);
   };
-  
+
   useEffect(() => {
     if (route.params?.nuevaVacuna) {
-      setHistoricoVacunas(prev => [route.params.nuevaVacuna, ...prev]);
+      setHistoricoVacunas((prev) => [route.params.nuevaVacuna, ...prev]);
     }
   }, [route.params]);
-  
 
   useEffect(() => {
     if (chip) {
@@ -78,6 +77,12 @@ const [showVacunaDatePicker, setShowVacunaDatePicker] = useState(false);
         .get(`http://192.168.1.4:3000/register/animal/${chip}`)
         .then((response) => {
           setAnimalInfo(response.data);
+          console.log("Datos del animal recibidos:", response.data); // Aquí verificamos los datos del animal
+
+          // Aseguramos que raza_id_raza se pase correctamente
+          if (response.data.raza_id_raza) {
+            console.log("raza_id_raza:", response.data.raza_id_raza); // Verificamos el valor de raza_id_raza
+          }
         })
         .catch((error) => {
           console.error("Error al obtener el animal:", error);
@@ -86,9 +91,6 @@ const [showVacunaDatePicker, setShowVacunaDatePicker] = useState(false);
     }
   }, [chip]);
 
-
-
-  // Reemplaza el useEffect actual por:
   useFocusEffect(
     React.useCallback(() => {
       const fetchData = async () => {
@@ -97,15 +99,17 @@ const [showVacunaDatePicker, setShowVacunaDatePicker] = useState(false);
             axios.get("http://192.168.1.4:3000/weighing/historico-pesaje"),
             axios.get("http://192.168.1.4:3000/vaccines/historico-vacunas"),
           ]);
-  
+
           const pesosFiltrados = pesosRes.data
             .filter((item) => item.chip === chip)
             .sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
-  
+
           const vacunasFiltradas = vacunasRes.data
             .filter((item) => item.chip === chip)
-            .sort((a, b) => new Date(b.fecha_vacuna) - new Date(a.fecha_vacuna));
-  
+            .sort(
+              (a, b) => new Date(b.fecha_vacuna) - new Date(a.fecha_vacuna)
+            );
+
           setHistoricoPesaje(pesosFiltrados);
           setHistoricoVacunas(vacunasFiltradas);
         } catch (error) {
@@ -114,11 +118,10 @@ const [showVacunaDatePicker, setShowVacunaDatePicker] = useState(false);
           setLoading(false);
         }
       };
-  
+
       fetchData();
-    }, [chip]) // Añade chip como dependencia
+    }, [chip])
   );
-  
 
   useEffect(() => {
     axios
@@ -137,34 +140,36 @@ const [showVacunaDatePicker, setShowVacunaDatePicker] = useState(false);
     if (pesoSeleccionado) {
       setSelectedPeso(pesoSeleccionado);
       setNuevoPeso(pesoSeleccionado.peso.toString());
-      // Recorta la fecha a los primeros 10 caracteres
       setNuevaFecha(pesoSeleccionado.fecha.substring(0, 10));
       setModalVisible(true);
     }
   };
-  
 
   const handleGuardarCambiosPeso = async () => {
     try {
       const payload = {
         fecha_pesaje: nuevaFecha.split("T")[0],
-        peso_kg: parseFloat(nuevoPeso)
+        peso_kg: parseFloat(nuevoPeso),
       };
 
-      await axios.put(`http://192.168.1.4:3000/weighing/${selectedPeso.id}`, payload);
-
-      const updatedPesos = historicoPesaje.map(p => 
-        p.id === selectedPeso.id ? {
-          ...p,
-          peso: payload.peso_kg,
-          fecha: payload.fecha_pesaje
-        } : p
+      await axios.put(
+        `http://192.168.1.4:3000/weighing/${selectedPeso.id}`,
+        payload
       );
-      
+
+      const updatedPesos = historicoPesaje.map((p) =>
+        p.id === selectedPeso.id
+          ? {
+              ...p,
+              peso: payload.peso_kg,
+              fecha: payload.fecha_pesaje,
+            }
+          : p
+      );
+
       setHistoricoPesaje(updatedPesos);
       setModalVisible(false);
       alert("Peso actualizado");
-      
     } catch (error) {
       if (error.response) {
         console.log("Detalles del error:", error.response.data);
@@ -224,8 +229,7 @@ const [showVacunaDatePicker, setShowVacunaDatePicker] = useState(false);
           nombre: nombreLabel || v.nombre,
           dosis: datosParaApi.dosis_administrada,
           observaciones: datosParaApi.observaciones, // <- El campo correcto
-          obs: datosParaApi.observaciones,         
-
+          obs: datosParaApi.observaciones,
         };
       })
     );
@@ -233,7 +237,6 @@ const [showVacunaDatePicker, setShowVacunaDatePicker] = useState(false);
     setModalVacunaVisible(false);
     alert("Vacuna actualizada");
   };
-
 
   return (
     <Layout>
@@ -313,12 +316,14 @@ const [showVacunaDatePicker, setShowVacunaDatePicker] = useState(false);
 
           <TouchableOpacity
             style={styles.editButton}
-            onPress={() =>
+            onPress={() => {
+              console.log("Pasando razaId:", animalInfo.raza); // Verificamos el valor de raza
               navigation.navigate("RegisterCattle", {
                 chip: animalInfo.chip_animal,
+                razaId: animalInfo.raza, // Aquí estamos pasando el valor de la raza correctamente
                 isEditing: true,
-              })
-            }
+              });
+            }}
           >
             <Text>✏️ Editar CHIP</Text>
           </TouchableOpacity>
@@ -335,8 +340,7 @@ const [showVacunaDatePicker, setShowVacunaDatePicker] = useState(false);
             {historicoPesaje.map((peso, index) => (
               <View key={index} style={styles.tableRow}>
                 <Text style={styles.tableCell}>
-                {peso.fecha ? peso.fecha.substring(0, 10) : ""}
-
+                  {peso.fecha ? peso.fecha.substring(0, 10) : ""}
                 </Text>
                 <Text style={styles.tableCell}>{peso.peso}</Text>
                 <TouchableOpacity
@@ -364,27 +368,25 @@ const [showVacunaDatePicker, setShowVacunaDatePicker] = useState(false);
                 style={styles.input}
               />
               <Pressable onPress={() => setShowPesoDatePicker(true)}>
-  <TextInput
-    value={formatDateDisplay(nuevaFecha)}
-    placeholder="Fecha (YYYY-MM-DD)"
-    style={styles.input}
-    editable={false}
-    pointerEvents="none"
-  />
-</Pressable>
-<DateTimePickerModal
-  isVisible={showPesoDatePicker}
-  mode="date"
-  date={nuevaFecha ? new Date(nuevaFecha) : new Date()}
-  onConfirm={(date) => {
-    setNuevaFecha(date.toISOString().substring(0, 10));
-    setShowPesoDatePicker(false);
-    
-  }}
-  themeVariant="light"
-  onCancel={() => setShowPesoDatePicker(false)}
-/>
-
+                <TextInput
+                  value={formatDateDisplay(nuevaFecha)}
+                  placeholder="Fecha (YYYY-MM-DD)"
+                  style={styles.input}
+                  editable={false}
+                  pointerEvents="none"
+                />
+              </Pressable>
+              <DateTimePickerModal
+                isVisible={showPesoDatePicker}
+                mode="date"
+                date={nuevaFecha ? new Date(nuevaFecha) : new Date()}
+                onConfirm={(date) => {
+                  setNuevaFecha(date.toISOString().substring(0, 10));
+                  setShowPesoDatePicker(false);
+                }}
+                themeVariant="light"
+                onCancel={() => setShowPesoDatePicker(false)}
+              />
               <Button
                 title="Guardar cambios"
                 onPress={handleGuardarCambiosPeso}
@@ -413,8 +415,7 @@ const [showVacunaDatePicker, setShowVacunaDatePicker] = useState(false);
             {historicoVacunas.map((vacuna, index) => (
               <View key={index} style={styles.tableRow}>
                 <Text style={styles.tableCellVV}>
-                {vacuna.fecha ? vacuna.fecha.substring(0, 10) : ""}
-
+                  {vacuna.fecha ? vacuna.fecha.substring(0, 10) : ""}
                 </Text>
                 <Text style={styles.tableCellV}>{vacuna.nombre}</Text>
                 <Text style={styles.tableCellV}>{vacuna.tipo}</Text>
@@ -440,28 +441,27 @@ const [showVacunaDatePicker, setShowVacunaDatePicker] = useState(false);
             <View style={styles.modalContent}>
               <Text style={styles.modalTitle}>Editar Vacuna</Text>
               <Pressable onPress={() => setShowVacunaDatePicker(true)}>
-  <TextInput
-    value={formatDateDisplay(nuevaFechaVacuna)}
-    placeholder="YYYY-MM-DD"
-    style={styles.input}
-    editable={false}
-    pointerEvents="none"
-  />
-</Pressable>
-<DateTimePickerModal
-  isVisible={showVacunaDatePicker}
-  mode="date"
-  date={nuevaFechaVacuna ? new Date(nuevaFechaVacuna) : new Date()}
-  onConfirm={(date) => {
-    setNuevaFechaVacuna(date.toISOString().substring(0, 10));
-    setShowVacunaDatePicker(false);
-    
-  }}
-   themeVariant="light"
-  onCancel={() => setShowVacunaDatePicker(false)}
-/>
-
-
+                <TextInput
+                  value={formatDateDisplay(nuevaFechaVacuna)}
+                  placeholder="YYYY-MM-DD"
+                  style={styles.input}
+                  editable={false}
+                  pointerEvents="none"
+                />
+              </Pressable>
+              <DateTimePickerModal
+                isVisible={showVacunaDatePicker}
+                mode="date"
+                date={
+                  nuevaFechaVacuna ? new Date(nuevaFechaVacuna) : new Date()
+                }
+                onConfirm={(date) => {
+                  setNuevaFechaVacuna(date.toISOString().substring(0, 10));
+                  setShowVacunaDatePicker(false);
+                }}
+                themeVariant="light"
+                onCancel={() => setShowVacunaDatePicker(false)}
+              />
               <DropDownPicker
                 open={openTipoVacuna}
                 value={tipoVacuna}
@@ -475,7 +475,6 @@ const [showVacunaDatePicker, setShowVacunaDatePicker] = useState(false);
                 ]}
                 listMode="SCROLLVIEW"
               />
-
               <DropDownPicker
                 open={openNombreVacuna}
                 value={nombreVacuna}
@@ -490,21 +489,18 @@ const [showVacunaDatePicker, setShowVacunaDatePicker] = useState(false);
                 ]}
                 listMode="SCROLLVIEW"
               />
-
               <TextInput
                 value={nuevaDosisVacuna}
                 onChangeText={setNuevaDosisVacuna}
                 placeholder="Dosis"
                 style={styles.input}
               />
-
               <TextInput
                 value={nuevaObsVacuna}
                 onChangeText={setNuevaObsVacuna}
                 placeholder="Observaciones"
                 style={styles.input}
               />
-
               <Button
                 title="Guardar cambios"
                 onPress={handleGuardarCambiosVacuna}
@@ -519,13 +515,13 @@ const [showVacunaDatePicker, setShowVacunaDatePicker] = useState(false);
         </Modal>
 
         <TouchableOpacity
-  style={styles.newControlButton}
-  onPress={() => navigation.navigate("FormScreen", { chip })}
->
-  <Text style={styles.newControlButtonText}>
-    Realiza un nuevo control
-  </Text>
-</TouchableOpacity>
+          style={styles.newControlButton}
+          onPress={() => navigation.navigate("FormScreen", { chip })}
+        >
+          <Text style={styles.newControlButtonText}>
+            Realiza un nuevo control
+          </Text>
+        </TouchableOpacity>
       </ScrollView>
     </Layout>
   );

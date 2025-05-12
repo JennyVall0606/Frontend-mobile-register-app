@@ -21,26 +21,25 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function RegisterCattleScreen({ route }) {
-  const { chip: chipFromParams, isEditing } = route.params || {};
+  const { chip: chipFromParams, razaId, isEditing } = route.params || {};
   const [chip, setChip] = useState(chipFromParams || "");
   const [animalData, setAnimalData] = useState(null);
   const [loading, setLoading] = useState(!!chipFromParams);
-  const [imagenes, setImagenes] = useState([]);
   const [image, setImage] = useState(null);
   const [birthDate, setBirthDate] = useState("");
   const [weight, setWeight] = useState("");
   const [father, setFather] = useState("");
   const [mother, setMother] = useState("");
-  const [disease, setDisease] = useState([]);
+
   const [observations, setObservations] = useState("");
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [currentDateType, setCurrentDateType] = useState("");
   const [openRaza, setOpenRaza] = useState(false);
   const [itemsRaza, setItemsRaza] = useState([]);
-  const [breed, setBreed] = useState("");
+  const [breed, setBreed] = useState(""); // Estado para la raza seleccionada
   const [openEnfermedad, setOpenEnfermedad] = useState(false);
   const [pendingBreedId, setPendingBreedId] = useState(null);
-
+  const [disease, setDisease] = useState([]);
   const [itemsEnfermedad, setItemsEnfermedad] = useState([
     { label: "Brucelosis", value: "brucelosis" },
     { label: "Fiebre aftosa", value: "fiebre aftosa" },
@@ -50,7 +49,10 @@ export default function RegisterCattleScreen({ route }) {
     { label: "Diarrea viral bovina (BVD)", value: "diarrea viral bovina" },
     { label: "Paratuberculosis (Johne)", value: "paratuberculosis" },
     { label: "Neosporosis", value: "neosporosis" },
-    { label: "Enfermedad respiratoria bovina", value: "enfermedad respiratoria bovina" },
+    {
+      label: "Enfermedad respiratoria bovina",
+      value: "enfermedad respiratoria bovina",
+    },
     { label: "Fiebre del transporte", value: "fiebre del transporte" },
     { label: "Dermatitis digital", value: "dermatitis digital" },
     { label: "Rabia", value: "rabia" },
@@ -67,7 +69,9 @@ export default function RegisterCattleScreen({ route }) {
   useEffect(() => {
     const fetchRazas = async () => {
       try {
-        const response = await axios.get("http://192.168.1.4:3000/register/razas");
+        const response = await axios.get(
+          "http://192.168.1.4:3000/register/razas"
+        );
         const razaItems = response.data.map((raza) => ({
           label: raza.nombre_raza,
           value: raza.id_raza.toString(),
@@ -77,38 +81,44 @@ export default function RegisterCattleScreen({ route }) {
         console.error("Error al obtener las razas:", error);
       }
     };
-    
+
     fetchRazas();
   }, []);
+
+  // Verificamos que la raza seleccionada esté en el listado de razas.
   useEffect(() => {
-    if (itemsRaza.length > 0 && pendingBreedId) {
-      const exists = itemsRaza.find(item => item.value === pendingBreedId);
-      if (exists) {
-        setBreed(pendingBreedId);
+    if (razaId) {
+      const razaExistente = itemsRaza.find((item) => item.label === razaId);
+      if (razaExistente) {
+        setBreed(razaExistente.value); // Esto asegura que el valor numérico se use en lugar del nombre
       }
     }
-  }, [itemsRaza, pendingBreedId]);
+  }, [itemsRaza, razaId]);
+
   useEffect(() => {
     const fetchAnimalData = async () => {
-      if (!chipFromParams || itemsRaza.length === 0) return; // <- aquí nos aseguramos
-  
+      if (!chipFromParams || itemsRaza.length === 0) return;
+
       try {
-        console.log("chipFromParams:", chipFromParams);
-        console.log("itemsRaza en fetch:", itemsRaza);
-  
-        const response = await axios.get(`http://192.168.1.4:3000/register/animal/${chipFromParams}`);
+        const response = await axios.get(
+          `http://192.168.1.4:3000/register/animal/${chipFromParams}`
+        );
         setAnimalData(response.data);
-  
+
         if (response.data) {
+          console.log(
+            "Enfermedades cargadas desde el servidor:",
+            response.data.enfermedades
+          );
           const fechaBD = response.data.fecha_nacimiento;
           let fechaFormateada = fechaBD;
-  
-          if (fechaBD && fechaBD.includes('T')) {
-            fechaFormateada = fechaBD.split('T')[0];
-          } else if (fechaBD && fechaBD.includes(' ')) {
-            fechaFormateada = fechaBD.split(' ')[0];
+
+          if (fechaBD && fechaBD.includes("T")) {
+            fechaFormateada = fechaBD.split("T")[0];
+          } else if (fechaBD && fechaBD.includes(" ")) {
+            fechaFormateada = fechaBD.split(" ")[0];
           }
-  
+
           setBirthDate(fechaFormateada || "");
           setWeight(response.data.peso_nacimiento?.toString() || "");
           setFather(response.data.id_madre?.toString() || "");
@@ -116,12 +126,16 @@ export default function RegisterCattleScreen({ route }) {
           setObservations(response.data.observaciones || "");
           setPendingBreedId(response.data.raza_id_raza?.toString() || "");
 
+          // Convertir las enfermedades de un string a un arreglo
           if (response.data.enfermedades) {
-            setDisease(Array.isArray(response.data.enfermedades) 
-              ? response.data.enfermedades 
-              : [response.data.enfermedades]);
+            const enfermedades = response.data.enfermedades.includes(",")
+              ? response.data.enfermedades.split(",") // Convertir el string a un arreglo
+              : [response.data.enfermedades]; // Si es un solo valor, convertirlo en un arreglo
+
+            const enfermedadesUnicas = Array.from(new Set(enfermedades)); // Eliminar duplicados
+            setDisease(enfermedadesUnicas); // Actualiza el estado con las enfermedades únicas
           }
-  
+
           if (response.data.foto) {
             setImage(`http://192.168.1.4:3000/uploads/${response.data.foto}`);
           }
@@ -133,16 +147,21 @@ export default function RegisterCattleScreen({ route }) {
         setLoading(false);
       }
     };
-  
-    fetchAnimalData();
-  }, [chipFromParams, itemsRaza]); // <- agregamos itemsRaza como dependencia
-  
-  
 
+    fetchAnimalData();
+  }, [chipFromParams, itemsRaza]);
+
+  useEffect(() => {
+    if (animalData && animalData.enfermedades) {
+      const enfermedades = animalData.enfermedades.split(",");
+      setDisease(enfermedades);
+    }
+  }, [animalData]);
 
   useEffect(() => {
     const requestPermission = async () => {
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== "granted") {
         alert("Se requieren permisos para acceder a la galería de imágenes.");
       }
@@ -165,21 +184,19 @@ export default function RegisterCattleScreen({ route }) {
   };
 
   const handleConfirmDate = (date) => {
-    // Formatear directamente como YYYY-MM-DD (sin ajuste horario)
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
     const formattedDate = `${year}-${month}-${day}`;
-  
-    // Fecha actual local
+
     const today = new Date();
-    const todayFormatted = today.toISOString().split('T')[0];
-  
+    const todayFormatted = today.toISOString().split("T")[0];
+
     if (formattedDate > todayFormatted) {
       Alert.alert("Fecha inválida", "No puedes seleccionar una fecha futura.");
       return;
     }
-  
+
     setBirthDate(formattedDate);
     setDatePickerVisibility(false);
   };
@@ -192,7 +209,7 @@ export default function RegisterCattleScreen({ route }) {
     setChip("");
     setFather("");
     setMother("");
-    setDisease([]);
+    setDisease(Array.isArray(value) ? value : []);
     setObservations("");
   };
 
@@ -200,22 +217,26 @@ export default function RegisterCattleScreen({ route }) {
     try {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
-        Alert.alert("❌ Error", "Token no encontrado. Inicia sesión nuevamente.");
+        Alert.alert(
+          "❌ Error",
+          "Token no encontrado. Inicia sesión nuevamente."
+        );
         return;
       }
 
       if (!chip || !breed || !birthDate || !weight) {
-        Alert.alert("⚠️ Datos incompletos", "Por favor completa los campos obligatorios.");
+        Alert.alert(
+          "⚠️ Datos incompletos",
+          "Por favor completa los campos obligatorios."
+        );
         return;
       }
-      const fechaFormateada = birthDate.split('T')[0];
-      const enfermedadesFormateadas = disease.length > 0 ? disease.join(',') : null;
-
+      const fechaFormateada = birthDate.split("T")[0];
+      const enfermedadesFormateadas =
+        disease.length > 0 ? disease.join(",") : null;
       const formData = new FormData();
-      
-      
-      // Solo adjuntar imagen si es nueva (no la que ya estaba)
-      if (image && !image.startsWith('http')) {
+
+      if (image && !image.startsWith("http")) {
         formData.append("foto", {
           uri: image,
           type: "image/jpeg",
@@ -229,15 +250,15 @@ export default function RegisterCattleScreen({ route }) {
       formData.append("fecha_nacimiento", fechaFormateada);
       if (father) formData.append("id_madre", father);
       if (mother) formData.append("id_padre", mother);
-      if (enfermedadesFormateadas) formData.append("enfermedades", enfermedadesFormateadas);
+      if (enfermedadesFormateadas)
+        formData.append("enfermedades", enfermedadesFormateadas);
       if (observations) formData.append("observaciones", observations);
 
-      // Determinar si es una actualización o creación nueva
-      const url = animalData 
+      const url = animalData
         ? `http://192.168.1.4:3000/register/update/${chip}`
         : "http://192.168.1.4:3000/register/add";
 
-      const method = animalData ? 'put' : 'post';
+      const method = animalData ? "put" : "post";
 
       const response = await axios({
         method,
@@ -252,17 +273,29 @@ export default function RegisterCattleScreen({ route }) {
       if (response.status === 200 || response.status === 201) {
         Alert.alert(
           "✅ Operación exitosa",
-          animalData 
+          animalData
             ? "Los datos del animal han sido actualizados correctamente"
             : "El ganado ha sido registrado correctamente"
         );
+
+        // Aquí enviamos la actualización a la pantalla anterior
+        navigation.setParams({
+          breed: breed, // Actualizamos la raza
+          disease: disease, // Actualizamos las enfermedades
+          weight: weight, // Actualizamos el peso
+          observations: observations, // Actualizamos las observaciones
+        });
+
         navigation.goBack();
       }
     } catch (error) {
       console.error("Error al registrar/actualizar:", error);
       if (error.response && error.response.data) {
         console.log("Detalles del error:", error.response.data);
-        const mensaje = error.response.data.message || error.response.data.error || "No se pudo completar la operación.";
+        const mensaje =
+          error.response.data.message ||
+          error.response.data.error ||
+          "No se pudo completar la operación.";
         Alert.alert("❌ Error", mensaje);
       } else {
         Alert.alert("❌ Error", "No se pudo completar la operación.");
@@ -292,7 +325,9 @@ export default function RegisterCattleScreen({ route }) {
         </TouchableOpacity>
 
         <Text style={styles.title}>
-          {isEditing ? "Editar Registro de Ganado" : "Formulario de Registro de Ganado"}
+          {isEditing
+            ? "Editar Registro de Ganado"
+            : "Formulario de Registro de Ganado"}
         </Text>
 
         {!image ? (
@@ -322,7 +357,6 @@ export default function RegisterCattleScreen({ route }) {
           open={openRaza}
           setOpen={setOpenRaza}
           items={itemsRaza}
-          setItems={setItemsRaza}
           value={breed}
           setValue={setBreed}
           placeholder={breed ? "" : "Selecciona una raza"}
@@ -394,20 +428,19 @@ export default function RegisterCattleScreen({ route }) {
           open={openEnfermedad}
           setOpen={setOpenEnfermedad}
           items={itemsEnfermedad}
-          setItems={setItemsEnfermedad}
           value={disease}
-          setValue={setDisease}
+          setValue={(value) => {
+            // Si el valor ya existe en el arreglo, lo eliminamos, de lo contrario lo agregamos
+            const newValue = value;
+            setDisease(newValue);
+          }}
           placeholder="Selecciona una o más enfermedades"
           style={styles.dropdown}
           textStyle={styles.dropdownText}
           listMode="SCROLLVIEW"
-          multipleText={`${
-            Array.isArray(disease) && disease.length
-          } enfermedad${
-            Array.isArray(disease) && disease.length === 1 ? "" : "es"
-          } seleccionada${
-            Array.isArray(disease) && disease.length === 1 ? "" : "s"
-          }`}
+          multipleText={`${disease.length} enfermedad${
+            disease.length === 1 ? "" : "s"
+          } seleccionada${disease.length === 1 ? "" : "s"}`}
         />
 
         <Text style={styles.selectedDiseases}>
