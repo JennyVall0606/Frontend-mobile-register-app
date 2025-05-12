@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -90,6 +90,27 @@ export default function ControlH_Screen({ navigation, route }) {
         });
     }
   }, [chip]);
+
+useFocusEffect(
+  useCallback(() => {
+    if (chip) {
+      axios
+        .get(`http://192.168.1.4:3000/register/animal/${chip}`)
+        .then((response) => {
+          setAnimalInfo(response.data);
+          // ...otros logs si quieres
+        })
+        .catch((error) => {
+          console.error("Error al obtener el animal:", error);
+          setAnimalInfo(null);
+        });
+    }
+  }, [chip])
+);
+
+
+
+
 
   useFocusEffect(
     React.useCallback(() => {
