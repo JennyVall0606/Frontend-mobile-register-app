@@ -49,15 +49,15 @@ export default function FormsScreen({ route }) {
   const [fechaPeso, setFechaPeso] = useState("");
   // Estados para formulario de vacunas
   const [chipVacuna, setChipVacuna] = useState("");
-
+  const API_URL = "https://webmobileregister-production.up.railway.app";
   useEffect(() => {
     axios
-      .get("http://192.168.1.4:3000/vaccines/tipos-vacuna")
+      .get(`${API_URL}/vaccines/tipos-vacuna`)
       .then((res) => setItemsTipoVacuna(res.data))
       .catch((err) => console.error(err));
 
     axios
-      .get("http://192.168.1.4:3000/vaccines/nombres-vacuna")
+      .get(`${API_URL}/vaccines/nombres-vacuna`)
       .then((res) => setItemsVacunaNombre(res.data))
       .catch((err) => console.error(err));
   }, []);
@@ -100,14 +100,11 @@ export default function FormsScreen({ route }) {
 
   const guardarPeso = async () => {
     try {
-      const response = await axios.post(
-        "http://192.168.1.4:3000/weighing/add",
-        {
-          chip_animal: chipPeso,
-          fecha_pesaje: fechaPeso,
-          peso_kg: parseFloat(peso),
-        }
-      );
+      const response = await axios.post(`${API_URL}/weighing/add`, {
+        chip_animal: chipPeso,
+        fecha_pesaje: fechaPeso,
+        peso_kg: parseFloat(peso),
+      });
       Alert.alert("Éxito", "Pesaje guardado");
       resetPesoFields();
       navigation.navigate("ControlScreen", {
@@ -141,17 +138,14 @@ export default function FormsScreen({ route }) {
 
   const guardarVacuna = async () => {
     try {
-      const response = await axios.post(
-        "http://192.168.1.4:3000/vaccines/add",
-        {
-          chip_animal: chipVacuna,
-          fecha_vacuna: fechaVacuna,
-          tipo_vacunas_id_tipo_vacuna: tipoVacuna,
-          nombre_vacunas_id_vacuna: nombreVacuna,
-          dosis_administrada: dosisFinal,
-          observaciones: observations,
-        }
-      );
+      const response = await axios.post(`${API_URL}/vaccines/add`, {
+        chip_animal: chipVacuna,
+        fecha_vacuna: fechaVacuna,
+        tipo_vacunas_id_tipo_vacuna: tipoVacuna,
+        nombre_vacunas_id_vacuna: nombreVacuna,
+        dosis_administrada: dosisFinal,
+        observaciones: observations,
+      });
       Alert.alert("Éxito", "Vacuna guardada");
       resetVacunaFields();
       navigation.navigate("ControlScreen", {

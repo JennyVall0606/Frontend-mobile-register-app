@@ -22,7 +22,7 @@ export default function CattleScreen({ navigation }) {
   const [ganado, setGanado] = useState([]);
   const [loading, setLoading] = useState(true);
   const { width, height } = Dimensions.get('window');
-
+const API_URL = "https://webmobileregister-production.up.railway.app";
   
   useEffect(() => {
     const fetchAnimals = async () => {
@@ -36,11 +36,11 @@ export default function CattleScreen({ navigation }) {
         }
 
        
-        const response = await axios.get("http://192.168.1.4:3000/api/mis-animales", {
-          headers: {
-            Authorization: `Bearer ${token}`, 
-          },
-        });
+       const response = await axios.get(`${API_URL}/api/mis-animales`, {
+  headers: {
+    Authorization: `Bearer ${token}`, 
+  },
+});
 
         setGanado(response.data); 
         setLoading(false); 
@@ -103,12 +103,14 @@ export default function CattleScreen({ navigation }) {
                 style={styles.cardContent}
                 onPress={() => navigation.navigate("ControlScreen", { chip: animal.chip_animal })}
               >
-                <Image
-                  source={{
-                    uri: `http://192.168.1.4:3000/uploads/${animal.foto}` || "https://via.placeholder.com/100",
-                  }}
-                  style={styles.cardImage}
-                />
+               <Image
+  source={{
+    uri: animal.foto
+      ? `${API_URL}/uploads/${animal.foto}`
+      : "https://via.placeholder.com/100",
+  }}
+  style={styles.cardImage}
+/>
                 <Text style={styles.cardText}>Chip: {animal.chip_animal || "Sin chip"}</Text>
                 <Text style={styles.cardText}>Estado: {animal.estado || "Desconocido"}</Text>
                 <Text style={styles.cardText}>

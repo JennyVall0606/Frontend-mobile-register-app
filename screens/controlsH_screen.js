@@ -45,7 +45,7 @@ export default function ControlH_Screen({ navigation, route }) {
   const [openNombreVacuna, setOpenNombreVacuna] = useState(false);
   const [showPesoDatePicker, setShowPesoDatePicker] = useState(false);
   const [showVacunaDatePicker, setShowVacunaDatePicker] = useState(false);
-
+const API_URL = "https://webmobileregister-production.up.railway.app";
   // Función para formatear fecha
   const formatDate = (dateString) => {
     if (!dateString) return "";
@@ -74,7 +74,7 @@ export default function ControlH_Screen({ navigation, route }) {
   useEffect(() => {
     if (chip) {
       axios
-        .get(`http://192.168.1.4:3000/register/animal/${chip}`)
+        .get(`${API_URL}/register/animal/${chip}`)
         .then((response) => {
           setAnimalInfo(response.data);
           console.log("Datos del animal recibidos:", response.data); // Aquí verificamos los datos del animal
@@ -95,7 +95,7 @@ useFocusEffect(
   useCallback(() => {
     if (chip) {
       axios
-        .get(`http://192.168.1.4:3000/register/animal/${chip}`)
+        .get(`${API_URL}/register/animal/${chip}`)
         .then((response) => {
           setAnimalInfo(response.data);
           // ...otros logs si quieres
@@ -116,10 +116,10 @@ useFocusEffect(
     React.useCallback(() => {
       const fetchData = async () => {
         try {
-          const [pesosRes, vacunasRes] = await Promise.all([
-            axios.get("http://192.168.1.4:3000/weighing/historico-pesaje"),
-            axios.get("http://192.168.1.4:3000/vaccines/historico-vacunas"),
-          ]);
+  const [pesosRes, vacunasRes] = await Promise.all([
+    axios.get(`${API_URL}/weighing/historico-pesaje`),
+    axios.get(`${API_URL}/vaccines/historico-vacunas`),
+  ]);
 
           const pesosFiltrados = pesosRes.data
             .filter((item) => item.chip === chip)
@@ -145,16 +145,16 @@ useFocusEffect(
   );
 
   useEffect(() => {
-    axios
-      .get("http://192.168.1.4:3000/vaccines/tipos-vacuna")
-      .then((res) => setItemsTipoVacuna(res.data))
-      .catch((err) => console.error(err));
+  axios
+    .get(`${API_URL}/vaccines/tipos-vacuna`)
+    .then((res) => setItemsTipoVacuna(res.data))
+    .catch((err) => console.error(err));
 
-    axios
-      .get("http://192.168.1.4:3000/vaccines/nombres-vacuna")
-      .then((res) => setItemsVacunaNombre(res.data))
-      .catch((err) => console.error(err));
-  }, []);
+  axios
+    .get(`${API_URL}/vaccines/nombres-vacuna`)
+    .then((res) => setItemsVacunaNombre(res.data))
+    .catch((err) => console.error(err));
+}, []);
 
   const handleEditPeso = (id) => {
     const pesoSeleccionado = historicoPesaje.find((item) => item.id === id);
@@ -174,9 +174,9 @@ useFocusEffect(
       };
 
       await axios.put(
-        `http://192.168.1.4:3000/weighing/${selectedPeso.id}`,
-        payload
-      );
+  `${API_URL}/weighing/${selectedPeso.id}`,
+  payload
+);
 
       const updatedPesos = historicoPesaje.map((p) =>
         p.id === selectedPeso.id
@@ -230,9 +230,9 @@ useFocusEffect(
     };
 
     await axios.put(
-      `http://192.168.1.4:3000/vaccines/${selectedVacuna.id}`,
-      datosParaApi
-    );
+  `${API_URL}/vaccines/${selectedVacuna.id}`,
+  datosParaApi
+);
 
     setHistoricoVacunas(
       historicoVacunas.map((v) => {
@@ -273,11 +273,11 @@ useFocusEffect(
 
         {animalInfo && animalInfo.foto && (
           <Image
-            source={{
-              uri: `http://192.168.1.4:3000/uploads/${animalInfo.foto}`,
-            }}
-            style={styles.image}
-          />
+  source={{
+    uri: `${API_URL}/uploads/${animalInfo.foto}`,
+  }}
+  style={styles.image}
+/>
         )}
 
         <View style={styles.card}>

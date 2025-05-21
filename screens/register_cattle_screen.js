@@ -62,16 +62,14 @@ export default function RegisterCattleScreen({ route }) {
     { label: "Ninguna", value: "Ninguna" },
     { label: "OTRA", value: "OTRA" },
   ]);
-
+const API_URL = "https://webmobileregister-production.up.railway.app";
   const navigation = useNavigation();
   const { width, height } = Dimensions.get("window");
 
   useEffect(() => {
     const fetchRazas = async () => {
       try {
-        const response = await axios.get(
-          "http://192.168.1.4:3000/register/razas"
-        );
+  const response = await axios.get(`${API_URL}/register/razas`);
         const razaItems = response.data.map((raza) => ({
           label: raza.nombre_raza,
           value: raza.id_raza.toString(),
@@ -100,10 +98,8 @@ export default function RegisterCattleScreen({ route }) {
       if (!chipFromParams || itemsRaza.length === 0) return;
 
       try {
-        const response = await axios.get(
-          `http://192.168.1.4:3000/register/animal/${chipFromParams}`
-        );
-        setAnimalData(response.data);
+  const response = await axios.get(`${API_URL}/register/animal/${chipFromParams}`);
+  setAnimalData(response.data);
 
         if (response.data) {
           console.log(
@@ -136,9 +132,9 @@ export default function RegisterCattleScreen({ route }) {
             setDisease(enfermedadesUnicas); // Actualiza el estado con las enfermedades únicas
           }
 
-          if (response.data.foto) {
-            setImage(`http://192.168.1.4:3000/uploads/${response.data.foto}`);
-          }
+         if (response.data.foto) {
+  setImage(`${API_URL}/uploads/${response.data.foto}`);
+}
         }
       } catch (error) {
         console.error("Error al cargar datos del animal:", error);
@@ -255,10 +251,10 @@ export default function RegisterCattleScreen({ route }) {
       if (observations) formData.append("observaciones", observations);
 
       const url = animalData
-        ? `http://192.168.1.4:3000/register/update/${chip}`
-        : "http://192.168.1.4:3000/register/add";
+  ? `${API_URL}/register/update/${chip}`
+  : `${API_URL}/register/add`;
 
-      const method = animalData ? "put" : "post";
+const method = animalData ? "put" : "post";
 
       const response = await axios({
         method,

@@ -8,7 +8,7 @@ import { login } from "../services/api";
 import AsyncStorage from '@react-native-async-storage/async-storage'; 
 
 
-const API_URL = 'http://192.168.1.4:3000'; 
+const API_URL = "https://webmobileregister-production.up.railway.app";
 
 
 
