@@ -45,7 +45,7 @@ export default function ControlH_Screen({ navigation, route }) {
   const [openNombreVacuna, setOpenNombreVacuna] = useState(false);
   const [showPesoDatePicker, setShowPesoDatePicker] = useState(false);
   const [showVacunaDatePicker, setShowVacunaDatePicker] = useState(false);
-const API_URL = "https://webmobileregister-production.up.railway.app";
+const API_URL = "http://172.20.10.2:3000";
   // Función para formatear fecha
   const formatDate = (dateString) => {
     if (!dateString) return "";
@@ -259,6 +259,24 @@ useFocusEffect(
     alert("Vacuna actualizada");
   };
 
+  const handleFechaConfirm = (date, type) => {
+    const today = new Date().toISOString().split("T")[0];
+    const selectedDate = date.toISOString().split("T")[0];
+
+    if (selectedDate > today) {
+      Alert.alert("Fecha inválida", "No puedes seleccionar una fecha futura.");
+      return;
+    }
+
+    if (type === "peso") {
+      setNuevaFecha(selectedDate);
+    } else if (type === "vacuna") {
+      setNuevaFechaVacuna(selectedDate);
+    }
+    setShowPesoDatePicker(false);
+    setShowVacunaDatePicker(false);
+  };
+
   return (
     <Layout>
       <ScrollView style={[styles.container, { width, height }]}>
@@ -398,16 +416,14 @@ useFocusEffect(
                 />
               </Pressable>
               <DateTimePickerModal
-                isVisible={showPesoDatePicker}
-                mode="date"
-                date={nuevaFecha ? new Date(nuevaFecha) : new Date()}
-                onConfirm={(date) => {
-                  setNuevaFecha(date.toISOString().substring(0, 10));
-                  setShowPesoDatePicker(false);
-                }}
-                themeVariant="light"
-                onCancel={() => setShowPesoDatePicker(false)}
-              />
+          isVisible={showPesoDatePicker}
+          mode="date"
+          date={nuevaFecha ? new Date(nuevaFecha) : new Date()}
+          onConfirm={(date) => handleFechaConfirm(date, "peso")}
+          themeVariant="light"
+          onCancel={() => setShowPesoDatePicker(false)}
+          maximumDate={new Date()} // Deshabilita fechas futuras
+        />
               <Button
                 title="Guardar cambios"
                 onPress={handleGuardarCambiosPeso}
@@ -470,19 +486,15 @@ useFocusEffect(
                   pointerEvents="none"
                 />
               </Pressable>
-              <DateTimePickerModal
-                isVisible={showVacunaDatePicker}
-                mode="date"
-                date={
-                  nuevaFechaVacuna ? new Date(nuevaFechaVacuna) : new Date()
-                }
-                onConfirm={(date) => {
-                  setNuevaFechaVacuna(date.toISOString().substring(0, 10));
-                  setShowVacunaDatePicker(false);
-                }}
-                themeVariant="light"
-                onCancel={() => setShowVacunaDatePicker(false)}
-              />
+             <DateTimePickerModal
+          isVisible={showVacunaDatePicker}
+          mode="date"
+          date={nuevaFechaVacuna ? new Date(nuevaFechaVacuna) : new Date()}
+          onConfirm={(date) => handleFechaConfirm(date, "vacuna")}
+          themeVariant="light"
+          onCancel={() => setShowVacunaDatePicker(false)}
+          maximumDate={new Date()} // Deshabilita fechas futuras
+        />
               <DropDownPicker
                 open={openTipoVacuna}
                 value={tipoVacuna}

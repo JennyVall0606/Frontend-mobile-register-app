@@ -96,6 +96,11 @@ export default StyleSheet.create({
     marginBottom: 20,
   },
 
+  inputError: {
+    borderColor: 'red', // Aplica el borde rojo cuando hay error
+    borderWidth: 1,
+  },
+
   dateButton: {
     flexDirection: "row",
     alignItems: "center",

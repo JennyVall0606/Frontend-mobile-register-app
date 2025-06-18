@@ -51,7 +51,6 @@ export default StyleSheet.create({
   formSection: {
     marginBottom: 30,
     padding: 10,
-    
     borderRadius: 10,
   },
 
@@ -70,6 +69,11 @@ export default StyleSheet.create({
     padding: 10,
     marginBottom: 10,
     backgroundColor: 'rgb(253, 253, 253)',
+  },
+
+  inputError: {
+    borderColor: 'red', // Aplica el borde rojo cuando hay error
+    borderWidth: 1,
   },
   inputWrapper: {
     width: "100%",
@@ -202,6 +206,9 @@ export default StyleSheet.create({
   
   dropdownContainerUnidad: {
     marginBottom: 20, 
+     borderWidth: 1,
+     borderRadius: 8, // Mismo radio de borde que el input común
+    borderColor: 'rgb(20, 20, 20)', // Mismo color de borde que el resto de los inputs
     zIndex: 10, 
     marginRight: 80,
     width: '35%'

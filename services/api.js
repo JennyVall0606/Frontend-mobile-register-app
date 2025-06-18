@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 
-const API_URL = 'https://webmobileregister-production.up.railway.app';
+const API_URL = 'http://172.20.10.2:3000';
+
 
 
 

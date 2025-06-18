@@ -62,7 +62,16 @@ export default function RegisterCattleScreen({ route }) {
     { label: "Ninguna", value: "Ninguna" },
     { label: "OTRA", value: "OTRA" },
   ]);
-const API_URL = "https://webmobileregister-production.up.railway.app";
+
+   const [errors, setErrors] = useState({
+    photo: false,
+    chip: false,
+    breed: false,
+    birthDate: false,
+    weight: false,
+  });
+
+const API_URL = "http://172.20.10.2:3000";
   const navigation = useNavigation();
   const { width, height } = Dimensions.get("window");
 
@@ -102,10 +111,7 @@ const API_URL = "https://webmobileregister-production.up.railway.app";
   setAnimalData(response.data);
 
         if (response.data) {
-          console.log(
-            "Enfermedades cargadas desde el servidor:",
-            response.data.enfermedades
-          );
+       
           const fechaBD = response.data.fecha_nacimiento;
           let fechaFormateada = fechaBD;
 
@@ -190,7 +196,7 @@ const API_URL = "https://webmobileregister-production.up.railway.app";
 
     if (formattedDate > todayFormatted) {
       Alert.alert("Fecha inválida", "No puedes seleccionar una fecha futura.");
-      return;
+   
     }
 
     setBirthDate(formattedDate);
@@ -210,6 +216,22 @@ const API_URL = "https://webmobileregister-production.up.railway.app";
   };
 
   const handleRegister = async () => {
+
+   const newErrors = {
+      photo: !image,
+      chip: !chip,
+      breed: !breed,
+      birthDate: !birthDate,
+      weight: !weight,
+    };
+
+    setErrors(newErrors);
+
+    if (Object.values(newErrors).includes(true)) {
+      Alert.alert("⚠️ Campos obligatorios incompletos", "Por favor completa todos los campos obligatorios.");
+      return;
+    }
+
     try {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
@@ -327,11 +349,8 @@ const method = animalData ? "put" : "post";
         </Text>
 
         {!image ? (
-          <TouchableOpacity
-            onPress={handleImagePick}
-            style={styles.imagePicker}
-          >
-            <Text style={styles.imagePickerText}>🐄 Subir imagen 📸</Text>
+          <TouchableOpacity onPress={handleImagePick} style={[styles.imagePicker, errors.photo && styles.inputError]}>
+            <Text style={styles.imagePickerText}>🐄 Subir imagen*</Text>
           </TouchableOpacity>
         ) : (
           <View style={styles.imageContainer}>
@@ -355,24 +374,16 @@ const method = animalData ? "put" : "post";
           items={itemsRaza}
           value={breed}
           setValue={setBreed}
-          placeholder={breed ? "" : "Selecciona una raza"}
-          style={styles.dropdown}
+          placeholder={breed ? "" : "Selecciona una raza*"}
+          style={[styles.dropdown, errors.breed && styles.inputError]}
           textStyle={styles.dropdownText}
           listMode="SCROLLVIEW"
         />
 
-        <TouchableOpacity
-          style={styles.dateButton}
-          onPress={() => {
-            setCurrentDateType("fechaNacimiento");
-            setDatePickerVisibility(true);
-          }}
-        >
+        <TouchableOpacity style={[styles.dateButton, errors.birthDate && styles.inputError]} onPress={() => setDatePickerVisibility(true)}>
           <View style={styles.rowContainer}>
             <Ionicons name="calendar" style={styles.iconStyle} />
-            <Text style={styles.dateButtonText}>
-              {birthDate ? birthDate : "Fecha de nacimiento"}
-            </Text>
+            <Text style={styles.dateButtonText}>{birthDate ? birthDate : "Fecha de nacimiento*"}</Text>
           </View>
         </TouchableOpacity>
 
@@ -382,12 +393,13 @@ const method = animalData ? "put" : "post";
           onConfirm={handleConfirmDate}
           themeVariant="light"
           onCancel={() => setDatePickerVisibility(false)}
+           maximumDate={new Date()} // Establece el día de hoy como la fecha máxima (deshabilita fechas futuras)
         />
 
         <View style={styles.weightContainer}>
           <TextInput
-            style={styles.weightInput}
-            placeholder="Peso"
+           style={[styles.weightInput, errors.weight && styles.inputError]}
+            placeholder="Peso*"
             keyboardType="numeric"
             value={weight}
             onChangeText={setWeight}
@@ -396,8 +408,8 @@ const method = animalData ? "put" : "post";
         </View>
 
         <TextInput
-          style={styles.input}
-          placeholder="Chip de registro vacuno"
+          style={[styles.input, errors.chip && styles.inputError]}
+          placeholder="Chip de registro vacuno*"
           value={chip}
           onChangeText={setChip}
           editable={!isEditing}

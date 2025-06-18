@@ -22,6 +22,15 @@ export default function FormsScreen({ route }) {
   const navigation = useNavigation();
   const { chip } = route.params || {};
   const { width, height } = Dimensions.get("window");
+
+   const [errors, setErrors] = useState({
+    fechaPeso: false,
+    peso: false,
+    dosis: false,
+    unidad: false,
+    fechaVacuna: false,
+  });
+  
   const [pesoChecked, setPesoChecked] = useState(false);
   const [vacunaChecked, setVacunaChecked] = useState(false);
   const [cantidad, setCantidad] = useState("");
@@ -49,7 +58,7 @@ export default function FormsScreen({ route }) {
   const [fechaPeso, setFechaPeso] = useState("");
   // Estados para formulario de vacunas
   const [chipVacuna, setChipVacuna] = useState("");
-  const API_URL = "https://webmobileregister-production.up.railway.app";
+  const API_URL = "http://172.20.10.2:3000";
   useEffect(() => {
     axios
       .get(`${API_URL}/vaccines/tipos-vacuna`)
@@ -63,27 +72,36 @@ export default function FormsScreen({ route }) {
   }, []);
 
   const handleConfirmDate = (date) => {
-    // Ajustar manualmente a UTC-5 (hora Colombia)
-    const colombiaDate = new Date(date.getTime() - 5 * 60 * 60 * 1000);
-    const formattedDate = colombiaDate.toISOString().split("T")[0];
+  // Ajustar manualmente a UTC-5 (hora Colombia)
+  const colombiaDate = new Date(date.getTime() - 5 * 60 * 60 * 1000);
+  const formattedDate = colombiaDate.toISOString().split("T")[0];
 
-    const today = new Date(new Date().getTime() - 5 * 60 * 60 * 1000)
-      .toISOString()
-      .split("T")[0];
+  const today = new Date(new Date().getTime() - 5 * 60 * 60 * 1000)
+    .toISOString()
+    .split("T")[0];
 
-    if (formattedDate > today) {
-      Alert.alert("Fecha inválida", "No puedes seleccionar una fecha futura.");
-      return;
-    }
+  // Si la fecha es futura, mostrar la alerta
+  if (formattedDate > today) {
+    Alert.alert(
+      "Fecha inválida",
+      "No puedes seleccionar una fecha futura.",
+      [{ text: "Aceptar" }],
+      { cancelable: false }
+    );
+    
+  }
 
-    if (currentDateType === "peso") {
-      setFechaPeso(formattedDate);
-    } else {
-      setFechaVacuna(formattedDate);
-    }
+  // Si la fecha es válida, asignarla
+  if (currentDateType === "peso") {
+    setFechaPeso(formattedDate);
+  } else {
+    setFechaVacuna(formattedDate);
+  }
 
-    setDatePickerVisibility(false);
-  };
+  // Solo cerrar el modal si la fecha es válida
+  setDatePickerVisibility(false);
+};
+
 
   useEffect(() => {
     if (chip) {
@@ -99,6 +117,13 @@ export default function FormsScreen({ route }) {
   };
 
   const guardarPeso = async () => {
+
+  if (!fechaPeso || !peso) {
+      setErrors({ ...errors, fechaPeso: !fechaPeso, peso: !peso });
+      Alert.alert("⚠️ Campos obligatorios", "Por favor, completa todos los campos obligatorios en el Control de Peso.");
+      return;
+    }
+
     try {
       const response = await axios.post(`${API_URL}/weighing/add`, {
         chip_animal: chipPeso,
@@ -137,6 +162,18 @@ export default function FormsScreen({ route }) {
   }, [cantidad, unidad]);
 
   const guardarVacuna = async () => {
+
+ if (!fechaVacuna || !cantidad || !unidad || !tipoVacuna || !nombreVacuna) {
+      setErrors({
+        ...errors,
+        fechaVacuna: !fechaVacuna,
+        dosis: !cantidad || !unidad,
+        unidad: !unidad,
+      });
+      Alert.alert("⚠️ Campos obligatorios", "Por favor, completa todos los campos obligatorios en el Control de Vacunas.");
+      return;
+    }
+
     try {
       const response = await axios.post(`${API_URL}/vaccines/add`, {
         chip_animal: chipVacuna,
@@ -278,7 +315,7 @@ export default function FormsScreen({ route }) {
               </ScrollView>
             )}
             <TouchableOpacity
-              style={styles.dateButton}
+               style={[styles.dateButton, errors.fechaPeso && styles.inputError]}
               onPress={() => {
                 setCurrentDateType("peso");
                 setDatePickerVisibility(true);
@@ -286,13 +323,13 @@ export default function FormsScreen({ route }) {
             >
               <Ionicons name="calendar" style={formsStyles.iconCalendar} />
               <Text style={styles.dateButtonText}>
-                {fechaPeso || "Fecha de pesaje"}
+                {fechaPeso || "Fecha de pesaje*"}
               </Text>
             </TouchableOpacity>
             <View style={styles.weightContainer}>
               <TextInput
-                style={styles.weightInput}
-                placeholder="Peso"
+                style={[styles.weightInput, errors.peso && styles.inputError]}
+                placeholder="Peso*"
                 keyboardType="numeric"
                 value={peso}
                 onChangeText={setPeso}
@@ -367,36 +404,48 @@ export default function FormsScreen({ route }) {
 
             <View style={styles.row}>
               <TextInput
-                style={styles.inputD}
+                style={[styles.inputD, errors.dosis && styles.inputError]}
                 value={cantidad}
                 onChangeText={setCantidad}
-                placeholder="Dosis"
+                placeholder="Dosis*"
                 keyboardType="numeric"
               />
               <DropDownPicker
-                open={open}
-                value={unidad}
-                items={items}
-                setOpen={() => {
-                  setOpenTipoVacuna(false);
-                  setOpenVacunaNombre(false);
-                  setOpen(true);
-                }}
-                setValue={setUnidad}
-                setItems={setItems}
-                placeholder="Unidad"
-                containerStyle={[
-                  styles.dropdownContainerUnidad,
-                  open && styles.dropdownBelowUnidad,
-                  { zIndex: open ? 10 : 1 },
-                ]}
-                listMode="SCROLLVIEW"
-                onChangeValue={() => setOpen(false)}
-              />
+  open={open}
+  value={unidad}
+  items={items}
+  setOpen={() => {
+    setOpenTipoVacuna(false);
+    setOpenVacunaNombre(false);
+    setOpen(true);
+  }}
+  setValue={setUnidad}
+  setItems={setItems}
+  placeholder="Unidad*"
+  containerStyle={[
+    styles.dropdownContainerUnidad, // Estilo base
+    open && styles.dropdownBelowUnidad, // Estilo cuando está abierto
+    { zIndex: open ? 10 : 1 }, // Ajuste de z-index
+    errors.unidad && styles.inputError,  // Aplica el estilo de error si hay un error
+  ]}
+  listMode="SCROLLVIEW"
+  onChangeValue={() => setOpen(false)}
+  
+  // Eliminar el borde extra dentro del dropdown
+  dropDownStyle={{
+    borderWidth: 0,  // Elimina el borde dentro del dropdown
+    padding: 0,      // Asegura que no haya relleno adicional
+  }}
+  style={{
+    borderWidth: 0,  // Elimina el borde interno adicional
+  }}
+/>
+
+
             </View>
 
             <TouchableOpacity
-              style={styles.dateButton}
+               style={[styles.dateButton, errors.fechaVacuna && styles.inputError]}
               onPress={() => {
                 setCurrentDateType("vacuna");
                 setDatePickerVisibility(true);
@@ -404,7 +453,7 @@ export default function FormsScreen({ route }) {
             >
               <Ionicons name="calendar" style={formsStyles.iconCalendar} />
               <Text style={styles.dateButtonText}>
-                {fechaVacuna || "Fecha de vacunación"}
+                {fechaVacuna || "Fecha de vacunación*"}
               </Text>
             </TouchableOpacity>
 
@@ -432,6 +481,7 @@ export default function FormsScreen({ route }) {
           onConfirm={handleConfirmDate}
           themeVariant="light"
           onCancel={() => setDatePickerVisibility(false)}
+            maximumDate={new Date()} // Establece el día de hoy como la fecha máxima (deshabilita fechas futuras)
         />
       </ScrollView>
     </Layout>
