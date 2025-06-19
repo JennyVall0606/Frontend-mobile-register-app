@@ -83,7 +83,7 @@ export default function Layout({ children }) {
 
   return (
     <ImageBackground
-      source={require("../assets/acuarela.jpg")}
+      source={require("../assets/acuarela.Home.png")}
       style={globalStyles.background}
     >
       {/* Top bar */}
@@ -97,7 +97,7 @@ export default function Layout({ children }) {
           accessibilityLabel="Abrir menú"
         >
           <Image
-            source={require("../assets/menu.png")}
+            source={require("../assets/Menu.png")}
             style={globalStyles.icon}
           />
         </TouchableOpacity>

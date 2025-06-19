@@ -12,29 +12,42 @@ export default function HomeScreen() {
       <ScrollView
               style={[styles.container, { width, height }]} // Ajustamos el ancho y alto al de la pantalla
             >
-        <Text style={styles.title}>AgroGestor</Text>
-
+        
         <Image
-          source={require('../assets/logogv.png')}
+          source={require('../assets/Logo_Positivo.png')}
           style={styles.logo}
           resizeMode="contain"
         />
 
-        <View style={styles.buttonRow}>
-          <TouchableOpacity
-            style={styles.squareButton}
-            onPress={() => navigation.navigate('RegisterCattle')}
-          >
-            <Text style={styles.buttonText}>Registrar Ganado</Text>
-          </TouchableOpacity>
+       <View style={styles.buttonRow}>
+  {/* Botón "Registrar Ganado" con imagen */}
+  <TouchableOpacity
+    style={styles.squareButton}
+    onPress={() => navigation.navigate('RegisterCattle')}
+  >
+    <View style={styles.buttonContent}>
+      <Image
+        source={require('../assets/RegistrarGanado.png')} // Ruta de la imagen para "Registrar Ganado"
+        style={styles.buttonImage}
+      />
+      <Text style={styles.buttonText}>Registrar Ganado</Text>
+    </View>
+  </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.squareButton}
-            onPress={() => navigation.navigate('CattleScreen')}
-          >
-            <Text style={styles.buttonText}>Ver mi ganado</Text>
-          </TouchableOpacity>
-        </View>
+  {/* Botón "Ver mi ganado" con imagen */}
+  <TouchableOpacity
+    style={styles.squareButton}
+    onPress={() => navigation.navigate('CattleScreen')}
+  >
+    <View style={styles.buttonContent}>
+      <Image
+        source={require('../assets/VerMiGanado.png')} // Ruta de la imagen para "Ver mi ganado"
+        style={styles.buttonImage}
+      />
+      <Text style={styles.buttonText}>Ver mi ganado</Text>
+    </View>
+  </TouchableOpacity>
+</View>
       </ScrollView>
     </Layout>
   );
