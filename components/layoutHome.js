@@ -81,15 +81,6 @@ export default function Layout({ children }) {
     }, 4000);
   };
 
-const navigateToHome = () => {
-    navigation.navigate("Home"); // Navegar a la pantalla "Home"
-  };
-
-   const goBack = () => {
-    navigation.goBack(); // Navegar a la pantalla anterior
-  };
-
-
    return (
     <ImageBackground
       source={require("../assets/acuarela.Home.png")}
@@ -158,32 +149,6 @@ const navigateToHome = () => {
         {children}
       </ScrollView>
 
-
-   <View style={globalStyles.greenBar}>
-  <View style={globalStyles.bottomImageContainer}>
-    {/* Imagen Inicio */}
-    <TouchableOpacity onPress={navigateToHome}>
-    <View style={globalStyles.imageContainer}>
-      <Image
-        source={require("../assets/Inicio.png")}
-        style={globalStyles.imageStyle}
-      />
-      <Text style={globalStyles.imageText}>Inicio</Text>
-    </View>
-    </TouchableOpacity>
-
-    {/* Imagen Regresar */}
-     <TouchableOpacity onPress={goBack}> 
-    <View style={globalStyles.imageContainer}>
-      <Image
-        source={require("../assets/Regresar.png")}
-        style={globalStyles.imageStyle}
-      />
-      <Text style={globalStyles.imageText}>Regresar</Text>
-    </View>
-    </TouchableOpacity>
-  </View>
-</View>
      
       
     </ImageBackground>

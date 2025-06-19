@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image, Dimensions } from 'react-native';
-import Layout from '../components/layout';
+import Layout from '../components/layoutHome';
 import styles from '../styles/home_styles';
 import { useNavigation } from '@react-navigation/native';
 

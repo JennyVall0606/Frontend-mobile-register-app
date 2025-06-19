@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Alert, TextInput, Image } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
-import Layout from "../components/simple_layout";
+import Layout from "../components/layoutlogin";
 import styles from "../styles/login_styles";
 import { login } from "../services/api";  
 import AsyncStorage from '@react-native-async-storage/async-storage'; 

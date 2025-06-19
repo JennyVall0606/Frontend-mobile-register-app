@@ -28,10 +28,22 @@ export default StyleSheet.create({
     height: 60,
     zIndex: 10,
   },
+  topBarGreen: {
+    height: 105, // Altura de la barra verde
+    backgroundColor: "rgb(52, 112, 24)", // Color verde
+    width: "100%",
+    flexDirection: "row", // Alinea los elementos de manera horizontal
+    justifyContent: "space-between", // Espaciado entre los íconos
+    alignItems: "center", // Centra los íconos verticalmente dentro de la barra
+    paddingHorizontal: 15, // Ajusta el espaciado de los íconos desde los bordes
+    top: -40, // Asegura que esté en la parte superior de la pantalla
+    zIndex: 1, // Asegura que la barra esté por encima del contenido
+  },
 
   icon: {
-    width: 40, 
-    height: 40,
+    width: 30, 
+    height: 30,
+    marginTop: 50,
   },
 
   searchContainerCustom: {
@@ -52,7 +64,7 @@ export default StyleSheet.create({
 
   searchInput: {
     flex: 1,
-    backgroundColor: "rgb(207, 207, 212)",
+    backgroundColor: "rgb(88, 88, 209)",
     padding: 8,
     borderRadius: 20,
     fontSize: 16, 
@@ -101,6 +113,42 @@ export default StyleSheet.create({
 
   content: {
     flex: 1,
+  },
+
+  greenBar: {
+    height: 80, // Altura de la barra verde
+    backgroundColor: "rgb(52, 112, 24)", // Color verde
+    width: "100%", // Asegura que la barra ocupe todo el ancho
+    position: "relative", // Permite que los elementos dentro de la barra se posicionen de manera relativa
+  },
+
+  bottomImageContainer: {
+    position: "absolute", // Lo posiciona en la parte inferior de la barra
+    bottom: 10, // Asegura que esté en la parte inferior
+    left: 0,
+    right: 0,
+    flexDirection: "row", // Para colocar las imágenes una al lado de la otra
+    justifyContent: "space-between", // Espaciado entre las imágenes
+    paddingHorizontal: 120, // Espacio de los bordes de la barra
+    marginBottom:15, // Espacio adicional debajo de las imágenes
+  },
+  
+ imageContainer: {
+    alignItems: "center", // Centra la imagen y el texto horizontalmente
+    justifyContent: "center", // Centra la imagen y el texto verticalmente
+    marginHorizontal: 15, // Añade espacio entre los contenedores de imagen
+  },
+
+  imageStyle: {
+    width: 20, // Ancho de las imágenes
+    height: 20, // Alto de las imágenes
+  },
+
+   imageText: {
+    marginTop: 5, // Añade un pequeño espacio entre la imagen y el texto
+    color: "white", // Puedes cambiar el color del texto si lo prefieres
+    fontSize: 12, // Tamaño del texto
+    fontWeight: "normal", // Estilo del texto
   },
   
 });
