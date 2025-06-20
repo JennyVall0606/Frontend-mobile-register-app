@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -8,58 +7,60 @@ import {
   ActivityIndicator,
   Image,
   Dimensions,
-  Alert
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Layout from "../components/layout";
 import { styles } from "../styles/CattleList_Styles";
 import axios from "axios";
-import AsyncStorage from '@react-native-async-storage/async-storage'; 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function CattleScreen({ navigation }) {
- 
   const [search, setSearch] = useState("");
   const [ganado, setGanado] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { width, height } = Dimensions.get('window');
-const API_URL = "http://172.20.10.2:3000";
-  
+  const { width, height } = Dimensions.get("window");
+  const API_URL = "http://172.20.10.2:3000";
+
   useEffect(() => {
     const fetchAnimals = async () => {
       try {
-        
         const token = await AsyncStorage.getItem("token");
 
         if (!token) {
-          Alert.alert("❌ Error", "Token no encontrado. Inicia sesión nuevamente.");
+          Alert.alert(
+            "❌ Error",
+            "Token no encontrado. Inicia sesión nuevamente."
+          );
           return;
         }
 
-       
-       const response = await axios.get(`${API_URL}/api/mis-animales`, {
-  headers: {
-    Authorization: `Bearer ${token}`, 
-  },
-});
+        const response = await axios.get(`${API_URL}/api/mis-animales`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-        setGanado(response.data); 
-        setLoading(false); 
+        setGanado(response.data);
+        setLoading(false);
       } catch (error) {
         console.error("Error al obtener el ganado:", error);
-        setLoading(false); 
-        Alert.alert("❌ Error", "Hubo un problema al obtener los datos del ganado.");
+        setLoading(false);
+        Alert.alert(
+          "❌ Error",
+          "Hubo un problema al obtener los datos del ganado."
+        );
       }
     };
 
     fetchAnimals();
   }, []);
 
-  
-  const filteredGanado = ganado.filter((animal) =>
-    animal.chip && animal.chip.toLowerCase().includes(search.toLowerCase())
+  const filteredGanado = ganado.filter(
+    (animal) =>
+      animal.chip && animal.chip.toLowerCase().includes(search.toLowerCase())
   );
 
-  
   const agruparEnPares = (animales) => {
     const pares = [];
     for (let i = 0; i < animales.length; i += 2) {
@@ -68,7 +69,6 @@ const API_URL = "http://172.20.10.2:3000";
     return pares;
   };
 
-  
   if (loading) {
     return (
       <View style={styles.container}>
@@ -77,57 +77,101 @@ const API_URL = "http://172.20.10.2:3000";
     );
   }
 
-  
   return (
     <Layout>
       <ScrollView
         style={[styles.container, { width, height }]} // Ajustamos el ancho y alto al de la pantalla
       >
-        
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Ionicons style={styles.icon} name="arrow-back" />
-        </TouchableOpacity>
+        <View style={styles.titleContainer}>
+          <Image
+            source={require("../assets/Imagen_Resumen_Ganado.png")} // Coloca la ruta de tu imagen aquí
+            style={styles.imageStyle} // Define el estilo para la imagen
+          />
+          <Text style={styles.title}>RESUMEN</Text>
+          <Text style={styles.title1}>DE GANADO</Text>
+        </View>
 
-       
-        <Text style={styles.title}>Resumen del Ganado</Text>
+        <View style={styles.totalCountContainer}>
+          <Image
+            source={require("../assets/TotalRegistros.png")} // Ruta de tu logo
+            style={styles.logoStyle} // Estilo para el logo
+          />
+          <Text style={styles.totalCount}>
+            Total de registros:{" "}
+            <Text style={styles.counter}>{ganado.length}</Text>
+          </Text>
+        </View>
 
-        
-        {agruparEnPares(ganado).map((par, index) => (
-          <View key={index} style={styles.card}>
-            {par.map((animal) => (
-              <TouchableOpacity
-                key={animal.id}
-                style={styles.cardContent}
-                onPress={() => navigation.navigate("ControlScreen", { chip: animal.chip_animal })}
-              >
-               <Image
-  source={{
-    uri: animal.foto
-      ? `${API_URL}/uploads/${animal.foto}`
-      : "https://via.placeholder.com/100",
-  }}
-  style={styles.cardImage}
-/>
-                <Text style={styles.cardText}>Chip: {animal.chip_animal || "Sin chip"}</Text>
-                <Text style={styles.cardText}>Estado: {animal.estado || "Desconocido"}</Text>
-                <Text style={styles.cardText}>
-                  Nacimiento: {new Date(animal.fecha_nacimiento).toLocaleDateString()}
-                </Text>
-                <Text style={styles.cardText}>
-                  Peso: {animal.peso_nacimiento ? `${animal.peso_nacimiento} kg` : "Sin dato"}
-                </Text>
-              </TouchableOpacity>
-            ))}
+        {ganado.map((animal) => (
+          <View key={animal.id} style={styles.card}>
+            <TouchableOpacity
+              key={animal.id}
+              style={styles.cardContent}
+              onPress={() =>
+                navigation.navigate("ControlScreen", {
+                  chip: animal.chip_animal,
+                })
+              }
+            >
+              <Image
+                source={{
+                  uri: animal.foto
+                    ? `${API_URL}/uploads/${animal.foto}`
+                    : "https://via.placeholder.com/100",
+                }}
+                style={styles.cardImage}
+              />
+             <View style={styles.column}>
+  <Text style={styles.cardText}>
+    <Image
+      source={require("../assets/Editar_Chip.png")} // Icono de chip
+      style={styles.iconStyle} // Estilo para la imagen
+    />
+    Chip:{" "}
+    <Text style={styles.DatosText}>
+      {animal.chip_animal || "Sin chip"}
+    </Text>
+  </Text>
+
+  <Text style={styles.cardText}>
+    <Image
+      source={require("../assets/Estado.png")} // Icono de estado
+      style={styles.iconStyle} // Estilo para la imagen
+    />
+    Estado:{" "}
+    <Text style={styles.DatosText}>
+      {animal.estado || "Desconocido"}
+    </Text>
+  </Text>
+
+  <Text style={styles.cardText}>
+    <Image
+      source={require("../assets/Nacimiento.png")} // Icono de nacimiento
+      style={styles.iconStyle} // Estilo para la imagen
+    />
+    Nacimiento:{" "}
+    <Text style={styles.DatosText}>
+      {new Date(animal.fecha_nacimiento).toLocaleDateString()}
+    </Text>
+  </Text>
+
+  <Text style={styles.cardText}>
+    <Image
+      source={require("../assets/Peso.png")} // Icono de peso
+      style={styles.iconStyle} // Estilo para la imagen
+    />
+    Peso:{" "}
+    <Text style={styles.DatosText}>
+      {animal.peso_nacimiento
+        ? `${animal.peso_nacimiento} kg`
+        : "Sin dato"}
+    </Text>
+  </Text>
+</View>
+
+            </TouchableOpacity>
           </View>
         ))}
-
-     
-        <Text style={styles.totalCount}>
-          Total de registros: {ganado.length}
-        </Text>
       </ScrollView>
     </Layout>
   );
