@@ -96,7 +96,7 @@ const navigateToHome = () => {
       style={globalStyles.background}
     >
 {/* Header con barra verde */}
-<View style={[globalStyles.topBar, globalStyles.topBarContainer]}>
+<View style={[ globalStyles.topBarContainer]}>
    <View style={globalStyles.topBarGreen}>
     <TouchableOpacity
       onPress={() => {

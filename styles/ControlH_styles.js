@@ -4,6 +4,7 @@ export const styles = {
   container: {
     flex: 1,
     padding: 16,
+    paddingTop: 80,
   },
   backButton: {
     marginBottom: 16,

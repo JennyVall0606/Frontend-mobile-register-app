@@ -124,7 +124,7 @@ export default function CattleScreen({ navigation }) {
              <View style={styles.column}>
   <Text style={styles.cardText}>
     <Image
-      source={require("../assets/Editar_Chip.png")} // Icono de chip
+      source={require("../assets/Chip.png")} // Icono de chip
       style={styles.iconStyle} // Estilo para la imagen
     />
     Chip:{" "}

@@ -9,27 +9,20 @@ export default StyleSheet.create({
 
   container: {
     flex: 1, 
+    
   },
 
-  topBar: {
-    flexDirection: "row",
-  alignItems: "center",
-  justifyContent: "space-between",
-  marginTop: 60,
-  paddingHorizontal: 20,
-  marginBottom: 20,
-  gap: 300,  
-  },
 
   topBarContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingHorizontal: -500,
+    paddingHorizontal: -30,
     height: 60,
     zIndex: 10,
+    
   },
   topBarGreen: {
-    height: 105, // Altura de la barra verde
+    height: 150, // Altura de la barra verde
     backgroundColor: "rgb(52, 112, 24)", // Color verde
     width: "100%",
     flexDirection: "row", // Alinea los elementos de manera horizontal
@@ -119,7 +112,7 @@ export default StyleSheet.create({
     height: 80, // Altura de la barra verde
     backgroundColor: "rgb(52, 112, 24)", // Color verde
     width: "100%", // Asegura que la barra ocupe todo el ancho
-    position: "relative", // Permite que los elementos dentro de la barra se posicionen de manera relativa
+      
   },
 
   bottomImageContainer: {

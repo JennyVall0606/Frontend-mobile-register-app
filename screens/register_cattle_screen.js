@@ -63,7 +63,7 @@ export default function RegisterCattleScreen({ route }) {
     { label: "OTRA", value: "OTRA" },
   ]);
 
-   const [errors, setErrors] = useState({
+  const [errors, setErrors] = useState({
     photo: false,
     chip: false,
     breed: false,
@@ -71,14 +71,14 @@ export default function RegisterCattleScreen({ route }) {
     weight: false,
   });
 
-const API_URL = "http://172.20.10.2:3000";
+  const API_URL = "http://172.20.10.2:3000";
   const navigation = useNavigation();
   const { width, height } = Dimensions.get("window");
 
   useEffect(() => {
     const fetchRazas = async () => {
       try {
-  const response = await axios.get(`${API_URL}/register/razas`);
+        const response = await axios.get(`${API_URL}/register/razas`);
         const razaItems = response.data.map((raza) => ({
           label: raza.nombre_raza,
           value: raza.id_raza.toString(),
@@ -107,11 +107,12 @@ const API_URL = "http://172.20.10.2:3000";
       if (!chipFromParams || itemsRaza.length === 0) return;
 
       try {
-  const response = await axios.get(`${API_URL}/register/animal/${chipFromParams}`);
-  setAnimalData(response.data);
+        const response = await axios.get(
+          `${API_URL}/register/animal/${chipFromParams}`
+        );
+        setAnimalData(response.data);
 
         if (response.data) {
-       
           const fechaBD = response.data.fecha_nacimiento;
           let fechaFormateada = fechaBD;
 
@@ -138,9 +139,9 @@ const API_URL = "http://172.20.10.2:3000";
             setDisease(enfermedadesUnicas); // Actualiza el estado con las enfermedades únicas
           }
 
-         if (response.data.foto) {
-  setImage(`${API_URL}/uploads/${response.data.foto}`);
-}
+          if (response.data.foto) {
+            setImage(`${API_URL}/uploads/${response.data.foto}`);
+          }
         }
       } catch (error) {
         console.error("Error al cargar datos del animal:", error);
@@ -196,7 +197,6 @@ const API_URL = "http://172.20.10.2:3000";
 
     if (formattedDate > todayFormatted) {
       Alert.alert("Fecha inválida", "No puedes seleccionar una fecha futura.");
-   
     }
 
     setBirthDate(formattedDate);
@@ -216,8 +216,7 @@ const API_URL = "http://172.20.10.2:3000";
   };
 
   const handleRegister = async () => {
-
-   const newErrors = {
+    const newErrors = {
       photo: !image,
       chip: !chip,
       breed: !breed,
@@ -228,7 +227,10 @@ const API_URL = "http://172.20.10.2:3000";
     setErrors(newErrors);
 
     if (Object.values(newErrors).includes(true)) {
-      Alert.alert("⚠️ Campos obligatorios incompletos", "Por favor completa todos los campos obligatorios.");
+      Alert.alert(
+        "⚠️ Campos obligatorios incompletos",
+        "Por favor completa todos los campos obligatorios."
+      );
       return;
     }
 
@@ -273,10 +275,10 @@ const API_URL = "http://172.20.10.2:3000";
       if (observations) formData.append("observaciones", observations);
 
       const url = animalData
-  ? `${API_URL}/register/update/${chip}`
-  : `${API_URL}/register/add`;
+        ? `${API_URL}/register/update/${chip}`
+        : `${API_URL}/register/add`;
 
-const method = animalData ? "put" : "post";
+      const method = animalData ? "put" : "post";
 
       const response = await axios({
         method,
@@ -335,22 +337,34 @@ const method = animalData ? "put" : "post";
   return (
     <Layout>
       <ScrollView style={[styles.container, { width, height }]}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={styles.backButton}
-        >
-          <Text style={styles.backArrow}>←</Text>
-        </TouchableOpacity>
+        <Image
+          source={
+            isEditing
+              ? require("../assets/Editar_Chip.png") // Ruta de la imagen para "Editar"
+              : require("../assets/Imagen_Formulario_Registro_Ganado.png") // Ruta de la imagen para "Registrar"
+          }
+          style={isEditing ? styles.editImage : styles.registerImage}
+        />
 
-        <Text style={styles.title}>
-          {isEditing
-            ? "Editar Registro de Ganado"
-            : "Formulario de Registro de Ganado"}
+        <Text style={isEditing ? styles.editText : styles.formText}>
+          {isEditing ? "EDITAR" : "FORMULARIO DE REGISTRO"}
+        </Text>
+        <Text style={styles.ganadoText}>
+          {isEditing ? "REGISTRO DE GANADO" : "DE GANADO"}
         </Text>
 
         {!image ? (
-          <TouchableOpacity onPress={handleImagePick} style={[styles.imagePicker, errors.photo && styles.inputError]}>
-            <Text style={styles.imagePickerText}>🐄 Subir imagen*</Text>
+          <TouchableOpacity
+            onPress={handleImagePick}
+            style={[styles.imagePicker, errors.photo && styles.inputError]}
+          >
+            <View style={styles.rowContainer}>
+              <Image
+                source={require("../assets/SubirImagen.png")}
+                style={styles.logo} // Estilo para el logo
+              />
+              <Text style={styles.imagePickerText}> Subir imagen*</Text>
+            </View>
           </TouchableOpacity>
         ) : (
           <View style={styles.imageContainer}>
@@ -359,10 +373,9 @@ const method = animalData ? "put" : "post";
               onPress={() => setImage(null)}
               style={styles.deleteButton}
             >
-              <Ionicons
-                name="trash-bin"
-                size={20}
-                style={styles.deleteButtonIcon}
+              <Image
+                source={require("../assets/Eliminar.png")} // Ruta de tu imagen
+                style={styles.deleteButtonIcon} // Aplica los estilos a la imagen
               />
             </TouchableOpacity>
           </View>
@@ -380,10 +393,18 @@ const method = animalData ? "put" : "post";
           listMode="SCROLLVIEW"
         />
 
-        <TouchableOpacity style={[styles.dateButton, errors.birthDate && styles.inputError]} onPress={() => setDatePickerVisibility(true)}>
+        <TouchableOpacity
+          style={[styles.dateButton, errors.birthDate && styles.inputError]}
+          onPress={() => setDatePickerVisibility(true)}
+        >
           <View style={styles.rowContainer}>
-            <Ionicons name="calendar" style={styles.iconStyle} />
-            <Text style={styles.dateButtonText}>{birthDate ? birthDate : "Fecha de nacimiento*"}</Text>
+            <Image
+              source={require("../assets/FechaDeNacimieto.png")} // Ruta de la imagen local
+              style={styles.iconStyle}
+            />
+            <Text style={styles.dateButtonText}>
+              {birthDate ? birthDate : "Fecha de nacimiento*"}
+            </Text>
           </View>
         </TouchableOpacity>
 
@@ -393,41 +414,77 @@ const method = animalData ? "put" : "post";
           onConfirm={handleConfirmDate}
           themeVariant="light"
           onCancel={() => setDatePickerVisibility(false)}
-           maximumDate={new Date()} // Establece el día de hoy como la fecha máxima (deshabilita fechas futuras)
+          maximumDate={new Date()} // Establece el día de hoy como la fecha máxima (deshabilita fechas futuras)
         />
 
-        <View style={styles.weightContainer}>
-          <TextInput
-           style={[styles.weightInput, errors.weight && styles.inputError]}
-            placeholder="Peso*"
-            keyboardType="numeric"
-            value={weight}
-            onChangeText={setWeight}
-          />
-          <Text style={styles.weightUnit}>kg</Text>
-        </View>
+        
+          <View
+            style={[styles.weightContainer, errors.weight && styles.inputError]}
+          >
+            <View style={styles.inputWithIcon}>
+              <Image
+                source={require("../assets/Peso.png")} // Ruta de la imagen local
+                style={styles.iconStylePeso}
+              />
+              <TextInput
+                style={styles.weightInput}
+                placeholder="Peso*"
+                placeholderTextColor="#000" 
+                keyboardType="numeric"
+                value={weight}
+                onChangeText={setWeight}
+              />
+               <Text style={styles.weightUnit}>(Kg)</Text>
+            </View>
+           
+          </View>
 
-        <TextInput
-          style={[styles.input, errors.chip && styles.inputError]}
-          placeholder="Chip de registro vacuno*"
-          value={chip}
-          onChangeText={setChip}
-          editable={!isEditing}
-        />
 
-        <TextInput
-          style={styles.input}
-          placeholder="Registro del padre"
-          value={father}
-          onChangeText={setFather}
-        />
+    {/* Chip de registro vacuno */}
+    <View style={[styles.inputWithIconChips, errors.chip && styles.inputError]}>
+      <Image source={require('../assets/Chip.png')} style={styles.iconStyleChips} />
+      <TextInput
+        style={styles.inputChips}
+        placeholder="Chip de registro vacuno*"
+        placeholderTextColor="#000" 
+        value={chip}
+        onChangeText={setChip}
+        editable={!isEditing}
+      />
+    </View>
 
-        <TextInput
-          style={styles.input}
-          placeholder="Registro de la madre"
-          value={mother}
-          onChangeText={setMother}
-        />
+    {/* Registro del padre */}
+    <View style={styles.inputWithIconChips}>
+      <Image source={require('../assets/Id_Padre.png')} style={styles.iconStyleChipsP}/>
+      <TextInput
+        style={styles.inputChips}
+        placeholder="Registro del padre"
+        placeholderTextColor="#000" 
+        value={father}
+        onChangeText={setFather}
+      />
+    </View>
+
+    {/* Registro de la madre */}
+    <View style={styles.inputWithIconChips}>
+      <Image source={require('../assets/Id_Madre.png')} style={styles.iconStyleChipsP}/>
+      <TextInput
+        style={styles.inputChips}
+        placeholder="Registro de la madre"
+        placeholderTextColor="#000" 
+        value={mother}
+        onChangeText={setMother}
+      />
+    </View>
+
+
+
+
+
+
+
+
+
 
         <DropDownPicker
           multiple={true}
@@ -443,31 +500,37 @@ const method = animalData ? "put" : "post";
             setDisease(newValue);
           }}
           placeholder="Selecciona una o más enfermedades"
-          style={styles.dropdown}
+          style={styles.dropdownE}
           textStyle={styles.dropdownText}
           listMode="SCROLLVIEW"
-          multipleText={`${disease.length} enfermedad${
+          multipleText={`${disease.length} enfermedade${
             disease.length === 1 ? "" : "s"
           } seleccionada${disease.length === 1 ? "" : "s"}`}
         />
 
-        <Text style={styles.selectedDiseases}>
-          {Array.isArray(disease) && disease.length > 0
-            ? `Enfermedades seleccionadas: ${disease.join(", ")}`
-            : "Selecciona las enfermedades"}
-        </Text>
+  <Text style={styles.selectedDiseases}>
+  {Array.isArray(disease) && disease.length > 0
+    ? disease.join("\n")    
+    : "Selecciona las enfermedades"}
+</Text>
 
-        <View style={styles.inputWrapper}>
-          <TextInput
-            style={styles.inputobs}
-            placeholder="Observaciones"
-            value={observations}
-            onChangeText={setObservations}
-            multiline
-            textAlignVertical="top"
-            maxLength={500}
-          />
-        </View>
+
+
+
+
+      <View style={styles.inputWrapper}>
+  <Image source={require('../assets/Obs.png')} style={styles.iconStyleO} />
+  <TextInput
+    style={styles.inputobs}
+    placeholder="Observaciones"
+    value={observations}
+    onChangeText={setObservations}
+    multiline
+    textAlignVertical="top"
+    maxLength={500}
+    placeholderTextColor="#000" 
+  />
+</View>
 
         <TouchableOpacity
           onPress={handleRegister}
