@@ -23,7 +23,7 @@ export default StyleSheet.create({
   },
   topBarGreen: {
     height: 150, // Altura de la barra verde
-    backgroundColor: "rgb(52, 112, 24)", // Color verde
+    backgroundColor: "#7dac53", // Color verde
     width: "100%",
     flexDirection: "row", // Alinea los elementos de manera horizontal
     justifyContent: "space-between", // Espaciado entre los íconos
@@ -36,7 +36,14 @@ export default StyleSheet.create({
   icon: {
     width: 30, 
     height: 30,
-    marginTop: 50,
+    marginTop: 90,
+  },
+
+  
+  iconUser: {
+    width: 50, 
+    height: 50,
+    marginTop: 90,
   },
 
   searchContainerCustom: {
@@ -110,7 +117,7 @@ export default StyleSheet.create({
 
   greenBar: {
     height: 80, // Altura de la barra verde
-    backgroundColor: "rgb(52, 112, 24)", // Color verde
+    backgroundColor: "#7dac53", // Color verde
     width: "100%", // Asegura que la barra ocupe todo el ancho
       
   },

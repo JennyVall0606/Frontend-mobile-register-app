@@ -58,7 +58,8 @@ export default function FormsScreen({ route }) {
   const [fechaPeso, setFechaPeso] = useState("");
   // Estados para formulario de vacunas
   const [chipVacuna, setChipVacuna] = useState("");
-  const API_URL = "http://172.20.10.2:3000";
+ const API_URL = "http://192.168.1.10:3000";
+
   useEffect(() => {
     axios
       .get(`${API_URL}/vaccines/tipos-vacuna`)

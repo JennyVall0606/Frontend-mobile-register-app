@@ -61,9 +61,9 @@ export default StyleSheet.create({
     borderRadius: 10,
 
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 8 },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 5,
-    shadowRadius: 20,
+    shadowRadius:4,
 
     elevation: 10,
   },
@@ -157,10 +157,10 @@ export default StyleSheet.create({
      borderTopRightRadius: 0,
     borderRadius: 10,
 
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height:2 },
+   shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 5,
-    shadowRadius: 20,
+    shadowRadius:4,
 
     elevation: 10,
   },
@@ -181,9 +181,9 @@ export default StyleSheet.create({
     borderRadius: 10,
 
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 9 },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 5,
-    shadowRadius: 20,
+    shadowRadius:4,
 
     elevation: 10,
   },
@@ -220,7 +220,7 @@ export default StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 5,
-    shadowRadius:10,
+     shadowRadius:4,
 
     elevation: 10,
   },
@@ -270,9 +270,9 @@ inputWithIconChips: {
     borderRadius: 10,
 
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 9 },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 5,
-    shadowRadius: 20,
+    shadowRadius:4,
 
     elevation: 10,
   },
@@ -310,9 +310,9 @@ inputWrapper: {
     borderRadius: 10,
 
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 9 },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 5,
-    shadowRadius: 20,
+    shadowRadius:4,
 
     elevation: 10,
   },
@@ -349,9 +349,10 @@ inputWrapper: {
     borderWidth: 1,
     borderColor: "rgb(255, 255, 255)",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 9 },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 5,
-    shadowRadius: 20,
+    shadowRadius:4,
+
     elevation: 10,
      marginBottom: 15,
     
@@ -379,7 +380,7 @@ inputWrapper: {
  
 
   registerButton: {
-    backgroundColor: "#2a2a2a",
+    backgroundColor: "#31502a",
     padding: 20,
     borderRadius: 8,
     alignItems: "center",

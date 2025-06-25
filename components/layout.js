@@ -122,7 +122,7 @@ const navigateToHome = () => {
     >
       <Image
         source={require("../assets/user.png")}
-        style={globalStyles.icon}
+        style={globalStyles.iconUser}
       />
     </TouchableOpacity>
   </View>

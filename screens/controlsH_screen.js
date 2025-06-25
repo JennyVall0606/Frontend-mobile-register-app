@@ -45,7 +45,8 @@ export default function ControlH_Screen({ navigation, route }) {
   const [openNombreVacuna, setOpenNombreVacuna] = useState(false);
   const [showPesoDatePicker, setShowPesoDatePicker] = useState(false);
   const [showVacunaDatePicker, setShowVacunaDatePicker] = useState(false);
-const API_URL = "http://172.20.10.2:3000";
+  const API_URL = "http://192.168.1.10:3000";
+
   // Función para formatear fecha
   const formatDate = (dateString) => {
     if (!dateString) return "";
@@ -91,35 +92,31 @@ const API_URL = "http://172.20.10.2:3000";
     }
   }, [chip]);
 
-useFocusEffect(
-  useCallback(() => {
-    if (chip) {
-      axios
-        .get(`${API_URL}/register/animal/${chip}`)
-        .then((response) => {
-          setAnimalInfo(response.data);
-          // ...otros logs si quieres
-        })
-        .catch((error) => {
-          console.error("Error al obtener el animal:", error);
-          setAnimalInfo(null);
-        });
-    }
-  }, [chip])
-);
-
-
-
-
+  useFocusEffect(
+    useCallback(() => {
+      if (chip) {
+        axios
+          .get(`${API_URL}/register/animal/${chip}`)
+          .then((response) => {
+            setAnimalInfo(response.data);
+            // ...otros logs si quieres
+          })
+          .catch((error) => {
+            console.error("Error al obtener el animal:", error);
+            setAnimalInfo(null);
+          });
+      }
+    }, [chip])
+  );
 
   useFocusEffect(
     React.useCallback(() => {
       const fetchData = async () => {
         try {
-  const [pesosRes, vacunasRes] = await Promise.all([
-    axios.get(`${API_URL}/weighing/historico-pesaje`),
-    axios.get(`${API_URL}/vaccines/historico-vacunas`),
-  ]);
+          const [pesosRes, vacunasRes] = await Promise.all([
+            axios.get(`${API_URL}/weighing/historico-pesaje`),
+            axios.get(`${API_URL}/vaccines/historico-vacunas`),
+          ]);
 
           const pesosFiltrados = pesosRes.data
             .filter((item) => item.chip === chip)
@@ -145,16 +142,16 @@ useFocusEffect(
   );
 
   useEffect(() => {
-  axios
-    .get(`${API_URL}/vaccines/tipos-vacuna`)
-    .then((res) => setItemsTipoVacuna(res.data))
-    .catch((err) => console.error(err));
+    axios
+      .get(`${API_URL}/vaccines/tipos-vacuna`)
+      .then((res) => setItemsTipoVacuna(res.data))
+      .catch((err) => console.error(err));
 
-  axios
-    .get(`${API_URL}/vaccines/nombres-vacuna`)
-    .then((res) => setItemsVacunaNombre(res.data))
-    .catch((err) => console.error(err));
-}, []);
+    axios
+      .get(`${API_URL}/vaccines/nombres-vacuna`)
+      .then((res) => setItemsVacunaNombre(res.data))
+      .catch((err) => console.error(err));
+  }, []);
 
   const handleEditPeso = (id) => {
     const pesoSeleccionado = historicoPesaje.find((item) => item.id === id);
@@ -173,10 +170,7 @@ useFocusEffect(
         peso_kg: parseFloat(nuevoPeso),
       };
 
-      await axios.put(
-  `${API_URL}/weighing/${selectedPeso.id}`,
-  payload
-);
+      await axios.put(`${API_URL}/weighing/${selectedPeso.id}`, payload);
 
       const updatedPesos = historicoPesaje.map((p) =>
         p.id === selectedPeso.id
@@ -229,10 +223,7 @@ useFocusEffect(
       observaciones: nuevaObsVacuna,
     };
 
-    await axios.put(
-  `${API_URL}/vaccines/${selectedVacuna.id}`,
-  datosParaApi
-);
+    await axios.put(`${API_URL}/vaccines/${selectedVacuna.id}`, datosParaApi);
 
     setHistoricoVacunas(
       historicoVacunas.map((v) => {
@@ -280,77 +271,117 @@ useFocusEffect(
   return (
     <Layout>
       <ScrollView style={[styles.container, { width, height }]}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={styles.backButton}
-        >
-          <Ionicons name="arrow-back" style={styles.iconFecha} />
-        </TouchableOpacity>
-
-        <Text style={styles.title}>Control de Chip</Text>
-
         {animalInfo && animalInfo.foto && (
+          <Image
+            source={require("../assets/Imagen_Control_De_Chip.png")} // Ruta de tu logo
+            style={styles.image}
+          />
+        )}
+
+        {/* {animalInfo && animalInfo.foto && (
           <Image
   source={{
     uri: `${API_URL}/uploads/${animalInfo.foto}`,
   }}
   style={styles.image}
 />
-        )}
+        )} */}
+
+        <Text style={styles.title}>CONTROL</Text>
+        <Text style={styles.title1}>DE CHIP</Text>
 
         <View style={styles.card}>
           <View style={styles.tableRow}>
+            {/* Logo al lado izquierdo del texto */}
+            <Image
+              source={require("../assets/Chip.png")} // Ruta de tu logo
+              style={styles.logo}
+            />
             <Text style={styles.tableCell}>Chip:</Text>
-            <Text style={styles.tableCell}>
+            <Text style={styles.tableCellDato}>
               {animalInfo?.chip_animal ||
                 "No se encontró información del animal"}
             </Text>
           </View>
           <View style={styles.tableRow}>
+            <Image
+              source={require("../assets/Raza.png")} // Ruta de tu logo
+              style={styles.logo}
+            />
             <Text style={styles.tableCell}>Raza:</Text>
-            <Text style={styles.tableCell}>
+            <Text style={styles.tableCellDato}>
               {animalInfo?.raza || "No especificado"}
             </Text>
           </View>
           <View style={styles.tableRow}>
+            <Image
+              source={require("../assets/FechaDeNacimieto.png")} // Ruta de tu logo
+              style={styles.logo}
+            />
             <Text style={styles.tableCell}>Fecha de Nacimiento:</Text>
-            <Text style={styles.tableCell}>
+            <Text style={styles.tableCellDato}>
               {animalInfo?.fecha_nacimiento
                 ? formatDate(animalInfo.fecha_nacimiento)
                 : ""}
             </Text>
           </View>
           <View style={styles.tableRow}>
+            <Image
+              source={require("../assets/Peso.png")} // Ruta de tu logo
+              style={styles.logo}
+            />
             <Text style={styles.tableCell}>Peso de Nacimiento:</Text>
-            <Text style={styles.tableCell}>
+            <Text style={styles.tableCellDato}>
               {animalInfo?.peso_nacimiento
                 ? formatWeight(animalInfo.peso_nacimiento)
                 : ""}
             </Text>
           </View>
           <View style={styles.tableRow}>
+            <Image
+              source={require("../assets/Id_Madre.png")} // Ruta de tu logo
+              style={styles.logo}
+            />
             <Text style={styles.tableCell}>ID Madre:</Text>
-            <Text style={styles.tableCell}>{animalInfo?.id_madre}</Text>
+            <Text style={styles.tableCellDato}>{animalInfo?.id_madre}</Text>
           </View>
           <View style={styles.tableRow}>
+            <Image
+              source={require("../assets/Id_Padre.png")} // Ruta de tu logo
+              style={styles.logo}
+            />
             <Text style={styles.tableCell}>ID Padre:</Text>
-            <Text style={styles.tableCell}>{animalInfo?.id_padre}</Text>
+            <Text style={styles.tableCellDato}>{animalInfo?.id_padre}</Text>
           </View>
           <View style={styles.tableRow}>
+            <Image
+              source={require("../assets/Enfermedades.png")} // Ruta de tu logo
+              style={styles.logo}
+            />
             <Text style={styles.tableCell}>Enfermedades:</Text>
-            <Text style={styles.tableCell}>
+            <Text style={styles.tableCellDato}>
               {Array.isArray(animalInfo?.enfermedades)
                 ? animalInfo.enfermedades.join(", ")
                 : animalInfo?.enfermedades}
             </Text>
           </View>
           <View style={styles.tableRow}>
+            <Image
+              source={require("../assets/Observaciones.png")} // Ruta de tu logo
+              style={styles.logo}
+            />
             <Text style={styles.tableCell}>Observaciones:</Text>
-            <Text style={styles.tableCell}>{animalInfo?.observaciones}</Text>
+            <Text style={styles.tableCellDato}>
+              {animalInfo?.observaciones}
+            </Text>
           </View>
           <View style={styles.tableRow}>
+            <Image
+              source={require("../assets/Estado.png")} // Ruta de tu logo
+              style={styles.logo}
+            />
             <Text style={styles.tableCell}>Estado:</Text>
-            <Text style={styles.tableCell}>{animalInfo?.estado}</Text>
+            <Text style={styles.tableCellDato}>{animalInfo?.estado}</Text>
           </View>
 
           <TouchableOpacity
@@ -364,11 +395,27 @@ useFocusEffect(
               });
             }}
           >
-            <Text>✏️ Editar CHIP</Text>
+            <View style={styles.containerEditChip}>
+              {/* Imagen al lado del texto */}
+              <Image
+                source={require("../assets/Editar_Chip.png")}
+                style={styles.logoEditarChip}
+              />
+              <Text style={styles.editTextEditar}>EDITAR CHIP</Text>
+            </View>
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.subtitle}>Pesos Registrados</Text>
+        <View style={styles.container}>
+          {/* Imagen encima del texto */}
+          <Image
+            source={require("../assets/Imagen_Pesos_Registrados.png")} // Reemplaza con la ruta de tu imagen
+            style={styles.imagePesoVacuna}
+          />
+          <Text style={styles.subtitle1}>PESOS</Text>
+          <Text style={styles.subtitle2}>REGISTRADOS</Text>
+        </View>
+
         {historicoPesaje.length > 0 ? (
           <View style={styles.table}>
             <View style={styles.tableHeader}>
@@ -398,46 +445,89 @@ useFocusEffect(
         <Modal visible={modalVisible} transparent animationType="slide">
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
-              <Text style={styles.modalTitle}>Editar Peso</Text>
-              <TextInput
-                value={nuevoPeso}
-                onChangeText={setNuevoPeso}
-                placeholder="Peso"
-                keyboardType="numeric"
-                style={styles.input}
+              <Image
+                source={require("../assets/Editar_Peso.png")} // Reemplaza con la ruta de tu imagen
+                style={styles.modalImage} // Aplica estilos para ajustar el tamaño de la imagen
               />
-              <Pressable onPress={() => setShowPesoDatePicker(true)}>
+              <Text style={styles.modalTitle1}>Editar</Text>
+              <Text style={styles.modalTitle2}>Peso</Text>
+              <View style={styles.inputContainer}>
+                <Image
+                  source={require("../assets/Peso.png")} // Reemplaza con la ruta de tu logo
+                  style={styles.inputLogo} // Aplica estilo para el logo
+                />
+                <TextInput
+                  value={nuevoPeso}
+                  onChangeText={setNuevoPeso}
+                  placeholder="Peso"
+                  keyboardType="numeric"
+                  style={styles.input} // Estilo para el TextInput
+                />
+              </View>
+              <Pressable
+                onPress={() => setShowPesoDatePicker(true)}
+                style={styles.inputContainer}
+              >
+                <Image
+                  source={require("../assets/FechaDeNacimieto.png")} // Reemplaza con la ruta de tu logo
+                  style={styles.inputLogo} // Aplica estilo para el logo
+                />
                 <TextInput
                   value={formatDateDisplay(nuevaFecha)}
                   placeholder="Fecha (YYYY-MM-DD)"
-                  style={styles.input}
+                  style={styles.input} // Estilo para el TextInput
                   editable={false}
                   pointerEvents="none"
                 />
               </Pressable>
+
               <DateTimePickerModal
-          isVisible={showPesoDatePicker}
-          mode="date"
-          date={nuevaFecha ? new Date(nuevaFecha) : new Date()}
-          onConfirm={(date) => handleFechaConfirm(date, "peso")}
-          themeVariant="light"
-          onCancel={() => setShowPesoDatePicker(false)}
-          maximumDate={new Date()} // Deshabilita fechas futuras
-        />
-              <Button
-                title="Guardar cambios"
-                onPress={handleGuardarCambiosPeso}
+                isVisible={showPesoDatePicker}
+                mode="date"
+                date={nuevaFecha ? new Date(nuevaFecha) : new Date()}
+                onConfirm={(date) => handleFechaConfirm(date, "peso")}
+                themeVariant="light"
+                onCancel={() => setShowPesoDatePicker(false)}
+                maximumDate={new Date()} // Deshabilita fechas futuras
               />
-              <Button
-                title="Cancelar"
-                color="red"
-                onPress={() => setModalVisible(false)}
-              />
+              <View style={styles.buttonsContainer}>
+                {/* Botón Guardar Cambios */}
+                <TouchableOpacity
+                  style={styles.buttonGuardar}
+                  onPress={handleGuardarCambiosPeso}
+                >
+                  <Image
+                    source={require("../assets/FechaDeNacimieto.png")} // Reemplaza con la ruta de tu logo
+                    style={styles.buttonLogo}
+                  />
+                  <Text style={styles.buttonText}>GUARDAR</Text>
+                </TouchableOpacity>
+
+                {/* Botón Cancelar */}
+                <TouchableOpacity
+                  style={styles.buttonCancelar}
+                  onPress={() => setModalVisible(false)}
+                >
+                  <Image
+                    source={require("../assets/FechaDeNacimieto.png")} // Reemplaza con la ruta de tu logo
+                    style={styles.buttonLogo}
+                  />
+                  <Text style={styles.buttonText}>CANCELAR</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </Modal>
 
-        <Text style={styles.subtitle}>Vacunas Registradas</Text>
+        <View style={styles.container}>
+          {/* Imagen encima del texto */}
+          <Image
+            source={require("../assets/Imagen_Vacunas_Registradas.png")} // Reemplaza con la ruta de tu imagen
+            style={styles.imagePesoVacuna}
+          />
+          <Text style={styles.subtitle1}>VACUNAS</Text>
+          <Text style={styles.subtitle2}>REGISTRADAS</Text>
+        </View>
         {historicoVacunas.length > 0 ? (
           <View style={styles.table}>
             <View style={styles.tableHeader}>
@@ -451,13 +541,13 @@ useFocusEffect(
             </View>
             {historicoVacunas.map((vacuna, index) => (
               <View key={index} style={styles.tableRow}>
-                <Text style={styles.tableCellVV}>
+                <Text style={styles.tableCellFechaVcuna}>
                   {vacuna.fecha ? vacuna.fecha.substring(0, 10) : ""}
                 </Text>
-                <Text style={styles.tableCellV}>{vacuna.nombre}</Text>
-                <Text style={styles.tableCellV}>{vacuna.tipo}</Text>
-                <Text style={styles.tableCellV}>{vacuna.dosis}</Text>
-                <Text style={styles.tableCellV}>
+                <Text style={styles.tableCellDatosVacuna}>{vacuna.nombre}</Text>
+                <Text style={styles.tableCellDatosVacuna}>{vacuna.tipo}</Text>
+                <Text style={styles.tableCellDatosVacuna}>{vacuna.dosis}</Text>
+                <Text style={styles.tableCellDatosVacuna}>
                   {vacuna.obs || "No disponible"}
                 </Text>
                 <TouchableOpacity
@@ -486,15 +576,17 @@ useFocusEffect(
                   pointerEvents="none"
                 />
               </Pressable>
-             <DateTimePickerModal
-          isVisible={showVacunaDatePicker}
-          mode="date"
-          date={nuevaFechaVacuna ? new Date(nuevaFechaVacuna) : new Date()}
-          onConfirm={(date) => handleFechaConfirm(date, "vacuna")}
-          themeVariant="light"
-          onCancel={() => setShowVacunaDatePicker(false)}
-          maximumDate={new Date()} // Deshabilita fechas futuras
-        />
+              <DateTimePickerModal
+                isVisible={showVacunaDatePicker}
+                mode="date"
+                date={
+                  nuevaFechaVacuna ? new Date(nuevaFechaVacuna) : new Date()
+                }
+                onConfirm={(date) => handleFechaConfirm(date, "vacuna")}
+                themeVariant="light"
+                onCancel={() => setShowVacunaDatePicker(false)}
+                maximumDate={new Date()} // Deshabilita fechas futuras
+              />
               <DropDownPicker
                 open={openTipoVacuna}
                 value={tipoVacuna}
