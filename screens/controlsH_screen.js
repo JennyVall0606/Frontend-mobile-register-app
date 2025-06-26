@@ -292,34 +292,34 @@ export default function ControlH_Screen({ navigation, route }) {
 
         <View style={styles.card}>
           <View style={styles.tableRow}>
-            {/* Logo al lado izquierdo del texto */}
+         
             <Image
-              source={require("../assets/Chip.png")} // Ruta de tu logo
+              source={require("../assets/Chip.png")} 
               style={styles.logo}
             />
-            <Text style={styles.tableCell}>Chip:</Text>
-            <Text style={styles.tableCellDato}>
+            <Text style={styles.tableCellChip}>Chip:</Text>
+            <Text style={styles.tableCellDatoChip}>
               {animalInfo?.chip_animal ||
                 "No se encontró información del animal"}
             </Text>
           </View>
           <View style={styles.tableRow}>
             <Image
-              source={require("../assets/Raza.png")} // Ruta de tu logo
+              source={require("../assets/Raza.png")} 
               style={styles.logo}
             />
-            <Text style={styles.tableCell}>Raza:</Text>
-            <Text style={styles.tableCellDato}>
+            <Text style={styles.tableCellChip}>Raza:</Text>
+            <Text style={styles.tableCellDatoChip}>
               {animalInfo?.raza || "No especificado"}
             </Text>
           </View>
           <View style={styles.tableRow}>
             <Image
-              source={require("../assets/FechaDeNacimieto.png")} // Ruta de tu logo
+              source={require("../assets/FechaDeNacimieto.png")} 
               style={styles.logo}
             />
-            <Text style={styles.tableCell}>Fecha de Nacimiento:</Text>
-            <Text style={styles.tableCellDato}>
+            <Text style={styles.tableCellChip}>Fecha de Nacimiento:</Text>
+            <Text style={styles.tableCellDatoChip}>
               {animalInfo?.fecha_nacimiento
                 ? formatDate(animalInfo.fecha_nacimiento)
                 : ""}
@@ -327,11 +327,11 @@ export default function ControlH_Screen({ navigation, route }) {
           </View>
           <View style={styles.tableRow}>
             <Image
-              source={require("../assets/Peso.png")} // Ruta de tu logo
+              source={require("../assets/Peso.png")} 
               style={styles.logo}
             />
-            <Text style={styles.tableCell}>Peso de Nacimiento:</Text>
-            <Text style={styles.tableCellDato}>
+            <Text style={styles.tableCellChip}>Peso de Nacimiento:</Text>
+            <Text style={styles.tableCellDatoChip}>
               {animalInfo?.peso_nacimiento
                 ? formatWeight(animalInfo.peso_nacimiento)
                 : ""}
@@ -339,27 +339,27 @@ export default function ControlH_Screen({ navigation, route }) {
           </View>
           <View style={styles.tableRow}>
             <Image
-              source={require("../assets/Id_Madre.png")} // Ruta de tu logo
+              source={require("../assets/Id_Madre.png")} 
               style={styles.logo}
             />
-            <Text style={styles.tableCell}>ID Madre:</Text>
-            <Text style={styles.tableCellDato}>{animalInfo?.id_madre}</Text>
+            <Text style={styles.tableCellChip}>ID Madre:</Text>
+            <Text style={styles.tableCellDatoChip}>{animalInfo?.id_madre}</Text>
           </View>
           <View style={styles.tableRow}>
             <Image
-              source={require("../assets/Id_Padre.png")} // Ruta de tu logo
+              source={require("../assets/Id_Padre.png")} 
               style={styles.logo}
             />
-            <Text style={styles.tableCell}>ID Padre:</Text>
-            <Text style={styles.tableCellDato}>{animalInfo?.id_padre}</Text>
+            <Text style={styles.tableCellChip}>ID Padre:</Text>
+            <Text style={styles.tableCellDatoChip}>{animalInfo?.id_padre}</Text>
           </View>
           <View style={styles.tableRow}>
             <Image
-              source={require("../assets/Enfermedades.png")} // Ruta de tu logo
+              source={require("../assets/Enfermedades.png")} 
               style={styles.logo}
             />
-            <Text style={styles.tableCell}>Enfermedades:</Text>
-            <Text style={styles.tableCellDato}>
+            <Text style={styles.tableCellChip}>Enfermedades:</Text>
+            <Text style={styles.tableCellDatoChip}>
               {Array.isArray(animalInfo?.enfermedades)
                 ? animalInfo.enfermedades.join(", ")
                 : animalInfo?.enfermedades}
@@ -367,36 +367,36 @@ export default function ControlH_Screen({ navigation, route }) {
           </View>
           <View style={styles.tableRow}>
             <Image
-              source={require("../assets/Observaciones.png")} // Ruta de tu logo
+              source={require("../assets/Observaciones.png")} 
               style={styles.logo}
             />
-            <Text style={styles.tableCell}>Observaciones:</Text>
-            <Text style={styles.tableCellDato}>
+            <Text style={styles.tableCellChip}>Observaciones:</Text>
+            <Text style={styles.tableCellDatoChip}>
               {animalInfo?.observaciones}
             </Text>
           </View>
           <View style={styles.tableRow}>
             <Image
-              source={require("../assets/Estado.png")} // Ruta de tu logo
+              source={require("../assets/Estado.png")} 
               style={styles.logo}
             />
-            <Text style={styles.tableCell}>Estado:</Text>
-            <Text style={styles.tableCellDato}>{animalInfo?.estado}</Text>
+            <Text style={styles.tableCellChip}>Estado:</Text>
+            <Text style={styles.tableCellDatoChip}>{animalInfo?.estado}</Text>
           </View>
 
           <TouchableOpacity
             style={styles.editButton}
             onPress={() => {
-              console.log("Pasando razaId:", animalInfo.raza); // Verificamos el valor de raza
+              console.log("Pasando razaId:", animalInfo.raza); 
               navigation.navigate("RegisterCattle", {
                 chip: animalInfo.chip_animal,
-                razaId: animalInfo.raza, // Aquí estamos pasando el valor de la raza correctamente
+                razaId: animalInfo.raza, 
                 isEditing: true,
               });
             }}
           >
             <View style={styles.containerEditChip}>
-              {/* Imagen al lado del texto */}
+    
               <Image
                 source={require("../assets/Editar_Chip.png")}
                 style={styles.logoEditarChip}
@@ -406,10 +406,14 @@ export default function ControlH_Screen({ navigation, route }) {
           </TouchableOpacity>
         </View>
 
+
+{/* TABLA DE PESO */}
+
+
         <View style={styles.container}>
-          {/* Imagen encima del texto */}
+  
           <Image
-            source={require("../assets/Imagen_Pesos_Registrados.png")} // Reemplaza con la ruta de tu imagen
+            source={require("../assets/Imagen_Pesos_Registrados.png")} 
             style={styles.imagePesoVacuna}
           />
           <Text style={styles.subtitle1}>PESOS</Text>
@@ -417,37 +421,48 @@ export default function ControlH_Screen({ navigation, route }) {
         </View>
 
         {historicoPesaje.length > 0 ? (
-          <View style={styles.table}>
-            <View style={styles.tableHeader}>
-              <Text style={styles.tableHeaderText}>Fecha</Text>
-              <Text style={styles.tableHeaderText}>Peso</Text>
-              <Text style={styles.editButtonTextHe}>✏️</Text>
+          <View style={styles.tablePesoVacuna}>
+            <View style={styles.tableHeaderPesoVacuna}>
+              
+              <Text style={styles.tableHeaderTextPeso}>Fecha</Text>
+              <Text style={styles.tableHeaderTextPeso}>Peso</Text>
+             <Image 
+  source={require('../assets/Peso.png')} 
+  style={styles.editButtonImagePeso1}
+/>
             </View>
+
             {historicoPesaje.map((peso, index) => (
-              <View key={index} style={styles.tableRow}>
-                <Text style={styles.tableCell}>
+              <View key={index} style={styles.tableRowPeso}>
+                <Text style={styles.tableCellPeso}>
                   {peso.fecha ? peso.fecha.substring(0, 10) : ""}
                 </Text>
-                <Text style={styles.tableCell}>{peso.peso}</Text>
+                <Text style={styles.tableCellPeso}>{peso.peso}</Text>
                 <TouchableOpacity
                   onPress={() => handleEditPeso(peso.id)}
                   style={styles.editCell}
                 >
-                  <Text style={styles.editButtonText}>✏️ </Text>
+                 <Image 
+  source={require('../assets/Editar_Peso.png')} 
+  style={styles.editButtonImagePeso2}
+/>
                 </TouchableOpacity>
               </View>
             ))}
           </View>
         ) : (
-          <Text>No se encontraron registros de peso.</Text>
+          <Text style={styles.noRecordsText}>No se encontraron registros de peso.</Text>
         )}
+
+{/* EDITAR PESO */}
+
 
         <Modal visible={modalVisible} transparent animationType="slide">
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
               <Image
                 source={require("../assets/Editar_Peso.png")} // Reemplaza con la ruta de tu imagen
-                style={styles.modalImage} // Aplica estilos para ajustar el tamaño de la imagen
+                style={styles.modalImagePeso} // Aplica estilos para ajustar el tamaño de la imagen
               />
               <Text style={styles.modalTitle1}>Editar</Text>
               <Text style={styles.modalTitle2}>Peso</Text>
@@ -493,7 +508,7 @@ export default function ControlH_Screen({ navigation, route }) {
               <View style={styles.buttonsContainer}>
                 {/* Botón Guardar Cambios */}
                 <TouchableOpacity
-                  style={styles.buttonGuardar}
+                  style={styles.buttonGuardarPeso}
                   onPress={handleGuardarCambiosPeso}
                 >
                   <Image
@@ -505,7 +520,7 @@ export default function ControlH_Screen({ navigation, route }) {
 
                 {/* Botón Cancelar */}
                 <TouchableOpacity
-                  style={styles.buttonCancelar}
+                  style={styles.buttonCancelarPeso}
                   onPress={() => setModalVisible(false)}
                 >
                   <Image
@@ -519,6 +534,9 @@ export default function ControlH_Screen({ navigation, route }) {
           </View>
         </Modal>
 
+
+{/* TABLA DE VACUNAS */}        
+
         <View style={styles.container}>
           {/* Imagen encima del texto */}
           <Image
@@ -528,54 +546,98 @@ export default function ControlH_Screen({ navigation, route }) {
           <Text style={styles.subtitle1}>VACUNAS</Text>
           <Text style={styles.subtitle2}>REGISTRADAS</Text>
         </View>
-        {historicoVacunas.length > 0 ? (
-          <View style={styles.table}>
-            <View style={styles.tableHeader}>
-              <Text style={styles.tableHeaderText}>Fecha</Text>
-              <Text style={styles.tableHeaderText}>Nombre</Text>
-              <Text style={styles.tableHeaderText}>Tipo</Text>
-              <Text style={styles.tableHeaderText}>Dosis</Text>
-              <Text style={styles.tableHeaderText}>Obs</Text>
 
-              <Text style={styles.editButtonTextHe}>✏️</Text>
+
+
+
+
+
+        {historicoVacunas.length > 0 ? (
+          <View style={styles.tablePesoVacuna}>
+            <View style={styles.tableHeaderPesoVacuna}>
+
+
+              <Text style={styles.tableHeaderTextVacuna}>Fecha</Text>
+              <Text style={styles.tableHeaderTextVacuna}>Nombre</Text>
+              <Text style={styles.tableHeaderTextVacuna}>Tipo</Text>
+              <Text style={styles.tableHeaderTextVacuna}>Dosis</Text>
+              <Text style={styles.tableHeaderTextVacuna}>Obs</Text>
+
+             <Image 
+  source={require('../assets/Vacunas.png')} // Ajusta la ruta de tu imagen de lápiz
+  style={styles.editButtonImageVacuna1}
+/>
+
             </View>
             {historicoVacunas.map((vacuna, index) => (
-              <View key={index} style={styles.tableRow}>
-                <Text style={styles.tableCellFechaVcuna}>
+              <View key={index} style={styles.tableRowVacuna}>
+                <Text style={styles.tableCellFechaVacuna}>
                   {vacuna.fecha ? vacuna.fecha.substring(0, 10) : ""}
                 </Text>
-                <Text style={styles.tableCellDatosVacuna}>{vacuna.nombre}</Text>
-                <Text style={styles.tableCellDatosVacuna}>{vacuna.tipo}</Text>
-                <Text style={styles.tableCellDatosVacuna}>{vacuna.dosis}</Text>
-                <Text style={styles.tableCellDatosVacuna}>
+                <Text style={styles.tableCellDatosVacunaNombre}>{vacuna.nombre}</Text>
+                <Text style={styles.tableCellDatosVacunaTipo}>{vacuna.tipo}</Text>
+                <Text style={styles.tableCellDatosVacunaDosis}>{vacuna.dosis}</Text>
+                <Text style={styles.tableCellDatosVacunaObs}>
                   {vacuna.obs || "No disponible"}
                 </Text>
                 <TouchableOpacity
                   onPress={() => handleEditVacuna(vacuna.id)}
-                  style={styles.editCell}
+                  style={styles.editCellVacuna}
                 >
-                  <Text style={styles.editButtonText}>✏️</Text>
+                               <Image 
+  source={require('../assets/Editar_Vacunas.png')} // Ajusta la ruta de tu imagen de lápiz
+  style={styles.editButtonImageVacuna2}
+/>
                 </TouchableOpacity>
               </View>
             ))}
           </View>
+
+
+
+
+
+
+
+
+
+
+
+
         ) : (
-          <Text>No se encontraron registros de vacunas.</Text>
+           <Text style={styles.noRecordsText}>No se encontraron registros de vacunas.</Text>
         )}
 
+{/* EDITAR VACUNAS */}
+
         <Modal visible={modalVacunaVisible} transparent animationType="slide">
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <Text style={styles.modalTitle}>Editar Vacuna</Text>
-              <Pressable onPress={() => setShowVacunaDatePicker(true)}>
+          <View style={styles.modalContainerVacuna}>
+            <View style={styles.modalContentVacuna}>
+              <Image
+                source={require("../assets/Editar_Vacunas.png")}
+                style={styles.modalImageVacuna}
+              />
+
+              <Text style={styles.modalTitle1}>EDITAR </Text>
+              <Text style={styles.modalTitle2}>VACUNA</Text>
+
+              <Pressable
+                onPress={() => setShowVacunaDatePicker(true)}
+                style={styles.inputContainerVacuna}
+              >
+                <Image
+                  source={require("../assets/FechaDeNacimieto.png")} // Reemplaza con la ruta de tu logo
+                  style={styles.datePickerLogo} // Aplica estilo para el logo
+                />
                 <TextInput
                   value={formatDateDisplay(nuevaFechaVacuna)}
                   placeholder="YYYY-MM-DD"
-                  style={styles.input}
+                  style={styles.inputVacunaFecha}
                   editable={false}
                   pointerEvents="none"
                 />
               </Pressable>
+
               <DateTimePickerModal
                 isVisible={showVacunaDatePicker}
                 mode="date"
@@ -587,54 +649,108 @@ export default function ControlH_Screen({ navigation, route }) {
                 onCancel={() => setShowVacunaDatePicker(false)}
                 maximumDate={new Date()} // Deshabilita fechas futuras
               />
-              <DropDownPicker
-                open={openTipoVacuna}
-                value={tipoVacuna}
-                items={itemsTipoVacuna}
-                setOpen={setOpenTipoVacuna}
-                setValue={setTipoVacuna}
-                placeholder="Tipo de vacuna"
-                containerStyle={[
-                  styles.dropdownContainer,
-                  openTipoVacuna && styles.dropdownBelow,
-                ]}
-                listMode="SCROLLVIEW"
-              />
-              <DropDownPicker
-                open={openNombreVacuna}
-                value={nombreVacuna}
-                items={itemsVacunaNombre}
-                setOpen={setOpenNombreVacuna}
-                setValue={setNombreVacuna}
-                placeholder="Nombre de vacuna"
-                containerStyle={[
-                  styles.dropdownContainer,
-                  openNombreVacuna && styles.dropdownBelow,
-                  { zIndex: openNombreVacuna ? 10 : 1 },
-                ]}
-                listMode="SCROLLVIEW"
-              />
-              <TextInput
-                value={nuevaDosisVacuna}
-                onChangeText={setNuevaDosisVacuna}
-                placeholder="Dosis"
-                style={styles.input}
-              />
-              <TextInput
-                value={nuevaObsVacuna}
-                onChangeText={setNuevaObsVacuna}
-                placeholder="Observaciones"
-                style={styles.input}
-              />
-              <Button
-                title="Guardar cambios"
-                onPress={handleGuardarCambiosVacuna}
-              />
-              <Button
-                title="Cancelar"
-                color="red"
-                onPress={() => setModalVacunaVisible(false)}
-              />
+
+              <View style={styles.datePickerWrapper}>
+                <Image
+                  source={require("../assets/FechaDeNacimieto.png")}
+                  style={styles.datePickerLogo}
+                />
+                <DropDownPicker
+                  open={openTipoVacuna}
+                  value={tipoVacuna}
+                  items={itemsTipoVacuna}
+                  setOpen={setOpenTipoVacuna}
+                  setValue={setTipoVacuna}
+                  placeholder="Tipo de vacuna"
+                  containerStyle={[
+                    styles.dropdownContainerVacuna,
+                    openTipoVacuna && styles.dropdownBelowVacuna,
+                  ]}
+                  listMode="SCROLLVIEW"
+                  style={styles.dropdownStyle} // Estilo personalizado para eliminar la línea negra
+                  dropDownStyle={styles.dropDownStyle} // Estilo para la lista desplegable
+                  arrowIconStyle={styles.arrowIconStyle} // Estilo para la flecha hacia abajo
+                  textStyle={styles.textStyle} // Estilo para el tamaño de la letra
+                />
+              </View>
+
+              <View style={styles.datePickerWrapper}>
+                <Image
+                  source={require("../assets/FechaDeNacimieto.png")}
+                  style={styles.datePickerLogo}
+                />
+
+                <DropDownPicker
+                  open={openNombreVacuna}
+                  value={nombreVacuna}
+                  items={itemsVacunaNombre}
+                  setOpen={setOpenNombreVacuna}
+                  setValue={setNombreVacuna}
+                  placeholder="Nombre de vacuna"
+                  containerStyle={[
+                    styles.dropdownContainerVacuna,
+                    openNombreVacuna && styles.dropdownBelowVacuna,
+                    { zIndex: openNombreVacuna ? 10 : 1 },
+                  ]}
+                  listMode="SCROLLVIEW"
+                  style={styles.dropdownStyle} // Estilo personalizado para eliminar la línea negra
+                  dropDownStyle={styles.dropdownStyle} // Estilo para la lista desplegable
+                  arrowIconStyle={styles.arrowIconStyle} // Estilo para la flecha hacia abajo
+                  textStyle={styles.textStyle} // Estilo para el tamaño de la letra
+                />
+              </View>
+
+              <View style={styles.inputContainerVacuna}>
+                <Image
+                  source={require("../assets/FechaDeNacimieto.png")} // Ajusta la ruta del logo
+                  style={styles.datePickerLogo}
+                />
+                <TextInput
+                  value={nuevaDosisVacuna}
+                  onChangeText={setNuevaDosisVacuna}
+                  placeholder="Dosis"
+                  style={styles.inputVacuna}
+                />
+              </View>
+
+              <View style={styles.inputContainerVacuna}>
+                <Image
+                  source={require("../assets/FechaDeNacimieto.png")} // Ajusta la ruta del logo
+                  style={styles.datePickerLogo}
+                />
+                <TextInput
+                  value={nuevaObsVacuna}
+                  onChangeText={setNuevaObsVacuna}
+                  placeholder="Observaciones"
+                  style={styles.inputVacuna}
+                />
+              </View>
+
+              <View style={styles.buttonsContainer}>
+                {/* Botón Guardar Cambios */}
+                <TouchableOpacity
+                  style={styles.buttonGuardarVacuna}
+                  onPress={handleGuardarCambiosVacuna}
+                >
+                  <Image
+                    source={require("../assets/FechaDeNacimieto.png")} // Reemplaza con la ruta de tu logo
+                    style={styles.buttonLogo}
+                  />
+                  <Text style={styles.buttonText}>GUARDAR</Text>
+                </TouchableOpacity>
+
+                {/* Botón Cancelar */}
+                <TouchableOpacity
+                  style={styles.buttonCancelarVacuna}
+                  onPress={() => setModalVacunaVisible(false)}
+                >
+                  <Image
+                    source={require("../assets/FechaDeNacimieto.png")} // Reemplaza con la ruta de tu logo
+                    style={styles.buttonLogo}
+                  />
+                  <Text style={styles.buttonText}>CANCELAR</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </Modal>
@@ -644,7 +760,7 @@ export default function ControlH_Screen({ navigation, route }) {
           onPress={() => navigation.navigate("FormScreen", { chip })}
         >
           <Text style={styles.newControlButtonText}>
-            Realiza un nuevo control
+            REALIZA UN NUEVO CONTROL
           </Text>
         </TouchableOpacity>
       </ScrollView>

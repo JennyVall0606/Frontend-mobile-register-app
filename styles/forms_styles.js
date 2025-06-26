@@ -7,22 +7,19 @@ export default StyleSheet.create({
     paddingTop: 80,
   },
 
-  backButton: {
-    marginBottom: 10,
+  title1: {
+    fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+    title2: {
+      fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 30,
+    textAlign: "center",
+    color: "#7dac53",
   },
 
-  iconFecha: {
-    fontSize: 24,
-    color: "rgb(53, 51, 51)",
-    marginRight: 10, 
-  },
-
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
 
   switchRow: {
     flexDirection: 'row',
@@ -35,6 +32,22 @@ export default StyleSheet.create({
     padding: 10,
     borderRadius: 10,
   },
+
+  
+  containerPeso: {
+    alignItems: "center", // Centra el contenido horizontalmente
+    justifyContent: "center", // Centra el contenido verticalmente
+    marginBottom: 20, // Espacio debajo de los elementos
+  },
+
+
+    imagePeso: {
+    width: 50, // Ajusta el tamaño de la imagen
+    height: 50, // Ajusta el tamaño de la imagen
+    marginBottom: 10, // Espacio entre la imagen y el texto
+    resizeMode: "contain", // Mantiene la proporción de la imagen
+  },
+
 
   iconChecked: {
     color: "rgb(7, 7, 7)",

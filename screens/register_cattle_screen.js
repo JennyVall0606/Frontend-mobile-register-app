@@ -382,17 +382,57 @@ export default function RegisterCattleScreen({ route }) {
           </View>
         )}
 
-        <DropDownPicker
-          open={openRaza}
-          setOpen={setOpenRaza}
-          items={itemsRaza}
-          value={breed}
-          setValue={setBreed}
-          placeholder={breed ? "" : "Selecciona una raza*"}
-          style={[styles.dropdown, errors.breed && styles.inputError]}
-          textStyle={styles.dropdownText}
-          listMode="SCROLLVIEW"
-        />
+
+
+<View style={[styles.dropdownContainer, errors.breed && styles.inputError]}>
+  <Image 
+    source={require("../assets/SeleccionarRaza.png")} // Ajusta la ruta de tu logo
+    style={styles.dropdownLogo} 
+  />
+  <DropDownPicker
+    open={openRaza}
+    setOpen={setOpenRaza}
+    items={itemsRaza}
+    value={breed}
+    setValue={setBreed}
+    placeholder={breed ? "" : "Selecciona una raza*"}
+    style={[styles.dropdown, errors.breed && styles.inputError1]} // Aplica el estilo de error al DropDownPicker
+    textStyle={styles.dropdownText}
+    listMode="SCROLLVIEW"
+     arrowIconStyle={styles.arrowIconStyle} // Estilo para la flecha hacia abajo
+  />
+</View>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         <TouchableOpacity
           style={[styles.dateButton, errors.birthDate && styles.inputError]}
@@ -418,73 +458,84 @@ export default function RegisterCattleScreen({ route }) {
           maximumDate={new Date()} // Establece el día de hoy como la fecha máxima (deshabilita fechas futuras)
         />
 
-        
-          <View
-            style={[styles.weightContainer, errors.weight && styles.inputError]}
-          >
-            <View style={styles.inputWithIcon}>
-              <Image
-                source={require("../assets/Peso.png")} // Ruta de la imagen local
-                style={styles.iconStylePeso}
-              />
-              <TextInput
-                style={styles.weightInput}
-                placeholder="Peso*"
-                placeholderTextColor="#000" 
-                keyboardType="numeric"
-                value={weight}
-                onChangeText={setWeight}
-              />
-               <Text style={styles.weightUnit}>(Kg)</Text>
-            </View>
-           
+        <View
+          style={[styles.weightContainer, errors.weight && styles.inputError]}
+        >
+          <View style={styles.inputWithIcon}>
+            <Image
+              source={require("../assets/Peso.png")} // Ruta de la imagen local
+              style={styles.iconStylePeso}
+            />
+            <TextInput
+              style={styles.weightInput}
+              placeholder="Peso*"
+              placeholderTextColor="#000"
+              keyboardType="numeric"
+              value={weight}
+              onChangeText={setWeight}
+            />
+            <Text style={styles.weightUnit}>(Kg)</Text>
           </View>
+        </View>
+
+        {/* Chip de registro vacuno */}
+        <View
+          style={[styles.inputWithIconChips, errors.chip && styles.inputError]}
+        >
+          <Image
+            source={require("../assets/Chip.png")}
+            style={styles.iconStyleChips}
+          />
+          <TextInput
+            style={styles.inputChips}
+            placeholder="Chip de registro vacuno*"
+            placeholderTextColor="#000"
+            value={chip}
+            onChangeText={setChip}
+            editable={!isEditing}
+          />
+        </View>
+
+        {/* Registro del padre */}
+        <View style={styles.inputWithIconChips}>
+          <Image
+            source={require("../assets/Id_Padre.png")}
+            style={styles.iconStyleChipsP}
+          />
+          <TextInput
+            style={styles.inputChips}
+            placeholder="Registro del padre"
+            placeholderTextColor="#000"
+            value={father}
+            onChangeText={setFather}
+          />
+        </View>
+
+        {/* Registro de la madre */}
+        <View style={styles.inputWithIconChips}>
+          <Image
+            source={require("../assets/Id_Madre.png")}
+            style={styles.iconStyleChipsP}
+          />
+          <TextInput
+            style={styles.inputChips}
+            placeholder="Registro de la madre"
+            placeholderTextColor="#000"
+            value={mother}
+            onChangeText={setMother}
+          />
+        </View>
 
 
-    {/* Chip de registro vacuno */}
-    <View style={[styles.inputWithIconChips, errors.chip && styles.inputError]}>
-      <Image source={require('../assets/Chip.png')} style={styles.iconStyleChips} />
-      <TextInput
-        style={styles.inputChips}
-        placeholder="Chip de registro vacuno*"
-        placeholderTextColor="#000" 
-        value={chip}
-        onChangeText={setChip}
-        editable={!isEditing}
-      />
-    </View>
-
-    {/* Registro del padre */}
-    <View style={styles.inputWithIconChips}>
-      <Image source={require('../assets/Id_Padre.png')} style={styles.iconStyleChipsP}/>
-      <TextInput
-        style={styles.inputChips}
-        placeholder="Registro del padre"
-        placeholderTextColor="#000" 
-        value={father}
-        onChangeText={setFather}
-      />
-    </View>
-
-    {/* Registro de la madre */}
-    <View style={styles.inputWithIconChips}>
-      <Image source={require('../assets/Id_Madre.png')} style={styles.iconStyleChipsP}/>
-      <TextInput
-        style={styles.inputChips}
-        placeholder="Registro de la madre"
-        placeholderTextColor="#000" 
-        value={mother}
-        onChangeText={setMother}
-      />
-    </View>
 
 
 
 
-
-
-
-
+<View style={[styles.dropdownContainer]}>
+  <Image 
+    source={require("../assets/Enfermedades.png")} // Ajusta la ruta de tu logo
+    style={styles.dropdownLogo} 
+  />
 
 
         <DropDownPicker
@@ -501,37 +552,50 @@ export default function RegisterCattleScreen({ route }) {
             setDisease(newValue);
           }}
           placeholder="Selecciona una o más enfermedades"
-          style={styles.dropdownE}
+          style={styles.dropdown}
           textStyle={styles.dropdownText}
           listMode="SCROLLVIEW"
           multipleText={`${disease.length} enfermedade${
             disease.length === 1 ? "" : "s"
           } seleccionada${disease.length === 1 ? "" : "s"}`}
+          arrowIconStyle={styles.arrowIconStyle} // Estilo para la flecha hacia abajo
         />
 
-  <Text style={styles.selectedDiseases}>
-  {Array.isArray(disease) && disease.length > 0
-    ? disease.join("\n")    
-    : "Selecciona las enfermedades"}
-</Text>
 
-
-
-
-
-      <View style={styles.inputWrapper}>
-  <Image source={require('../assets/Obs.png')} style={styles.iconStyleO} />
-  <TextInput
-    style={styles.inputobs}
-    placeholder="Observaciones"
-    value={observations}
-    onChangeText={setObservations}
-    multiline
-    textAlignVertical="top"
-    maxLength={500}
-    placeholderTextColor="#000" 
-  />
 </View>
+
+
+
+
+
+
+
+
+
+
+
+        <Text style={styles.selectedDiseases}>
+          {Array.isArray(disease) && disease.length > 0
+            ? disease.join("\n")
+            : "Selecciona las enfermedades"}
+        </Text>
+
+        <View style={styles.inputWrapper}>
+          <Image
+            source={require("../assets/Obs.png")}
+            style={styles.iconStyleO}
+          />
+          <TextInput
+            style={styles.inputobs}
+            placeholder="Observaciones"
+            value={observations}
+            onChangeText={setObservations}
+            multiline
+            textAlignVertical="top"
+            maxLength={500}
+            placeholderTextColor="#000"
+          />
+        </View>
 
         <TouchableOpacity
           onPress={handleRegister}

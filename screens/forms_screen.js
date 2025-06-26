@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+    Image,
   ScrollView,
   StyleSheet,
   Dimensions,
@@ -245,14 +246,10 @@ export default function FormsScreen({ route }) {
       <ScrollView
         style={[styles.container, { width, height }]} // Ajustamos el ancho y alto al de la pantalla
       >
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={styles.backButton}
-        >
-          <Ionicons name="arrow-back" style={styles.iconFecha} />
-        </TouchableOpacity>
+        
 
-        <Text style={styles.title}>Formularios de control</Text>
+        <Text style={styles.title1}>Formularios </Text>
+         <Text style={styles.title2}>de control</Text>
 
         <View style={styles.switchRow}>
           <TouchableOpacity
@@ -295,7 +292,13 @@ export default function FormsScreen({ route }) {
         {/* FORMULARIO DE PESO */}
         {pesoChecked && (
           <View style={styles.formSection}>
-            <Text style={styles.subtitle}>Formulario de Control de Peso</Text>
+            <View style={styles.container}>
+  <Image
+     source={require("../assets/Enfermedades.png")} 
+    style={styles.imagePeso}
+  />
+  <Text style={styles.subtitle}>Formulario de Control de Peso</Text>
+</View>
             <TextInput
               style={styles.input}
               value={chipPeso} // o chipVacuna según el formulario

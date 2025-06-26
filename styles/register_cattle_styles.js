@@ -49,7 +49,7 @@ export default StyleSheet.create({
   },
 
   imagePicker: {
-    backgroundColor: "rgb(244, 245, 244)",
+    backgroundColor: "rgb(255, 255, 255)",
     padding: 16,
     borderWidth: 1,
     borderColor: "rgb(255, 255, 255)",
@@ -63,7 +63,7 @@ export default StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 5,
-    shadowRadius:4,
+    shadowRadius: 4,
 
     elevation: 10,
   },
@@ -84,11 +84,11 @@ export default StyleSheet.create({
     width: "100%",
     height: 200,
     borderRadius: 30,
-    borderColor: "rgb(248, 248, 248)",
+    borderColor: "rgb(255, 255, 255)",
     borderWidth: 1,
     borderTopLeftRadius: 20, // Redondea la esquina superior izquierda
     borderTopRightRadius: 0, // No redondea la esquina superior derecha
-  marginBottom: 30,
+    marginBottom: 30,
     // Sombra para iOS
     shadowColor: "#000", // Sombra negra
     shadowOffset: { width: 0, height: 9 }, // Desplazamiento de la sombra
@@ -139,31 +139,76 @@ export default StyleSheet.create({
     height: 30,
     marginRight: 10,
   },
+  ////////////////////////////////////////////////////////////////
 
-  
-     dropdown: {
-    borderColor: "rgb(8, 43, 28)",
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    height: 50,
-    backgroundColor: "rgb(244, 245, 244)",
-    fontSize: 16,
-    width: "90%",
-    alignSelf: "center",
-    maxHeight: 200,
-   marginBottom: 30,
+  dropdownContainer: {
+    flexDirection: "row",
+    alignItems: "center",
     borderWidth: 1,
     borderColor: "rgb(255, 255, 255)",
-     borderTopRightRadius: 0,
+    padding: 12,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+    marginBottom: 30,
+    backgroundColor: "rgb(255, 255, 255)",
+    marginHorizontal: 20,
+    zIndex: 10,
+    borderTopRightRadius: 0,
     borderRadius: 10,
 
-   shadowColor: "#000",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 5,
-    shadowRadius:4,
+    shadowRadius: 4,
 
     elevation: 10,
   },
+
+  dropdownLogo: {
+    width: 30,
+    height: 30,
+  },
+
+  dropdownText: {
+    fontSize: 14, // Ajusta el tamaño del texto
+    color: "#000", // Cambia el color del texto
+  },
+
+  dropdown: {
+    borderWidth: 1, // Borde normal
+    borderColor: "rgb(255, 255, 255)",
+    padding: 120,
+    backgroundColor: "rgb(255, 255, 255)",
+    width: "95%", // Ajusta el anch
+  },
+
+  arrowIconStyle: {
+    tintColor: "#7dac53",
+    transform: [{ scale: 2.0 }],
+  },
+
+  ///////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   dateButton: {
     flexDirection: "row",
@@ -174,16 +219,16 @@ export default StyleSheet.create({
     paddingHorizontal: 15,
     borderRadius: 8,
     marginBottom: 30,
-    backgroundColor: "rgb(244, 245, 244)",
+    backgroundColor: "rgb(255, 255, 255)",
     marginHorizontal: 20,
-    
-     borderTopRightRadius: 0,
+
+    borderTopRightRadius: 0,
     borderRadius: 10,
 
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 5,
-    shadowRadius:4,
+    shadowRadius: 4,
 
     elevation: 10,
   },
@@ -198,7 +243,6 @@ export default StyleSheet.create({
     color: "rgb(2, 2, 2)",
   },
 
-
   // ///////////////////////////PESO#
 
   weightContainer: {
@@ -210,21 +254,21 @@ export default StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 8,
     marginBottom: 30,
-    backgroundColor: "rgb(244, 245, 244)",
-    marginHorizontal: 20, 
-    width: '45%',
+    backgroundColor: "rgb(255, 255, 255)",
+    marginHorizontal: 20,
+    width: "45%",
 
-     borderTopRightRadius: 0,
+    borderTopRightRadius: 0,
     borderRadius: 10,
 
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 5,
-     shadowRadius:4,
+    shadowRadius: 4,
 
     elevation: 10,
   },
-  
+
   inputWithIcon: {
     flexDirection: "row", // Alinea el logo y el input en una fila
     alignItems: "center",
@@ -244,35 +288,33 @@ export default StyleSheet.create({
     paddingLeft: 20,
   },
 
- iconStylePeso: {
+  iconStylePeso: {
     width: 30, // Ajusta el tamaño de la imagen
     height: 32,
     marginRight: 10,
   },
 
-
   // ///////////////////////////CHIP#CHIPMADRE#CHIPPADRE#
 
-
-inputWithIconChips: {
-     flexDirection: "row", // Alineación horizontal
+  inputWithIconChips: {
+    flexDirection: "row", // Alineación horizontal
     alignItems: "center", // Centra verticalmente el logo y el texto
     borderWidth: 1,
     borderColor: "rgb(255, 255, 255)",
     padding: 12,
     paddingHorizontal: 10,
     borderRadius: 8,
-   marginBottom: 30,
-    backgroundColor: "rgb(244, 245, 244)",
-    marginHorizontal: 20, 
+    marginBottom: 30,
+    backgroundColor: "rgb(255, 255, 255)",
+    marginHorizontal: 20,
 
-     borderTopRightRadius: 0,
+    borderTopRightRadius: 0,
     borderRadius: 10,
 
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 5,
-    shadowRadius:4,
+    shadowRadius: 4,
 
     elevation: 10,
   },
@@ -281,38 +323,38 @@ inputWithIconChips: {
     height: 30,
     marginRight: 10, // Espacio entre el logo y el texto
   },
-   iconStyleChipsP: {
-    width:35,
-    height:25,
+  iconStyleChipsP: {
+    width: 35,
+    height: 25,
     marginRight: 10, // Espacio entre el logo y el texto
   },
   inputChips: {
     flex: 1, // El TextInput ocupará todo el espacio disponible
     fontSize: 16, // Tamaño del texto
-    color: '#333', // Color del texto
+    color: "#333", // Color del texto
     paddingVertical: 0, // Elimina padding vertical por defecto
     paddingLeft: 5, // Evita que el texto se solape con el logo
   },
 
-inputWrapper: {
-   flexDirection: "row", // Alineación horizontal
-    alignItems: 'flex-start', // Alineación vertical hacia la parte superior
+  inputWrapper: {
+    flexDirection: "row", // Alineación horizontal
+    alignItems: "flex-start", // Alineación vertical hacia la parte superior
     borderWidth: 1,
     borderColor: "rgb(255, 255, 255)",
     padding: 12,
     paddingHorizontal: 10,
     borderRadius: 8,
-  marginBottom: 30,
-    backgroundColor: "rgb(244, 245, 244)",
-    marginHorizontal: 20, 
+    marginBottom: 30,
+    backgroundColor: "rgb(255, 255, 255)",
+    marginHorizontal: 20,
 
-     borderTopRightRadius: 0,
+    borderTopRightRadius: 0,
     borderRadius: 10,
 
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 5,
-    shadowRadius:4,
+    shadowRadius: 4,
 
     elevation: 10,
   },
@@ -322,62 +364,29 @@ inputWrapper: {
     height: 30,
     marginRight: 10,
   },
-  
-  inputobs: {  
+
+  inputobs: {
     flex: 1, // El TextInput ocupará todo el espacio disponible
     fontSize: 16, // Tamaño del texto
-    textAlignVertical: 'top', // Alinea el texto en la parte superior
+    textAlignVertical: "top", // Alinea el texto en la parte superior
     height: 100, // Altura ajustada para un TextInput multilinea
     paddingLeft: 2, // Espacio izquierdo para que no se solape con el logo
     paddingVertical: 5,
-    selectionColor: '#000', // Color de la selección (cuando el texto está seleccionado)
+    selectionColor: "#000", // Color de la selección (cuando el texto está seleccionado)
   },
 
 
-  dropdownE: {
-    borderColor: "rgb(8, 43, 28)",
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    height: 50,
-    backgroundColor: "rgb(244, 245, 244)",
-    fontSize: 16,
-    width: "90%",
-    alignSelf: "center",
-    maxHeight: 200,
-    borderTopRightRadius: 0,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "rgb(255, 255, 255)",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 5,
-    shadowRadius:4,
 
-    elevation: 10,
-     marginBottom: 15,
-    
-  },
-
- selectedDiseases: {
+  selectedDiseases: {
     fontSize: 16, // Ajusta el tamaño de la fuente
-    color: "rgb(9, 167, 9)",                   
+    color: "rgb(9, 167, 9)",
     lineHeight: 18,
     paddingVertical: 2,
     paddingHorizontal: 25,
-    flexDirection: 'column', // Alinea el texto en una columna
-    flexWrap: 'wrap', // Asegura que el texto no se desborde y se ajuste
+    flexDirection: "column", // Alinea el texto en una columna
+    flexWrap: "wrap", // Asegura que el texto no se desborde y se ajuste
     marginBottom: 15,
   },
-
-
-
-
-
-
-
-
-
- 
 
   registerButton: {
     backgroundColor: "#31502a",
@@ -396,9 +405,6 @@ inputWrapper: {
     fontWeight: "bold",
     fontSize: 16,
   },
-
-
- 
 
   inputError: {
     borderColor: "red", // Aplica el borde rojo cuando hay error

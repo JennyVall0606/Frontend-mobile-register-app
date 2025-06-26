@@ -7,15 +7,13 @@ export const styles = {
     paddingTop: 80,
   },
 
-  // CONTROL CHIP
-
   image: {
-    width: "60%", 
-    height: 190, 
-    resizeMode: "cover", 
-    borderRadius: 10, 
-    marginBottom: 30, 
-    alignSelf: "center", 
+    width: "60%",
+    height: 190,
+    resizeMode: "cover",
+    borderRadius: 10,
+    marginBottom: 30,
+    alignSelf: "center",
   },
 
   // image: {
@@ -62,25 +60,24 @@ export const styles = {
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 15,
-    
   },
 
   logo: {
-    width: 28, // Ajusta el tamaño del logo
-    height: 28, // Ajusta el tamaño del logo
-    marginRight: 10, // Espacio entre el logo y el texto
+    width: 28,
+    height: 28,
+    marginRight: 10,
   },
 
-  tableCell: {
+  tableCellChip: {
     flex: 1,
     fontSize: 14,
     color: "#7dac53",
   },
 
-  tableCellDato: {
+  tableCellDatoChip: {
     flex: 1,
     fontSize: 14,
-    color: "#7dac53",
+    color: "#000",
   },
 
   editButton: {
@@ -89,9 +86,9 @@ export const styles = {
     borderWidth: 1,
     borderColor: "#31502a",
     marginBottom: 30,
-    alignItems: "center", // Centra el contenido dentro del botón (texto o iconos)
-    justifyContent: "center", // Centra verticalmente el contenido dentro del botón
-    marginHorizontal: "auto", // Centra el botón horizontalmente
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: "auto",
     borderTopRightRadius: 0,
     borderRadius: 10,
     shadowColor: "#000",
@@ -99,11 +96,11 @@ export const styles = {
     shadowOpacity: 5,
     shadowRadius: 4,
     elevation: 10,
-    width: '70%', 
+    width: "70%",
   },
 
   containerEditChip: {
-    flexDirection: "row", // Alinea los elementos horizontalmente
+    flexDirection: "row",
     borderWidth: 1,
     borderColor: "#31502a",
     borderTopRightRadius: 0,
@@ -111,21 +108,254 @@ export const styles = {
   },
 
   logoEditarChip: {
-    width: 45, // Ajusta el tamaño de la imagen
-    height: 39, // Ajusta el tamaño de la imagen
+    width: 45,
+    height: 39,
   },
 
   editTextEditar: {
-    fontSize: 15, // Tamaño de la fuente
-    fontWeight: "normal", // Fuente normal (puedes cambiar a 'bold' si prefieres negrita)
-    color: "rgb(255, 255, 255)", // Color blanco del texto
-    textAlign: "left", // Centra el texto horizontalmente dentro de su contenedor
-    padding: 10, // Espaciado alrededor del texto
+    fontSize: 15,
+    fontWeight: "normal",
+    color: "rgb(255, 255, 255)",
+    textAlign: "left",
+    padding: 10,
   },
 
-// TITULOS E IMAGENES DE CONTROL DE PESOS Y VACUNAS 
+  tablePesoVacuna: {
+    backgroundColor: "rgb(244, 245, 244)",
+    paddingHorizontal: 3,
+    paddingVertical: 20,
+    borderWidth: 1,
+    borderColor: "rgb(255, 255, 255)",
+    alignItems: "center",
+    marginHorizontal: 5,
+    alignItems: "flex-start",
+    borderTopRightRadius: 0,
+    borderRadius: 10,
 
- imagePesoVacuna: {
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 5,
+    shadowRadius: 4,
+
+    elevation: 10,
+  },
+
+  tableHeaderPesoVacuna: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    borderBottomWidth: 3,
+    borderBottomColor: "#7dac53",
+    paddingBottom: 8,
+    marginBottom: 10,
+    width: "100%",
+  },
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+ tableHeaderTextPeso: {
+    fontSize: 16, // Tamaño del texto
+    fontWeight: "normal", // Negrita para resaltar los encabezados
+    color: "#000", // Color del texto, ajusta según tus necesidades
+    textAlign: "center", // Alinea el texto al centro de cada celda
+    flex: 1, // Hace que cada celda ocupe el mismo espacio
+  },
+
+  editButtonImagePeso1: {
+    width: 30, // Ajusta el tamaño de la imagen
+    height: 30, // Ajusta el tamaño de la imagen
+    resizeMode: 'contain', // Mantiene la proporción de la imagen
+    marginHorizontal: 10, // Espacio a los lados de la imagen
+    alignSelf: 'center', // Centra la imagen dentro de su contenedor
+    marginTop: -10, 
+  },
+
+  tableRowPeso: {
+    flexDirection: "row", // Alinea los elementos de la fila horizontalmente
+    justifyContent: "space-between", // Espacio entre las celdas
+    alignItems: "center", // Alinea los elementos verticalmente
+    borderBottomWidth: 1, // Líneas horizontales entre filas
+    borderBottomColor: "#ccc", // Color de las líneas horizontales
+    paddingVertical: 10, // Espacio vertical para separar las filas
+  },
+
+  // Estilo para las celdas de la tabla
+  tableCellPeso: {
+    fontSize: 14, // Tamaño de la fuente
+    color: "#7dac53", 
+    flex: 1, // Hace que cada celda ocupe el mismo espacio
+    textAlign: "center", // Centra el texto dentro de cada celda
+  },
+
+  // Estilo para el botón de editar (imagen)
+  editCell: {
+    justifyContent: "center", // Centra el contenido dentro de la celda de editar
+    alignItems: "center", // Centra la imagen dentro del TouchableOpacity
+    padding: 10, // Espaciado dentro del área del botón de editar
+  },
+
+  // Estilo para la imagen del botón de editar
+  editButtonImagePeso2: {
+    width: 30, // Ajusta el tamaño de la imagen
+    height: 30, // Ajusta el tamaño de la imagen
+    resizeMode: 'contain', // Asegura que la imagen mantenga su proporción
+      marginTop: -5, 
+  },
+
+ noRecordsText: {
+    fontSize: 18, // Tamaño de fuente más grande para hacerlo visible
+    color: "#31502a", // Un color verde amigable para el texto
+    textAlign: "center", // Centra el texto horizontalmente
+    marginTop: 20, // Espacio desde el top, para darle algo de espacio alrededor
+    marginBottom: 20, // Espacio debajo
+    fontWeight: "bold", // Hace el texto más destacado
+    paddingHorizontal: 20, // Agrega un pequeño padding en los lados para no pegarse al borde
+  },
+
+  ///////////////////////////////  /////////////////////////////// ///////////////////////////////  ///////////////////////////////  ///////////////////////////////  ////////////////////////////////
+  tableHeaderTextVacuna: {
+    fontSize: 16, // Tamaño del texto
+    fontWeight: "normal", // Peso de la fuente
+    color: "#000", // Color del texto (negro)
+    flex: 1, // Hace que cada celda ocupe el mismo espacio
+    textAlign: "center", // Centra el texto dentro de cada celda
+  },
+
+  // Estilo para la imagen del botón de editar (en el encabezado)
+  editButtonImageVacuna1: {
+    width: 27, // Ajusta el tamaño de la imagen
+    height: 27, // Ajusta el tamaño de la imagen
+    resizeMode: "contain", // Mantiene la proporción de la imagen
+    marginTop: -5, // Ajusta el espacio superior
+    alignSelf: "center", // Alinea la imagen al centro
+  },
+
+  // Estilo para la fila de datos en la tabla
+  tableRowVacuna: {
+    flexDirection: "row", // Alinea los elementos en una fila
+    justifyContent: "space-between", // Distribuye el espacio entre las celdas
+    alignItems: "center", // Centra los elementos verticalmente
+    borderBottomWidth: 1, // Línea divisoria entre las filas
+    borderBottomColor: "#ccc", // Color gris claro para la línea divisoria
+  },
+
+  // Estilo para la celda de fecha
+  tableCellFechaVacuna: {
+    fontSize: 10, // Tamaño del texto para la fecha
+    color: "#000", // Color del texto
+    textAlign: "left", // Alinea el texto a la izquierda
+    flex: 1, // Hace que ocupe el mismo espacio que las otras celdas
+    backgroundColor: "rgb(50, 8, 238)", // Fondo de la celda
+    paddingLeft: 5, // Ajusta el espacio a la izquierda
+  },
+
+  // Estilo para la celda de nombre
+  tableCellDatosVacunaNombre: {
+    fontSize: 10, // Tamaño del texto
+    color: "#000", // Color del texto
+    textAlign: "left", // Alinea el texto a la izquierda
+    flex: 1, // Hace que ocupe el mismo espacio que las otras celdas
+  },
+
+  // Estilo para la celda de tipo
+  tableCellDatosVacunaTipo: {
+    fontSize: 10, // Tamaño del texto
+    color: "#000", // Color del texto
+    textAlign: "left", // Alinea el texto a la izquierda
+    flex: 1, // Hace que ocupe el mismo espacio que las otras celdas
+  },
+
+  // Estilo para la celda de dosis
+  tableCellDatosVacunaDosis: {
+    fontSize: 10, // Tamaño del texto
+    color: "#000", // Color del texto
+    textAlign: "left", // Alinea el texto a la izquierda
+    flex: 1, // Hace que ocupe el mismo espacio que las otras celdas
+  },
+
+  // Estilo para la celda de observaciones
+  tableCellDatosVacunaObs: {
+    fontSize: 10, // Tamaño del texto
+    color: "#000", // Color del texto
+    textAlign: "left", // Alinea el texto a la izquierda
+    flex: 1, // Hace que ocupe el mismo espacio que las otras celdas
+  },
+
+  // Estilo para la celda de edición
+  editCellVacuna: {
+    justifyContent: "center", // Centra el contenido dentro de la celda
+    alignItems: "center", // Centra la imagen dentro de la celda
+    flex: 0.3, // Asegura que ocupe un espacio más pequeño
+  },
+
+  // Estilo para la imagen del botón de editar (en la fila)
+  editButtonImageVacuna2: {
+    width: 28, // Ajusta el tamaño de la imagen
+    height: 28, // Ajusta el tamaño de la imagen
+    resizeMode: "contain", // Mantiene la proporción de la imagen
+    marginBottom: 10, // Ajusta el espacio inferior
+    alignSelf: "center", // Alinea la imagen al centro
+  },
+
+  // Estilo para el botón de editar en la tabla
+  editButtonTextVacuna: {
+    fontSize: 10, // Tamaño del texto del botón
+    color: "#7dac53", // Color verde para el texto
+    textAlign: "left", // Alinea el texto a la izquierda
+    paddingHorizontal: 10, // Espacio dentro de la celda
+  },
+    ///////////////////////////////  /////////////////////////////// ///////////////////////////////  ///////////////////////////////  ///////////////////////////////  ////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /////////////////////////////////////// TITULOS E IMAGENES DE CONTROL DE PESOS Y VACUNAS ///////////////////////////////////////
+
+  imagePesoVacuna: {
     width: 150, // Ancho de la imagen
     height: 150, // Alto de la imagen
     alignSelf: "center", // Centra la imagen horizontalmente
@@ -145,50 +375,12 @@ export const styles = {
     textAlign: "center", // centra el texto
   },
 
+  ////////////////////////////////// MODAL PESO ///////////////////////////////////////
 
-// TABLAS 
-
- table: {
-     backgroundColor: "rgb(244, 245, 244)",
-    padding: 16,
-    borderWidth: 1,
-    borderColor: "rgb(255, 255, 255)",
-    alignItems: "center",
-    marginHorizontal: 5,
-    alignItems: "flex-start",
-    borderTopRightRadius: 0,
-    borderRadius: 10,
-
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 5,
-    shadowRadius: 4,
-
-    elevation: 10,
-  },
-  tableHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    borderBottomWidth: 3,
-    borderBottomColor: "#7dac53",
-    paddingBottom: 8,
-    marginBottom: 8,
-  },
-
- tableHeaderText: {
-    flex: 1,
-    fontWeight: "bold",
-    fontSize: 14,
-    
-  },
-
-
-////////////////////////////////// EDITAR PESO MODAL
-
-modalContent: {
+  modalContent: {
     backgroundColor: "#fff",
     borderRadius: 8,
-   padding: 30,
+    padding: 30,
     elevation: 5,
   },
 
@@ -196,183 +388,232 @@ modalContent: {
     flex: 1,
     justifyContent: "center",
     backgroundColor: "rgba(7, 7, 7, 0.77)",
-   
+
     alignItems: "center",
   },
 
-modalImage: {
-    width: 77,   // Ajusta el tamaño de la imagen
-    height: 70,  // Ajusta el tamaño de la imagen
-    marginBottom: 15, // Espacio entre la imagen y el título
-     alignSelf: 'center', // Asegura que la imagen esté centrada
-  },
-  modalTitle1: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center', // Centra el texto del título
+  modalImagePeso: {
+    width: 82,
+    height: 72,
+    marginBottom: 15,
+    alignSelf: "center",
   },
 
-   modalTitle2: {
+  modalTitle1: {
     fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 40, // Espacio entre el título y el contenido
-    textAlign: 'center', // Centra el texto del título
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+
+  modalTitle2: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 40,
+    textAlign: "center",
     color: "#7dac53",
   },
   inputContainer: {
-    flexDirection: 'row', // Alinea los elementos horizontalmente
-    alignItems: 'center', // Alinea el logo y el TextInput verticalmente
+    flexDirection: "row",
+    alignItems: "center",
     borderWidth: 1,
     borderRadius: 5,
-     borderTopRightRadius: 0,
+    borderTopRightRadius: 0,
     borderRadius: 10,
-    marginBottom: 20, // Espacio entre los inputs
-   
-   
+    marginBottom: 20,
   },
   inputLogo: {
-    width: 35,   // Ajusta el tamaño del logo
-    height: 35,  // Ajusta el tamaño del logo
-    marginRight: 10, // Espacio entre el logo y el TextInput
+    width: 35,
+    height: 35,
+    marginRight: 10,
     marginLeft: 20,
   },
 
   input: {
     paddingVertical: 20,
     fontSize: 16,
-      width: '65%',
+    width: "65%",
   },
 
+  buttonsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 20,
+  },
+  buttonGuardarPeso: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#31502a",
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderTopRightRadius: 0,
+    borderRadius: 10,
+    borderRadius: 5,
+    marginRight: 10,
+  },
+  buttonCancelarPeso: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#292929",
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderTopRightRadius: 0,
+    borderRadius: 10,
+    borderRadius: 5,
+    marginRight: 10,
+  },
 
-    buttonsContainer: {
-    flexDirection: 'row', // Alinea los botones horizontalmente
-    justifyContent: 'space-between', // Espacio entre los botones
-    marginTop: 20, // Espacio superior para separar de otros elementos
-  },
-  buttonGuardar: {
-    flexDirection: 'row', // Alinea la imagen y el texto horizontalmente dentro de cada botón
-    alignItems: 'center', // Centra verticalmente la imagen y el texto
-    backgroundColor: '#31502a', // Fondo verde para el botón "Guardar cambios"
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-      borderTopRightRadius: 0,
-    borderRadius: 10,
-    borderRadius: 5,
-    marginRight: 10, // Espacio entre los botones
-  },
-   buttonCancelar: {
-    flexDirection: 'row', // Alinea la imagen y el texto horizontalmente dentro de cada botón
-    alignItems: 'center', // Centra verticalmente la imagen y el texto
-    backgroundColor: '#292929', // Fondo verde para el botón "Guardar cambios"
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-      borderTopRightRadius: 0,
-    borderRadius: 10,
-    borderRadius: 5,
-    marginRight: 10, // Espacio entre los botones
-  },
   buttonText: {
-    color: 'white', // Color del texto del botón
+    color: "white",
     fontSize: 16,
-    marginLeft: 10, // Espacio entre la imagen y el texto del botón
+    marginLeft: 10,
   },
   buttonLogo: {
-    width: 20,   // Ajusta el tamaño del logo
-    height: 20,  // Ajusta el tamaño del logo
-  },
-  
-////////////////////////////////////////////////////////
-
-////////////////////////////////// EDITAR PESO MODAL
-
-
-
-  tableCellFechaVcuna: {
-    flex: 6, // si quieres que tenga un ancho relativo
-    padding: 1,
-    textAlign: "left",
-    fontSize: 10,
-  color: "#7dac53",
-    paddingLeft: 0,
+    width: 20,
+    height: 20,
   },
 
-  tableCellDatosVacuna: {
-    flex: 5,
-    padding: 1,
-    textAlign: "left",
-    fontSize: 11,
-    color: "#7dac53",
-    paddingLeft: 0,
-    
+  ////////////////////////////////// MODAL VACUNA ///////////////////////////////////////
+
+  modalContentVacuna: {
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    width: "90%",
+    elevation: 5,
   },
 
-  editButtonText: {
-    fontSize: 12,
-    textAlign: "center",
-
-    paddingLeft: 0,
-    borderColor: "rgb(255, 255, 255)", // color de la línea
-    borderRadius: 4, // opcional, esquinas suavizadas
-    overflow: "hidden", // para que respete el borderRadius
+  modalImageVacuna: {
+    width: 82,
+    height: 72,
+    marginBottom: 15,
+    alignSelf: "center",
+    marginTop: 20,
   },
-
- 
-  editCell: {
-    width: 40,
-    alignItems: "center",
+  modalContainerVacuna: {
+    flex: 1,
     justifyContent: "center",
+    backgroundColor: "rgba(7, 7, 7, 0.77)",
+    alignItems: "center",
   },
- 
-  editButtonTextHe: {
-    fontSize: 12,
-    alignItems: "flex-start",
-    paddingLeft: 20,
+
+  datePickerLogo: {
+    width: 32,
+    height: 32,
+    marginRight: 10,
+    marginLeft: 10,
   },
+
+  inputContainerVacuna: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 8,
+    borderTopRightRadius: 0,
+    borderRadius: 10,
+    marginBottom: 20,
+    width: "90%",
+    alignSelf: "center",
+  },
+
+  ////EL DropDownPicker DE TIPO DE VACUNAS
+
+  datePickerWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderRadius: 5,
+    height: 60,
+    borderTopRightRadius: 0,
+    borderRadius: 10,
+    marginBottom: 20,
+    width: "90%",
+    alignSelf: "center",
+  },
+
+  dropdownStyle: {
+    marginTop: -10,
+    borderWidth: 1,
+    borderColor: "rgb(250, 250, 250)",
+    borderRadius: 10,
+    padding: 8,
+    height: 50,
+    width: "100%",
+    marginBottom: 10,
+  },
+
+  dropdownContainerVacuna: {
+    flex: 1,
+    height: 30,
+    borderWidth: 0,
+  },
+
+  dropdownBelowVacuna: {
+    marginTop: 20,
+    borderWidth: 0,
+  },
+
+  dropDownStyle: {
+    borderWidth: 0,
+    backgroundColor: "#7dac53",
+  },
+
+  arrowIconStyle: {
+    tintColor: "#7dac53",
+    transform: [{ scale: 2.0 }],
+  },
+
+  textStyle: {
+    fontSize: 16,
+    color: "#000",
+  },
+
+  inputVacuna: {
+    flex: 1,
+    height: 40,
+    borderRadius: 5,
+    paddingLeft: 10,
+  },
+
+  buttonGuardarVacuna: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#31502a",
+    paddingVertical: 5,
+    paddingHorizontal: 20,
+    borderTopRightRadius: 0,
+    borderRadius: 10,
+    marginLeft: 20,
+    marginBottom: 30,
+  },
+  buttonCancelarVacuna: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#292929",
+    padding: 15,
+    borderTopRightRadius: 0,
+    borderRadius: 5,
+    marginRight: 20,
+    marginBottom: 30,
+  },
+
+  //////////////////////////////////////////  BOTON NUEVO CONTROL ///////////////////////////////////////
 
   newControlButton: {
-    backgroundColor: "rgb(180, 180, 180)",
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
+    backgroundColor: "#292929",
+    padding: 20,
     alignItems: "center",
-    marginTop: 24, // espacio arriba
-    marginBottom: 16, // (opcional) separa abajo
-    borderWidth: 1, // grosor del borde
-    borderColor: "black", // mismo tono que el fondo o el que prefieras
-    elevation: 2,
+    borderRadius: 10,
+    borderTopRightRadius: 0,
+    marginTop: 60,
+    marginBottom: 40,
+    borderWidth: 1,
+    width: "75%",
+    alignSelf: "center",
   },
 
   newControlButtonText: {
-    color: "black", // texto blanco
+    color: "white",
     fontSize: 16,
-    fontWeight: "600",
-  },
-
-  
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 12,
-    textAlign: "center",
-  },
- 
-  dropdownContainer: {
-    marginBottom: 12,
-    zIndex: 1000,
-  },
-
-  pickerContainer: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 6,
-    marginBottom: 6,
-    overflow: "hidden",
-  },
-  picker: {
-    height: 40,
-    width: "100%",
-  },
-  dropdownBelow: {
-    marginTop: 40,
+    fontWeight: "500",
   },
 };
