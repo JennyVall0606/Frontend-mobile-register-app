@@ -106,15 +106,16 @@ export default StyleSheet.create({
   },
 
   logo: {
-    width: 30,
-    height: 25,
-    marginRight: 8, // Espacio entre el logo y el texto
+    width: 31,
+    height: 26,
+    marginRight: 8, 
+    marginLeft: -5,
   },
 
   imagePickerText: {
-    color: "rgb(0, 0, 0)", // Color del texto
-    fontSize: 16, // Tamaño de la fuente
-    textAlign: "left", // Alinea el texto a la izquierda
+     fontSize: 16, // Ajusta el tamaño del texto
+    color: "#000", // Cambia el color del texto
+   marginLeft: -7, 
   },
 
   deleteButton: {
@@ -137,7 +138,7 @@ export default StyleSheet.create({
   iconStyle: {
     width: 30, // Ajusta el tamaño de la imagen
     height: 30,
-    marginRight: 10,
+     marginLeft: -5,
   },
   ////////////////////////////////////////////////////////////////
 
@@ -167,19 +168,31 @@ export default StyleSheet.create({
   dropdownLogo: {
     width: 30,
     height: 30,
+    marginLeft: -5, 
+  },
+
+  
+  dropdownLogoRaza: {
+    width: 34,
+    height: 30,
+     marginRight: 6,
+    marginLeft: -5, 
   },
 
   dropdownText: {
-    fontSize: 14, // Ajusta el tamaño del texto
+    fontSize: 16, // Ajusta el tamaño del texto
     color: "#000", // Cambia el color del texto
+   marginLeft: -7, 
   },
+
+
 
   dropdown: {
     borderWidth: 1, // Borde normal
     borderColor: "rgb(255, 255, 255)",
-    padding: 120,
     backgroundColor: "rgb(255, 255, 255)",
     width: "95%", // Ajusta el anch
+     marginLeft: -5, 
   },
 
   arrowIconStyle: {
@@ -239,8 +252,9 @@ export default StyleSheet.create({
   },
 
   dateButtonText: {
-    fontSize: 16,
-    color: "rgb(2, 2, 2)",
+        fontSize: 16,
+    color: "rgb(15, 15, 15)",
+    paddingLeft: 5,
   },
 
   // ///////////////////////////PESO#
@@ -289,9 +303,10 @@ export default StyleSheet.create({
   },
 
   iconStylePeso: {
-    width: 30, // Ajusta el tamaño de la imagen
-    height: 32,
-    marginRight: 10,
+   width: 30,
+    height: 33,
+     marginRight: 6,
+    marginLeft: -5, 
   },
 
   // ///////////////////////////CHIP#CHIPMADRE#CHIPPADRE#
@@ -321,19 +336,37 @@ export default StyleSheet.create({
   iconStyleChips: {
     width: 30, // Ajusta el tamaño de la imagen
     height: 30,
-    marginRight: 10, // Espacio entre el logo y el texto
+    marginRight: 4, // Espacio entre el logo y el texto
+    marginLeft: -5,
   },
   iconStyleChipsP: {
     width: 35,
     height: 25,
-    marginRight: 10, // Espacio entre el logo y el texto
+    marginLeft: -5, 
+
+
+    
   },
   inputChips: {
     flex: 1, // El TextInput ocupará todo el espacio disponible
     fontSize: 16, // Tamaño del texto
-    color: "#333", // Color del texto
     paddingVertical: 0, // Elimina padding vertical por defecto
     paddingLeft: 5, // Evita que el texto se solape con el logo
+  },
+
+      dropdownTextEnfermedad: {
+    fontSize: 16, // Ajusta el tamaño del texto
+    color: "#000", // Cambia el color del texto
+   marginLeft: -7, 
+   
+  },
+
+    dropdownEnfermedad: {
+    borderWidth: 1, // Borde normal
+    borderColor: "rgb(255, 255, 255)",
+    backgroundColor: "rgb(255, 255, 255)",
+    width: "95%", // Ajusta el anch
+     marginLeft: 3, 
   },
 
   inputWrapper: {
@@ -362,7 +395,8 @@ export default StyleSheet.create({
   iconStyleO: {
     width: 30, // Ajusta el tamaño de la imagen
     height: 30,
-    marginRight: 10,
+    marginRight: 6,
+     marginLeft: -5, 
   },
 
   inputobs: {
@@ -385,7 +419,8 @@ export default StyleSheet.create({
     paddingHorizontal: 25,
     flexDirection: "column", // Alinea el texto en una columna
     flexWrap: "wrap", // Asegura que el texto no se desborde y se ajuste
-    marginBottom: 15,
+    marginBottom: 20,
+     marginTop: -25, 
   },
 
   registerButton: {

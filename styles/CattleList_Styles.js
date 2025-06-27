@@ -11,21 +11,21 @@ export const styles = StyleSheet.create({
   },
 
   imageStyle: {
-    width: 200, // Ajusta el ancho de la imagen
-    height: 200, // Ajusta la altura de la imagen
+    width: 200, 
+    height: 200, 
      marginTop: 60, 
   },
 
   titleContainer: {
-    alignItems: "center", // Alinea horizontalmente los elementos al centro
-    justifyContent: "center", // Centra los elementos verticalmente
-    flexDirection: "column", // Alinea los títulos en una columna
+    alignItems: "center", 
+    justifyContent: "center", 
+    flexDirection: "column", 
   },
 
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    textAlign: "center", // Asegura que el texto esté centrado dentro de su contenedor
+    textAlign: "center", 
     color: "#2c3e50",
   },
 
@@ -33,98 +33,144 @@ export const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 10,
-    textAlign: "center", // Asegura que el texto esté centrado dentro de su contenedor
+    textAlign: "center", 
     color: "rgb(52, 112, 24)",
   },
 
   totalCountContainer: {
-    flexDirection: "row", // Alinea los elementos horizontalmente (imagen y texto)
-    alignItems: "center", // Centra la imagen y el texto verticalmente dentro del contenedor
-    marginTop: 10, // Ajusta el espacio superior según sea necesario
+    flexDirection: "row", 
+    alignItems: "center", 
+    marginTop: 10, 
     marginBottom: 25,
   },
 
   logoStyle: {
-    width: 28, // Ajusta el tamaño del logo
-    height: 28, // Ajusta el tamaño del logo
-    marginRight: 5, // Espacio entre el logo y el texto
+    width: 28, 
+    height: 30, 
+    marginRight: 5, 
   },
 
   totalCount: {
-    fontSize: 15, // Tamaño del texto
+    fontSize: 16, 
     color: "rgb(39, 85, 18)",
     fontWeight: "bold",
   },
 
   counter: {
-    fontSize: 16, // Tamaño del contador
-    color: "rgb(73, 177, 25)", // Color del contador (puedes cambiar este color)
-    fontWeight: "bold", // Puedes agregar negrita si lo deseas
+    fontSize: 18, 
+    color: "#7dac53", 
+    fontWeight: "bold", 
   },
 
+  
   card: {
-    flexDirection: "column", // Cambiar a columna para una disposición vertical
-    justifyContent: "flex-start", // Alineación de los elementos desde arriba
-    marginBottom: 30, // Espaciado entre las cartas
-    gap: 10, // Espaciado entre los elementos dentro de cada carta
+    flexDirection: "column", 
+    justifyContent: "flex-start", 
+    marginBottom: 40, 
+    gap: 10, 
    
   },
 
+  
   cardContent: {
-    flexDirection: "row", // Alinea la imagen y el texto horizontalmente
-    alignItems: "center", // Centra los elementos verticalmente
-    width: "100%", // Carta ocupa todo el ancho disponible
-    minHeight: 150, // Asegura que la carta tenga una altura mínima adecuada
-    backgroundColor: "rgb(238, 238, 238)", // Fondo de la tarjeta
-    borderTopLeftRadius: 20, // Redondea la esquina superior izquierda
-    borderTopRightRadius: 0, // No redondea la esquina superior derecha
-    marginBottom: 10, // Espaciado entre las líneas
-    borderRadius: 20, // Bordes redondeados
-    elevation: 3, // Sombra para Android
-    shadowColor: "#000", // Sombra para iOS
+    flexDirection: "row", 
+    alignItems: "center", 
+    width: "100%", 
+    minHeight: 170, 
+    backgroundColor: "rgb(255, 255, 255)", 
+    borderTopLeftRadius: 20, 
+    borderTopRightRadius: 0, 
+    borderRadius: 20,
+    elevation: 3, 
+    shadowColor: "#000", 
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.9,
     shadowRadius: 4,
   },
 
   cardImage: {
-    width: 180, // Ajusta el tamaño de la imagen
-    height: 180, // Altura de la imagen
-    borderRadius: 20, // Bordes redondeados para la imagen
-    marginRight: 10, // Espacio entre la imagen y el texto
+    width: 170, 
+    height: 203, 
+    borderRadius: 20, 
+    marginRight: 10, 
     borderTopRightRadius: 0,
     borderBottomRightRadius: 0,
   },
 
   
-  cardText: {
+column: {
+  flexDirection: 'column', 
+  width: '100%', 
+},
+
+row: {
+  flexDirection: 'row', 
+  alignItems: 'center', 
+  marginBottom: 12, 
+},
+
+iconStyle: {
+  width: 29,
+  height: 30,
+  marginRight: 8, 
+  marginTop: 8,
+   marginLeft: -6,
+},
+
+iconStyleNacimiento: {
+  width: 29,
+  height: 33,
+  marginRight: 8, 
+  marginTop: 8,
+   marginLeft: -6,
+},
+
+chipText: {
   fontSize: 14,
-  marginRight: 60,
-  color: "#333", // Color del texto
-  marginBottom: 12, // Espaciado entre los textos
-  width: "100%", // Asegura que el contenedor ocupe todo el ancho disponible
-},
-DatosText: {
-  fontSize: 14, // Tamaño del texto de los datos
-  color: "rgb(156, 89, 35)", // Color específico para los valores
-  marginBottom: 10, // Espaciado entre los valores
-  textAlign: "center", // Alineación horizontal del texto al centro
+  color: "rgb(0, 0, 0)", 
+  fontWeight: "bold", 
+   marginRight: 8, 
+  marginTop: 12,
+   marginLeft: -4,
 },
 
+DatosTextChip: {
+   fontSize:16,
+   width: '23%',
+  color: "#7dac53", 
+  textAlign: 'Left', 
+  marginTop: 12,
+   marginLeft: 40,
+},
 
-  iconStyle: {
-    width: 26, // Tamaño de la imagen
-    height: 26, // Tamaño de la imagen
-  },
 
-  DatosText: {
-    fontSize: 14,
-  color: "rgb(65, 173, 15)",
-  marginBottom: 10,
-  textAlign: "center",
-  width: '100%',
-  alignSelf: 'center', // Asegura que el texto se centre en su contenedor
-  },
+DatosTextNacimiento: {
+   fontSize:16,
+   width: '23%',
+  color: "#7dac53", 
+  textAlign: 'Left', 
+  marginTop: 12,
+   marginLeft: -9,
+},
+
+DatosTextPeso: {
+   fontSize:16,
+   width: '23%',
+  color: "#7dac53", 
+  textAlign: 'Left', 
+  marginTop: 12,
+   marginLeft: 39,
+},
+
+DatosTextEstado: {
+   fontSize:16,
+   width: '23%',
+  color: "#7dac53", 
+  textAlign: 'Left', 
+  marginTop: 12,
+  marginLeft: 24,
+},
+
 
   
 });

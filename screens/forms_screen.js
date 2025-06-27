@@ -299,7 +299,7 @@ export default function FormsScreen({ route }) {
         {pesoChecked && (
           <View style={styles.formSection}>
             <Image
-              source={require("../assets/Enfermedades.png")}
+              source={require("../assets/Peso.png")}
               style={styles.imagePeso}
             />
             <Text style={styles.subtitle1}>Formulario </Text>
@@ -307,7 +307,7 @@ export default function FormsScreen({ route }) {
 
             <View style={styles.inputContainer}>
               <Image
-                source={require("../assets/Enfermedades.png")}
+                source={require("../assets/Chip.png")}
                 style={styles.logo}
               />
 
@@ -341,7 +341,7 @@ export default function FormsScreen({ route }) {
               }}
             >
               <Image
-                source={require("../assets/Enfermedades.png")}
+                source={require("../assets/FechaDeNacimieto.png")}
                 style={styles.logo}
               />
               <Text style={styles.dateButtonText}>
@@ -379,7 +379,7 @@ export default function FormsScreen({ route }) {
         {vacunaChecked && (
           <View style={styles.formSection}>
             <Image
-              source={require("../assets/Enfermedades.png")}
+              source={require("../assets/Vacunas.png")}
               style={styles.imagePeso}
             />
             <Text style={styles.subtitle1}>Formulario </Text>
@@ -387,7 +387,7 @@ export default function FormsScreen({ route }) {
 
             <View style={styles.inputContainer}>
               <Image
-                source={require("../assets/Enfermedades.png")}
+                source={require("../assets/Chip.png")}
                 style={styles.logo}
               />
 
@@ -417,8 +417,8 @@ export default function FormsScreen({ route }) {
 
 <View style={styles.dropdownContainerTipoVacuna}>
   <Image
-    source={require("../assets/Enfermedades.png")}
-    style={styles.dropdownLogo}
+    source={require("../assets/CC.png")}
+    style={styles.dropdownLogoCC}
   />
 
   {/* DropDownPicker */}
@@ -448,7 +448,7 @@ style={styles.dropdownListStyle}
 
 <View style={styles.dropdownContainerNombreVacuna}>
   <Image
-    source={require("../assets/Enfermedades.png")}
+    source={require("../assets/Nombre.png")}
     style={styles.dropdownLogo}
   />
             <DropDownPicker
@@ -478,7 +478,7 @@ style={styles.dropdownListStyle}
             <View style={styles.row}>
   <View style={[styles.inputDosisContainer,errors.dosis && styles.inputError] }>
   <Image
-    source={require("../assets/Enfermedades.png")}
+    source={require("../assets/Vacuna.png")}
     style={styles.dropdownLogo}
   />
   <TextInput
@@ -540,7 +540,7 @@ style={styles.dropdownListStyle}
               }}
             >
   <Image
-                source={require("../assets/Enfermedades.png")}
+                source={require("../assets/Vacunas.png")}
                 style={styles.logo}
               />
               <Text style={styles.dateButtonText}>

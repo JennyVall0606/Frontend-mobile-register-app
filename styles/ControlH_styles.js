@@ -39,7 +39,7 @@ export const styles = {
   },
 
   card: {
-    backgroundColor: "rgb(244, 245, 244)",
+    backgroundColor: "rgb(255, 255, 255)",
     padding: 16,
     borderWidth: 1,
     borderColor: "rgb(255, 255, 255)",
@@ -60,24 +60,46 @@ export const styles = {
   tableRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 15,
+    marginBottom: 13,
   },
 
   logo: {
-    width: 28,
-    height: 28,
-    marginRight: 10,
+   width: 35,
+  height: 36,
+  marginRight: 8, 
+  marginTop: 8,
+   marginLeft: -5,
+  },
+
+    logoId: {
+   width: 44,
+  height: 32,
+     marginRight: 4, 
+  marginTop: 8,
+   marginLeft: -9,
+  },
+
+  logoObs: {
+   width: 45,
+  height: 35,
+  marginTop: 8,
+
+   marginLeft: -5,
   },
 
   tableCellChip: {
     flex: 1,
     fontSize: 14,
+     marginTop: 15,
+     
+     fontWeight: "bold",
     color: "#7dac53",
   },
 
   tableCellDatoChip: {
     flex: 1,
     fontSize: 14,
+     marginTop: 15,
     color: "#000",
   },
 
@@ -92,6 +114,7 @@ export const styles = {
     marginHorizontal: "auto",
     borderTopRightRadius: 0,
     borderRadius: 10,
+       marginTop: 25,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 5,
@@ -242,7 +265,7 @@ export const styles = {
 
   // Estilo para la celda de fecha
   tableCellFechaVacuna: {
-    fontSize: 10, // Tamaño del texto para la fecha
+    fontSize: 9, // Tamaño del texto para la fecha
     color: "#7dac53", // Color del texto
     textAlign: "left", // Alinea el texto a la izquierda
     flex: 1, // Hace que ocupe el mismo espacio que las otras celdas
@@ -380,7 +403,7 @@ export const styles = {
   },
   inputLogo: {
     width: 35,
-    height: 35,
+    height: 37,
     marginRight: 10,
     marginLeft: 20,
   },
@@ -453,10 +476,16 @@ export const styles = {
   },
 
   datePickerLogo: {
-    width: 32,
-    height: 32,
-    marginRight: 10,
-    marginLeft: 10,
+    width: 35,
+    height: 35,
+    marginRight: 12,
+    marginLeft: 8,
+  },
+    datePickerLogoCC: {
+    width: 35,
+    height: 45,
+    marginRight: 12,
+    marginLeft: 8,
   },
 
   inputContainerVacuna: {
@@ -485,6 +514,7 @@ export const styles = {
     marginBottom: 20,
     width: "90%",
     alignSelf: "center",
+    
   },
 
   dropdownStyle: {
@@ -502,6 +532,7 @@ export const styles = {
     flex: 1,
     height: 30,
     borderWidth: 0,
+    marginLeft: -10,
   },
 
   dropdownBelowVacuna: {
@@ -520,7 +551,7 @@ export const styles = {
   },
 
   textStyle: {
-    fontSize: 16,
+    fontSize: 13,
     color: "#000",
   },
 
@@ -529,6 +560,7 @@ export const styles = {
     height: 40,
     borderRadius: 5,
     paddingLeft: 10,
+    marginLeft: -14,
   },
 
   buttonGuardarVacuna: {

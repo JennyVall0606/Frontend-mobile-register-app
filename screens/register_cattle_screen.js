@@ -187,6 +187,8 @@ export default function RegisterCattleScreen({ route }) {
     }
   };
 
+  
+
   const handleConfirmDate = (date) => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -252,6 +254,10 @@ export default function RegisterCattleScreen({ route }) {
         );
         return;
       }
+
+
+     
+        
       const fechaFormateada = birthDate.split("T")[0];
       const enfermedadesFormateadas =
         disease.length > 0 ? disease.join(",") : null;
@@ -290,6 +296,7 @@ export default function RegisterCattleScreen({ route }) {
           Authorization: `Bearer ${token}`,
         },
       });
+      
 
       if (response.status === 200 || response.status === 201) {
         Alert.alert(
@@ -387,7 +394,7 @@ export default function RegisterCattleScreen({ route }) {
 <View style={[styles.dropdownContainer, errors.breed && styles.inputError]}>
   <Image 
     source={require("../assets/SeleccionarRaza.png")} // Ajusta la ruta de tu logo
-    style={styles.dropdownLogo} 
+    style={styles.dropdownLogoRaza} 
   />
   <DropDownPicker
     open={openRaza}
@@ -501,15 +508,18 @@ export default function RegisterCattleScreen({ route }) {
           />
         </View>
 
+
+
+
         {/* Registro del padre */}
         <View style={styles.inputWithIconChips}>
           <Image
-            source={require("../assets/Id_Padre.png")}
+            source={require("../assets/Id_Madre.png")}
             style={styles.iconStyleChipsP}
           />
           <TextInput
             style={styles.inputChips}
-            placeholder="Registro del padre"
+            placeholder="Registro del madre"
             placeholderTextColor="#000"
             value={father}
             onChangeText={setFather}
@@ -519,12 +529,12 @@ export default function RegisterCattleScreen({ route }) {
         {/* Registro de la madre */}
         <View style={styles.inputWithIconChips}>
           <Image
-            source={require("../assets/Id_Madre.png")}
+            source={require("../assets/Id_Padre.png")}
             style={styles.iconStyleChipsP}
           />
           <TextInput
             style={styles.inputChips}
-            placeholder="Registro de la madre"
+            placeholder="Registro de la padre"
             placeholderTextColor="#000"
             value={mother}
             onChangeText={setMother}
@@ -557,8 +567,8 @@ export default function RegisterCattleScreen({ route }) {
             setDisease(newValue);
           }}
           placeholder="Selecciona una o más enfermedades"
-          style={styles.dropdown}
-          textStyle={styles.dropdownText}
+          style={styles.dropdownEnfermedad}
+          textStyle={styles.dropdownTextEnfermedad}
           listMode="SCROLLVIEW"
           multipleText={`${disease.length} enfermedade${
             disease.length === 1 ? "" : "s"

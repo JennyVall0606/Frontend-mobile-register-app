@@ -318,7 +318,7 @@ export default function ControlH_Screen({ navigation, route }) {
               source={require("../assets/FechaDeNacimieto.png")} 
               style={styles.logo}
             />
-            <Text style={styles.tableCellChip}>Fecha de Nacimiento:</Text>
+            <Text style={styles.tableCellChip}>Fecha Nacimiento:</Text>
             <Text style={styles.tableCellDatoChip}>
               {animalInfo?.fecha_nacimiento
                 ? formatDate(animalInfo.fecha_nacimiento)
@@ -330,7 +330,7 @@ export default function ControlH_Screen({ navigation, route }) {
               source={require("../assets/Peso.png")} 
               style={styles.logo}
             />
-            <Text style={styles.tableCellChip}>Peso de Nacimiento:</Text>
+            <Text style={styles.tableCellChip}>Peso Nacimiento:</Text>
             <Text style={styles.tableCellDatoChip}>
               {animalInfo?.peso_nacimiento
                 ? formatWeight(animalInfo.peso_nacimiento)
@@ -340,7 +340,7 @@ export default function ControlH_Screen({ navigation, route }) {
           <View style={styles.tableRow}>
             <Image
               source={require("../assets/Id_Madre.png")} 
-              style={styles.logo}
+              style={styles.logoId}
             />
             <Text style={styles.tableCellChip}>ID Madre:</Text>
             <Text style={styles.tableCellDatoChip}>{animalInfo?.id_madre}</Text>
@@ -348,7 +348,7 @@ export default function ControlH_Screen({ navigation, route }) {
           <View style={styles.tableRow}>
             <Image
               source={require("../assets/Id_Padre.png")} 
-              style={styles.logo}
+              style={styles.logoId}
             />
             <Text style={styles.tableCellChip}>ID Padre:</Text>
             <Text style={styles.tableCellDatoChip}>{animalInfo?.id_padre}</Text>
@@ -368,7 +368,7 @@ export default function ControlH_Screen({ navigation, route }) {
           <View style={styles.tableRow}>
             <Image
               source={require("../assets/Observaciones.png")} 
-              style={styles.logo}
+              style={styles.logoObs}
             />
             <Text style={styles.tableCellChip}>Observaciones:</Text>
             <Text style={styles.tableCellDatoChip}>
@@ -564,7 +564,7 @@ export default function ControlH_Screen({ navigation, route }) {
               <Text style={styles.tableHeaderTextVacuna}>Obs</Text>
 
              <Image 
-  source={require('../assets/Vacunas.png')} // Ajusta la ruta de tu imagen de lápiz
+  source={require('../assets/Vacuna.png')} // Ajusta la ruta de tu imagen de lápiz
   style={styles.editButtonImageVacuna1}
 />
 
@@ -652,8 +652,8 @@ export default function ControlH_Screen({ navigation, route }) {
 
               <View style={styles.datePickerWrapper}>
                 <Image
-                  source={require("../assets/FechaDeNacimieto.png")}
-                  style={styles.datePickerLogo}
+                  source={require("../assets/CC.png")}
+                  style={styles.datePickerLogoCC}
                 />
                 <DropDownPicker
                   open={openTipoVacuna}
@@ -676,7 +676,7 @@ export default function ControlH_Screen({ navigation, route }) {
 
               <View style={styles.datePickerWrapper}>
                 <Image
-                  source={require("../assets/FechaDeNacimieto.png")}
+                  source={require("../assets/Nombre.png")}
                   style={styles.datePickerLogo}
                 />
 
@@ -702,7 +702,7 @@ export default function ControlH_Screen({ navigation, route }) {
 
               <View style={styles.inputContainerVacuna}>
                 <Image
-                  source={require("../assets/FechaDeNacimieto.png")} // Ajusta la ruta del logo
+                  source={require("../assets/Vacuna.png")} // Ajusta la ruta del logo
                   style={styles.datePickerLogo}
                 />
                 <TextInput
@@ -715,7 +715,7 @@ export default function ControlH_Screen({ navigation, route }) {
 
               <View style={styles.inputContainerVacuna}>
                 <Image
-                  source={require("../assets/FechaDeNacimieto.png")} // Ajusta la ruta del logo
+                  source={require("../assets/Obs.png")} // Ajusta la ruta del logo
                   style={styles.datePickerLogo}
                 />
                 <TextInput

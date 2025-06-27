@@ -220,6 +220,14 @@ export default StyleSheet.create({
     marginRight: 3, // Espacio entre el logo y el TextInput
     marginLeft: 8,
   },
+
+  dropdownLogoCC: {
+    width: 34, // Ajusta el tamaño del logo
+    height: 45, // Ajusta el tamaño del logo
+    marginRight: 3, // Espacio entre el logo y el TextInput
+    marginLeft: 8,
+  },
+
   dropdownText: {
     fontSize: 14, // Tamaño del texto
     color: "#000", // Color del texto

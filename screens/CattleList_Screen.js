@@ -20,8 +20,7 @@ export default function CattleScreen({ navigation }) {
   const [ganado, setGanado] = useState([]);
   const [loading, setLoading] = useState(true);
   const { width, height } = Dimensions.get("window");
- const API_URL = "http://192.168.1.10:3000";
-
+  const API_URL = "http://192.168.1.10:3000";
 
   useEffect(() => {
     const fetchAnimals = async () => {
@@ -122,52 +121,57 @@ export default function CattleScreen({ navigation }) {
                 }}
                 style={styles.cardImage}
               />
-             <View style={styles.column}>
-  <Text style={styles.cardText}>
+              <View style={styles.column}>
+  {/* Chip */}
+  <View style={styles.row}>
     <Image
-      source={require("../assets/Chip.png")} // Icono de chip
-      style={styles.iconStyle} // Estilo para la imagen
+      source={require("../assets/Chip.png")}
+      style={styles.iconStyle}
     />
-    Chip:{" "}
-    <Text style={styles.DatosText}>
+    <Text style={styles.chipText}>Chip: </Text>
+    <Text style={styles.DatosTextChip}>
       {animal.chip_animal || "Sin chip"}
     </Text>
-  </Text>
+  </View>
 
-  <Text style={styles.cardText}>
-    <Image
-      source={require("../assets/Estado.png")} // Icono de estado
-      style={styles.iconStyle} // Estilo para la imagen
-    />
-    Estado:{" "}
-    <Text style={styles.DatosText}>
-      {animal.estado || "Desconocido"}
-    </Text>
-  </Text>
 
-  <Text style={styles.cardText}>
+
+  {/* Nacimiento */}
+  <View style={styles.row}>
     <Image
-      source={require("../assets/Nacimiento.png")} // Icono de nacimiento
-      style={styles.iconStyle} // Estilo para la imagen
+      source={require("../assets/Nacimiento.png")}
+      style={styles.iconStyleNacimiento}
     />
-    Nacimiento:{" "}
-    <Text style={styles.DatosText}>
+    <Text style={styles.chipText}>Nacimiento: </Text>
+    <Text style={styles.DatosTextNacimiento}>
       {new Date(animal.fecha_nacimiento).toLocaleDateString()}
     </Text>
-  </Text>
+  </View>
 
-  <Text style={styles.cardText}>
+  {/* Peso */}
+  <View style={styles.row}>
     <Image
-      source={require("../assets/Peso.png")} // Icono de peso
-      style={styles.iconStyle} // Estilo para la imagen
+      source={require("../assets/Peso.png")}
+      style={styles.iconStyle}
     />
-    Peso:{" "}
-    <Text style={styles.DatosText}>
-      {animal.peso_nacimiento
-        ? `${animal.peso_nacimiento} kg`
-        : "Sin dato"}
+    <Text style={styles.chipText}>Peso: </Text>
+    <Text style={styles.DatosTextPeso}>
+      {animal.peso_nacimiento ? `${animal.peso_nacimiento} kg` : "Sin dato"}
     </Text>
-  </Text>
+  </View>
+
+  {/* Estado */}
+  <View style={styles.row}>
+    <Image
+      source={require("../assets/Estado.png")}
+      style={styles.iconStyle}
+    />
+    <Text style={styles.chipText}>Estado: </Text>
+    <Text style={styles.DatosTextEstado}>
+      {animal.estado || "Desconocido"}
+    </Text>
+  </View>
+
 </View>
 
             </TouchableOpacity>
