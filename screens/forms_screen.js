@@ -5,7 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
-    Image,
+  Image,
   ScrollView,
   StyleSheet,
   Dimensions,
@@ -24,14 +24,14 @@ export default function FormsScreen({ route }) {
   const { chip } = route.params || {};
   const { width, height } = Dimensions.get("window");
 
-   const [errors, setErrors] = useState({
+  const [errors, setErrors] = useState({
     fechaPeso: false,
     peso: false,
     dosis: false,
     unidad: false,
     fechaVacuna: false,
   });
-  
+
   const [pesoChecked, setPesoChecked] = useState(false);
   const [vacunaChecked, setVacunaChecked] = useState(false);
   const [cantidad, setCantidad] = useState("");
@@ -59,7 +59,7 @@ export default function FormsScreen({ route }) {
   const [fechaPeso, setFechaPeso] = useState("");
   // Estados para formulario de vacunas
   const [chipVacuna, setChipVacuna] = useState("");
- const API_URL = "http://192.168.1.10:3000";
+  const API_URL = "http://192.168.1.10:3000";
 
   useEffect(() => {
     axios
@@ -74,36 +74,34 @@ export default function FormsScreen({ route }) {
   }, []);
 
   const handleConfirmDate = (date) => {
-  // Ajustar manualmente a UTC-5 (hora Colombia)
-  const colombiaDate = new Date(date.getTime() - 5 * 60 * 60 * 1000);
-  const formattedDate = colombiaDate.toISOString().split("T")[0];
+    // Ajustar manualmente a UTC-5 (hora Colombia)
+    const colombiaDate = new Date(date.getTime() - 5 * 60 * 60 * 1000);
+    const formattedDate = colombiaDate.toISOString().split("T")[0];
 
-  const today = new Date(new Date().getTime() - 5 * 60 * 60 * 1000)
-    .toISOString()
-    .split("T")[0];
+    const today = new Date(new Date().getTime() - 5 * 60 * 60 * 1000)
+      .toISOString()
+      .split("T")[0];
 
-  // Si la fecha es futura, mostrar la alerta
-  if (formattedDate > today) {
-    Alert.alert(
-      "Fecha inválida",
-      "No puedes seleccionar una fecha futura.",
-      [{ text: "Aceptar" }],
-      { cancelable: false }
-    );
-    
-  }
+    // Si la fecha es futura, mostrar la alerta
+    if (formattedDate > today) {
+      Alert.alert(
+        "Fecha inválida",
+        "No puedes seleccionar una fecha futura.",
+        [{ text: "Aceptar" }],
+        { cancelable: false }
+      );
+    }
 
-  // Si la fecha es válida, asignarla
-  if (currentDateType === "peso") {
-    setFechaPeso(formattedDate);
-  } else {
-    setFechaVacuna(formattedDate);
-  }
+    // Si la fecha es válida, asignarla
+    if (currentDateType === "peso") {
+      setFechaPeso(formattedDate);
+    } else {
+      setFechaVacuna(formattedDate);
+    }
 
-  // Solo cerrar el modal si la fecha es válida
-  setDatePickerVisibility(false);
-};
-
+    // Solo cerrar el modal si la fecha es válida
+    setDatePickerVisibility(false);
+  };
 
   useEffect(() => {
     if (chip) {
@@ -119,10 +117,12 @@ export default function FormsScreen({ route }) {
   };
 
   const guardarPeso = async () => {
-
-  if (!fechaPeso || !peso) {
+    if (!fechaPeso || !peso) {
       setErrors({ ...errors, fechaPeso: !fechaPeso, peso: !peso });
-      Alert.alert("⚠️ Campos obligatorios", "Por favor, completa todos los campos obligatorios en el Control de Peso.");
+      Alert.alert(
+        "⚠️ Campos obligatorios",
+        "Por favor, completa todos los campos obligatorios en el Control de Peso."
+      );
       return;
     }
 
@@ -164,15 +164,17 @@ export default function FormsScreen({ route }) {
   }, [cantidad, unidad]);
 
   const guardarVacuna = async () => {
-
- if (!fechaVacuna || !cantidad || !unidad || !tipoVacuna || !nombreVacuna) {
+    if (!fechaVacuna || !cantidad || !unidad || !tipoVacuna || !nombreVacuna) {
       setErrors({
         ...errors,
         fechaVacuna: !fechaVacuna,
         dosis: !cantidad || !unidad,
         unidad: !unidad,
       });
-      Alert.alert("⚠️ Campos obligatorios", "Por favor, completa todos los campos obligatorios en el Control de Vacunas.");
+      Alert.alert(
+        "⚠️ Campos obligatorios",
+        "Por favor, completa todos los campos obligatorios en el Control de Vacunas."
+      );
       return;
     }
 
@@ -246,10 +248,14 @@ export default function FormsScreen({ route }) {
       <ScrollView
         style={[styles.container, { width, height }]} // Ajustamos el ancho y alto al de la pantalla
       >
-        
+<Image
+  source={require("../assets/Imagen_Formulario_Registro_Ganado.png")}  // Ruta de la imagen
+  style={styles.image}  // Estilo único para la imagen
+/>
+
 
         <Text style={styles.title1}>Formularios </Text>
-         <Text style={styles.title2}>de control</Text>
+        <Text style={styles.title2}>de control</Text>
 
         <View style={styles.switchRow}>
           <TouchableOpacity
@@ -292,18 +298,26 @@ export default function FormsScreen({ route }) {
         {/* FORMULARIO DE PESO */}
         {pesoChecked && (
           <View style={styles.formSection}>
-            <View style={styles.container}>
-  <Image
-     source={require("../assets/Enfermedades.png")} 
-    style={styles.imagePeso}
-  />
-  <Text style={styles.subtitle}>Formulario de Control de Peso</Text>
-</View>
-            <TextInput
-              style={styles.input}
-              value={chipPeso} // o chipVacuna según el formulario
-              editable={false}
+            <Image
+              source={require("../assets/Enfermedades.png")}
+              style={styles.imagePeso}
             />
+            <Text style={styles.subtitle1}>Formulario </Text>
+            <Text style={styles.subtitle2}>Control de Peso</Text>
+
+            <View style={styles.inputContainer}>
+              <Image
+                source={require("../assets/Enfermedades.png")}
+                style={styles.logo}
+              />
+
+              <TextInput
+                style={styles.inputChip}
+                value={chipPeso}
+                editable={false}
+              />
+            </View>
+
             {filteredCattle.length > 0 && (
               <ScrollView vertical style={styles.cattleList}>
                 {filteredCattle.map((item) => (
@@ -318,42 +332,72 @@ export default function FormsScreen({ route }) {
                 ))}
               </ScrollView>
             )}
+
             <TouchableOpacity
-               style={[styles.dateButton, errors.fechaPeso && styles.inputError]}
+              style={[styles.dateButton, errors.fechaPeso && styles.inputError]}
               onPress={() => {
                 setCurrentDateType("peso");
                 setDatePickerVisibility(true);
               }}
             >
-              <Ionicons name="calendar" style={formsStyles.iconCalendar} />
+              <Image
+                source={require("../assets/Enfermedades.png")}
+                style={styles.logo}
+              />
               <Text style={styles.dateButtonText}>
                 {fechaPeso || "Fecha de pesaje*"}
               </Text>
             </TouchableOpacity>
-            <View style={styles.weightContainer}>
-              <TextInput
-                style={[styles.weightInput, errors.peso && styles.inputError]}
+
+        <View
+          style={[styles.weightContainer, errors.peso && styles.inputError]}
+        >
+            <Image
+              source={require("../assets/Peso.png")} // Ruta de la imagen local
+              style={styles.iconStylePeso}
+            />
+            <TextInput
+                style={[styles.weightInput]}
                 placeholder="Peso*"
+                placeholderTextColor="#000" 
                 keyboardType="numeric"
                 value={peso}
                 onChangeText={setPeso}
               />
-              <Text style={styles.weightUnit}>kg</Text>
-            </View>
-            <TouchableOpacity style={styles.button} onPress={guardarPeso}>
-              <Text style={styles.buttonText}>Guardar</Text>
+            <Text style={styles.weightUnit}>(Kg)</Text>
+          
+        </View>
+
+        
+            <TouchableOpacity style={styles.buttonGuardar} onPress={guardarPeso}>
+
+              <Text style={styles.buttonTextGuardar}>Guardar</Text>
             </TouchableOpacity>
           </View>
         )}
 
         {vacunaChecked && (
           <View style={styles.formSection}>
-            <Text style={styles.subtitle}>Formulario de Vacunación</Text>
-            <TextInput
-              style={styles.input}
-              value={chipVacuna}
-              editable={false}
+            <Image
+              source={require("../assets/Enfermedades.png")}
+              style={styles.imagePeso}
             />
+            <Text style={styles.subtitle1}>Formulario </Text>
+            <Text style={styles.subtitle2}>Control de Vacunas</Text>
+
+            <View style={styles.inputContainer}>
+              <Image
+                source={require("../assets/Enfermedades.png")}
+                style={styles.logo}
+              />
+
+              <TextInput
+                style={styles.inputChip}
+                value={chipVacuna}
+                editable={false}
+              />
+            </View>
+
             {filteredCattle.length > 0 && (
               <ScrollView vertical style={styles.cattleList}>
                 {filteredCattle.map((item) => (
@@ -368,25 +412,45 @@ export default function FormsScreen({ route }) {
                 ))}
               </ScrollView>
             )}
-            <DropDownPicker
-              open={openTipoVacuna}
-              setOpen={() => {
-                setOpenVacunaNombre(false);
-                setOpenTipoVacuna(true);
-                setOpen(false);
-              }}
-              value={tipoVacuna}
-              items={itemsTipoVacuna}
-              setValue={setTipoVacuna}
-              placeholder="Tipo de vacuna"
-              containerStyle={[
-                styles.dropdownContainer,
-                openVacunaNombre && styles.dropdownBelow,
-              ]}
-              listMode="SCROLLVIEW"
-              onChangeValue={() => setOpenTipoVacuna(false)}
-            />
 
+
+
+<View style={styles.dropdownContainerTipoVacuna}>
+  <Image
+    source={require("../assets/Enfermedades.png")}
+    style={styles.dropdownLogo}
+  />
+
+  {/* DropDownPicker */}
+  <DropDownPicker
+    open={openTipoVacuna}
+    setOpen={() => {
+      setOpenVacunaNombre(false);
+      setOpenTipoVacuna(true);
+      setOpen(false);
+    }}
+    value={tipoVacuna}
+    items={itemsTipoVacuna}
+    setValue={setTipoVacuna}
+    placeholder="Tipo de vacuna"
+     containerStyle={[
+                styles.dropdownContainerPicker,
+                openVacunaNombre && styles.dropdownBelow,
+                 
+              ]}
+style={styles.dropdownListStyle}  
+    listMode="SCROLLVIEW"
+    onChangeValue={() => setOpenTipoVacuna(false)}
+    arrowIconStyle={styles.arrowIconStyle}
+  />
+</View>
+
+
+<View style={styles.dropdownContainerNombreVacuna}>
+  <Image
+    source={require("../assets/Enfermedades.png")}
+    style={styles.dropdownLogo}
+  />
             <DropDownPicker
               open={openVacunaNombre}
               setOpen={() => {
@@ -399,69 +463,101 @@ export default function FormsScreen({ route }) {
               setValue={setNombreVacuna}
               placeholder="Nombre de vacuna"
               containerStyle={[
-                styles.dropdownContainer,
+                styles.dropdownContainerPicker,
                 openTipoVacuna && styles.dropdownBelow,
+                
               ]}
+              style={styles.dropdownListStyle}  
               listMode="SCROLLVIEW"
               onChangeValue={() => setOpenVacunaNombre(false)}
+               arrowIconStyle={styles.arrowIconStyle}
             />
+</View>
+
 
             <View style={styles.row}>
-              <TextInput
-                style={[styles.inputD, errors.dosis && styles.inputError]}
-                value={cantidad}
-                onChangeText={setCantidad}
-                placeholder="Dosis*"
-                keyboardType="numeric"
-              />
+  <View style={[styles.inputDosisContainer,errors.dosis && styles.inputError] }>
+  <Image
+    source={require("../assets/Enfermedades.png")}
+    style={styles.dropdownLogo}
+  />
+  <TextInput
+    style={[styles.inputDosis, errors.dosis && styles.inputError1]}
+    value={cantidad}
+    onChangeText={setCantidad}
+    placeholder="Dosis*"
+    placeholderTextColor="#000" 
+    keyboardType="numeric"
+  />
+</View>
+
               <DropDownPicker
-  open={open}
-  value={unidad}
-  items={items}
-  setOpen={() => {
-    setOpenTipoVacuna(false);
-    setOpenVacunaNombre(false);
-    setOpen(true);
-  }}
-  setValue={setUnidad}
-  setItems={setItems}
-  placeholder="Unidad*"
-  containerStyle={[
-    styles.dropdownContainerUnidad, // Estilo base
-    open && styles.dropdownBelowUnidad, // Estilo cuando está abierto
-    { zIndex: open ? 10 : 1 }, // Ajuste de z-index
-    errors.unidad && styles.inputError,  // Aplica el estilo de error si hay un error
-  ]}
-  listMode="SCROLLVIEW"
-  onChangeValue={() => setOpen(false)}
-  
-  // Eliminar el borde extra dentro del dropdown
-  dropDownStyle={{
-    borderWidth: 0,  // Elimina el borde dentro del dropdown
-    padding: 0,      // Asegura que no haya relleno adicional
-  }}
-  style={{
-    borderWidth: 0,  // Elimina el borde interno adicional
-  }}
-/>
-
-
+                open={open}
+                value={unidad}
+                items={items}
+                setOpen={() => {
+                  setOpenTipoVacuna(false);
+                  setOpenVacunaNombre(false);
+                  setOpen(true);
+                }}
+                setValue={setUnidad}
+                setItems={setItems}
+                placeholder="Unidad*"
+                containerStyle={[
+                  styles.dropdownContainerUnidad, // Estilo base
+                  open && styles.dropdownBelowUnidad, // Estilo cuando está abierto
+                 
+                  errors.unidad && styles.inputError, // Aplica el estilo de error si hay un error
+                ]}
+                listMode="SCROLLVIEW"
+                arrowIconStyle={styles.arrowIconStyle}
+                onChangeValue={() => setOpen(false)}
+                // Eliminar el borde extra dentro del dropdown
+                dropDownStyle={{
+                  borderWidth: 0, // Elimina el borde dentro del dropdown
+                  padding: 0, // Asegura que no haya relleno adicional
+                }}
+                style={{
+                  borderWidth: 0, // Elimina el borde interno adicional
+                }}
+              />
+              
             </View>
 
+
+
+
+
+
             <TouchableOpacity
-               style={[styles.dateButton, errors.fechaVacuna && styles.inputError]}
+              style={[
+                styles.dateButton,
+                errors.fechaVacuna && styles.inputError,
+              ]}
               onPress={() => {
                 setCurrentDateType("vacuna");
                 setDatePickerVisibility(true);
               }}
             >
-              <Ionicons name="calendar" style={formsStyles.iconCalendar} />
+  <Image
+                source={require("../assets/Enfermedades.png")}
+                style={styles.logo}
+              />
               <Text style={styles.dateButtonText}>
+
                 {fechaVacuna || "Fecha de vacunación*"}
               </Text>
             </TouchableOpacity>
 
+
+
+
+
             <View style={styles.inputWrapper}>
+                       <Image
+            source={require("../assets/Obs.png")}
+            style={styles.iconStyleO}
+          />
               <TextInput
                 style={styles.inputobs}
                 placeholder="Observaciones"
@@ -473,8 +569,39 @@ export default function FormsScreen({ route }) {
               />
             </View>
 
-            <TouchableOpacity style={styles.button} onPress={guardarVacuna}>
-              <Text style={styles.buttonText}>Guardar</Text>
+
+
+
+
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <TouchableOpacity style={styles.buttonGuardar} onPress={guardarVacuna}>
+              <Text style={styles.buttonTextGuardar}>Guardar</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -485,7 +612,7 @@ export default function FormsScreen({ route }) {
           onConfirm={handleConfirmDate}
           themeVariant="light"
           onCancel={() => setDatePickerVisibility(false)}
-            maximumDate={new Date()} // Establece el día de hoy como la fecha máxima (deshabilita fechas futuras)
+          maximumDate={new Date()} // Establece el día de hoy como la fecha máxima (deshabilita fechas futuras)
         />
       </ScrollView>
     </Layout>

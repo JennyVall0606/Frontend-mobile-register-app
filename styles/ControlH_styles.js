@@ -152,8 +152,7 @@ export const styles = {
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
- tableHeaderTextPeso: {
+  tableHeaderTextPeso: {
     fontSize: 16, // Tamaño del texto
     fontWeight: "normal", // Negrita para resaltar los encabezados
     color: "#000", // Color del texto, ajusta según tus necesidades
@@ -164,10 +163,10 @@ export const styles = {
   editButtonImagePeso1: {
     width: 30, // Ajusta el tamaño de la imagen
     height: 30, // Ajusta el tamaño de la imagen
-    resizeMode: 'contain', // Mantiene la proporción de la imagen
+    resizeMode: "contain", // Mantiene la proporción de la imagen
     marginHorizontal: 10, // Espacio a los lados de la imagen
-    alignSelf: 'center', // Centra la imagen dentro de su contenedor
-    marginTop: -10, 
+    alignSelf: "center", // Centra la imagen dentro de su contenedor
+    marginTop: -10,
   },
 
   tableRowPeso: {
@@ -182,7 +181,7 @@ export const styles = {
   // Estilo para las celdas de la tabla
   tableCellPeso: {
     fontSize: 14, // Tamaño de la fuente
-    color: "#7dac53", 
+    color: "#7dac53",
     flex: 1, // Hace que cada celda ocupe el mismo espacio
     textAlign: "center", // Centra el texto dentro de cada celda
   },
@@ -198,11 +197,11 @@ export const styles = {
   editButtonImagePeso2: {
     width: 30, // Ajusta el tamaño de la imagen
     height: 30, // Ajusta el tamaño de la imagen
-    resizeMode: 'contain', // Asegura que la imagen mantenga su proporción
-      marginTop: -5, 
+    resizeMode: "contain", // Asegura que la imagen mantenga su proporción
+    marginTop: -5,
   },
 
- noRecordsText: {
+  noRecordsText: {
     fontSize: 18, // Tamaño de fuente más grande para hacerlo visible
     color: "#31502a", // Un color verde amigable para el texto
     textAlign: "center", // Centra el texto horizontalmente
@@ -214,11 +213,12 @@ export const styles = {
 
   ///////////////////////////////  /////////////////////////////// ///////////////////////////////  ///////////////////////////////  ///////////////////////////////  ////////////////////////////////
   tableHeaderTextVacuna: {
-    fontSize: 16, // Tamaño del texto
+    fontSize: 14, // Tamaño del texto
     fontWeight: "normal", // Peso de la fuente
     color: "#000", // Color del texto (negro)
     flex: 1, // Hace que cada celda ocupe el mismo espacio
     textAlign: "center", // Centra el texto dentro de cada celda
+    paddingRight: 10,
   },
 
   // Estilo para la imagen del botón de editar (en el encabezado)
@@ -242,43 +242,47 @@ export const styles = {
   // Estilo para la celda de fecha
   tableCellFechaVacuna: {
     fontSize: 10, // Tamaño del texto para la fecha
-    color: "#000", // Color del texto
+    color: "#7dac53", // Color del texto
     textAlign: "left", // Alinea el texto a la izquierda
     flex: 1, // Hace que ocupe el mismo espacio que las otras celdas
-    backgroundColor: "rgb(50, 8, 238)", // Fondo de la celda
-    paddingLeft: 5, // Ajusta el espacio a la izquierda
+
+    paddingLeft: 2, // Ajusta el espacio a la izquierda
   },
 
   // Estilo para la celda de nombre
   tableCellDatosVacunaNombre: {
-    fontSize: 10, // Tamaño del texto
-    color: "#000", // Color del texto
-    textAlign: "left", // Alinea el texto a la izquierda
+    fontSize: 11, // Tamaño del texto
+    color: "#7dac53", // Color del texto
+    textAlign: "center", // Alinea el texto a la izquierda
     flex: 1, // Hace que ocupe el mismo espacio que las otras celdas
+    paddingRight: 12,
   },
 
   // Estilo para la celda de tipo
   tableCellDatosVacunaTipo: {
-    fontSize: 10, // Tamaño del texto
-    color: "#000", // Color del texto
-    textAlign: "left", // Alinea el texto a la izquierda
+    fontSize: 11, // Tamaño del texto
+    color: "#7dac53", // Color del texto
+    textAlign: "center", // Alinea el texto a la izquierda
     flex: 1, // Hace que ocupe el mismo espacio que las otras celdas
+    paddingRight: 10,
   },
 
   // Estilo para la celda de dosis
   tableCellDatosVacunaDosis: {
-    fontSize: 10, // Tamaño del texto
-    color: "#000", // Color del texto
-    textAlign: "left", // Alinea el texto a la izquierda
+    fontSize: 12, // Tamaño del texto
+    color: "#7dac53", // Color del texto
+    textAlign: "center", // Alinea el texto a la izquierda
     flex: 1, // Hace que ocupe el mismo espacio que las otras celdas
+    paddingRight: 16,
   },
 
   // Estilo para la celda de observaciones
   tableCellDatosVacunaObs: {
-    fontSize: 10, // Tamaño del texto
-    color: "#000", // Color del texto
-    textAlign: "left", // Alinea el texto a la izquierda
+    fontSize: 11, // Tamaño del texto
+    color: "#7dac53", // Color del texto
+    textAlign: "center", // Alinea el texto a la izquierda
     flex: 1, // Hace que ocupe el mismo espacio que las otras celdas
+    paddingRight: 25,
   },
 
   // Estilo para la celda de edición
@@ -290,11 +294,11 @@ export const styles = {
 
   // Estilo para la imagen del botón de editar (en la fila)
   editButtonImageVacuna2: {
-    width: 28, // Ajusta el tamaño de la imagen
-    height: 28, // Ajusta el tamaño de la imagen
+    width: 27, // Ajusta el tamaño de la imagen
+    height: 27, // Ajusta el tamaño de la imagen
     resizeMode: "contain", // Mantiene la proporción de la imagen
     marginBottom: 10, // Ajusta el espacio inferior
-    alignSelf: "center", // Alinea la imagen al centro
+    marginLeft: -12,
   },
 
   // Estilo para el botón de editar en la tabla
@@ -304,54 +308,6 @@ export const styles = {
     textAlign: "left", // Alinea el texto a la izquierda
     paddingHorizontal: 10, // Espacio dentro de la celda
   },
-    ///////////////////////////////  /////////////////////////////// ///////////////////////////////  ///////////////////////////////  ///////////////////////////////  ////////////////////////////////
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   /////////////////////////////////////// TITULOS E IMAGENES DE CONTROL DE PESOS Y VACUNAS ///////////////////////////////////////
 
@@ -537,7 +493,7 @@ export const styles = {
     borderRadius: 10,
     padding: 8,
     height: 50,
-    width: "100%",
+    width: "99%",
     marginBottom: 10,
   },
 

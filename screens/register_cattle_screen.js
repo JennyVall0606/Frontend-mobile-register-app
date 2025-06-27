@@ -458,6 +458,9 @@ export default function RegisterCattleScreen({ route }) {
           maximumDate={new Date()} // Establece el día de hoy como la fecha máxima (deshabilita fechas futuras)
         />
 
+
+
+
         <View
           style={[styles.weightContainer, errors.weight && styles.inputError]}
         >
@@ -477,6 +480,8 @@ export default function RegisterCattleScreen({ route }) {
             <Text style={styles.weightUnit}>(Kg)</Text>
           </View>
         </View>
+
+        
 
         {/* Chip de registro vacuno */}
         <View
