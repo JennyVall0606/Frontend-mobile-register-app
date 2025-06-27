@@ -4,7 +4,7 @@ export const styles = {
   container: {
     flex: 1,
     padding: 16,
-    paddingTop: 80,
+    paddingTop: 100,
   },
 
   image: {
@@ -14,6 +14,7 @@ export const styles = {
     borderRadius: 10,
     marginBottom: 30,
     alignSelf: "center",
+   
   },
 
   // image: {
@@ -561,7 +562,7 @@ export const styles = {
     borderRadius: 10,
     borderTopRightRadius: 0,
     marginTop: 60,
-    marginBottom: 40,
+    marginBottom:120,
     borderWidth: 1,
     width: "75%",
     alignSelf: "center",

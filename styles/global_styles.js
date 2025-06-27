@@ -119,7 +119,7 @@ export default StyleSheet.create({
     height: 80, // Altura de la barra verde
     backgroundColor: "#7dac53", // Color verde
     width: "100%", // Asegura que la barra ocupe todo el ancho
-      
+       marginTop: 10,  
   },
 
   bottomImageContainer: {

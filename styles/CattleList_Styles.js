@@ -6,12 +6,14 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    paddingTop: 80,
+    paddingTop: 20,
+   
   },
 
   imageStyle: {
-    width: 250, // Ajusta el ancho de la imagen
-    height: 250, // Ajusta la altura de la imagen
+    width: 200, // Ajusta el ancho de la imagen
+    height: 200, // Ajusta la altura de la imagen
+     marginTop: 60, 
   },
 
   titleContainer: {
@@ -56,7 +58,7 @@ export const styles = StyleSheet.create({
 
   counter: {
     fontSize: 16, // Tamaño del contador
-    color: "rgb(65, 173, 15)", // Color del contador (puedes cambiar este color)
+    color: "rgb(73, 177, 25)", // Color del contador (puedes cambiar este color)
     fontWeight: "bold", // Puedes agregar negrita si lo deseas
   },
 
