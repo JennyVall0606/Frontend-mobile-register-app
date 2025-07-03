@@ -3,17 +3,50 @@ import { StyleSheet } from "react-native";
 export const styles = {
   container: {
     flex: 1,
-    padding: 16,
-    paddingTop: 100,
+    padding: 12,
+    paddingTop: 50,
+   
   },
+
+  button: {
+    backgroundColor: "rgb(255, 255, 255)",
+    padding: 8,
+    borderWidth: 1,
+    borderColor: "rgb(255, 255, 255)",
+    alignItems: "center",
+    marginLeft: -1, // Eliminamos el margen a la derecha
+    marginRight: 20, // Puedes ajustarlo si necesitas un pequeño espacio a la derecha
+    borderTopRightRadius: 0,
+    borderRadius: 10,
+
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 5,
+    shadowRadius: 4,
+
+    elevation: 10,
+
+    alignSelf: 'flex-start', // Esto alinea el botón a la izquierda
+  },
+
+  link: {
+    fontSize: 12, // Tamaño del texto
+    color: '#7dac53', // Color azul del enlace
+      fontWeight: 'bold', // Hacer el texto en negrita
+  },
+
+
+
+  
 
   image: {
     width: "60%",
     height: 190,
-    resizeMode: "cover",
+    resizeMode: "c//over",
     borderRadius: 10,
     marginBottom: 30,
     alignSelf: "center",
+    marginTop: 50,
    
   },
 
@@ -418,6 +451,9 @@ export const styles = {
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 20,
+     marginRight: 20,
+      marginLeft: 20,
+      
   },
   buttonGuardarPeso: {
     flexDirection: "row",

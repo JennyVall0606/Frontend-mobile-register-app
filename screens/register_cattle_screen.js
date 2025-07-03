@@ -32,6 +32,7 @@ export default function RegisterCattleScreen({ route }) {
   const [mother, setMother] = useState("");
 
   const [observations, setObservations] = useState("");
+    const [isFocused, setIsFocused] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [currentDateType, setCurrentDateType] = useState("");
   const [openRaza, setOpenRaza] = useState(false);
@@ -71,7 +72,7 @@ export default function RegisterCattleScreen({ route }) {
     weight: false,
   });
 
-  const API_URL = "http://192.168.1.10:3000";
+  const API_URL = "http://192.168.1.11:3000";
 
   const navigation = useNavigation();
   const { width, height } = Dimensions.get("window");
@@ -410,37 +411,6 @@ export default function RegisterCattleScreen({ route }) {
   />
 </View>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         <TouchableOpacity
           style={[styles.dateButton, errors.birthDate && styles.inputError]}
           onPress={() => setDatePickerVisibility(true)}
@@ -580,37 +550,30 @@ export default function RegisterCattleScreen({ route }) {
 </View>
 
 
-
-
-
-
-
-
-
-
-
         <Text style={styles.selectedDiseases}>
           {Array.isArray(disease) && disease.length > 0
             ? disease.join("\n")
             : "Selecciona las enfermedades"}
         </Text>
 
-        <View style={styles.inputWrapper}>
-          <Image
-            source={require("../assets/Obs.png")}
-            style={styles.iconStyleO}
-          />
-          <TextInput
-            style={styles.inputobs}
-            placeholder="Observaciones"
-            value={observations}
-            onChangeText={setObservations}
-            multiline
-            textAlignVertical="top"
-            maxLength={500}
-            placeholderTextColor="#000"
-          />
-        </View>
+ <View style={styles.inputWrapper}>
+      <Image
+        source={require("../assets/Obs.png")}
+        style={styles.iconStyleO}
+      />
+      <TextInput
+        style={styles.inputobs}
+        placeholder={isFocused ? "" : "Observaciones"} // Si tiene foco, no muestra el placeholder
+        value={observations}
+        onChangeText={setObservations}
+        multiline
+        textAlignVertical="top"
+        maxLength={500}
+        placeholderTextColor="#000"
+        onFocus={() => setIsFocused(true)} // Cuando el campo recibe foco
+        onBlur={() => setIsFocused(false)} // Cuando el campo pierde foco
+      />
+    </View>
 
         <TouchableOpacity
           onPress={handleRegister}

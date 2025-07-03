@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   View,
   Text,
@@ -44,8 +44,29 @@ export default function ControlH_Screen({ navigation, route }) {
   const [openTipoVacuna, setOpenTipoVacuna] = useState(false);
   const [openNombreVacuna, setOpenNombreVacuna] = useState(false);
   const [showPesoDatePicker, setShowPesoDatePicker] = useState(false);
+
+  const scrollViewRef = useRef(null);
+
+  
+  // Refs para las secciones a las que vamos a navegar
+  const sectionPesosRef = useRef(null);
+  const sectionVacunasRef = useRef(null);
+  const sectionNuevoControlRef = useRef(null);
+
+const scrollToSection = (sectionRef) => {
+    sectionRef.current?.measureLayout(
+      scrollViewRef.current, // Pasamos el scrollViewRef
+      (x, y, width, height) => {
+        scrollViewRef.current?.scrollTo({ y, animated: true }); // Desplazar hacia la posición 'y'
+      },
+      (error) => {
+        console.error("Error al medir la posición de la sección", error);
+      }
+    );
+  };
+
   const [showVacunaDatePicker, setShowVacunaDatePicker] = useState(false);
-  const API_URL = "http://192.168.1.10:3000";
+  const API_URL = "http://192.168.1.11:3000";
 
   // Función para formatear fecha
   const formatDate = (dateString) => {
@@ -270,7 +291,26 @@ export default function ControlH_Screen({ navigation, route }) {
 
   return (
     <Layout>
-      <ScrollView style={[styles.container, { width, height }]}>
+      <ScrollView ref={scrollViewRef} style={[styles.container, { width, height }]}>
+
+<View style={styles.buttonsContainer}>
+  <TouchableOpacity onPress={() => scrollToSection(sectionPesosRef)} style={styles.button}>
+     <Text style={styles.link}>PESOS</Text>
+  <Text style={[styles.link, { marginTop: 5 }]}>REGISTRADOS</Text>
+  </TouchableOpacity>
+  <TouchableOpacity onPress={() => scrollToSection(sectionVacunasRef)} style={styles.button}>
+     <Text style={styles.link}>VACUNAS </Text>
+  <Text style={[styles.link, { marginTop: 5 }]}>REGISTRADAS</Text>
+  </TouchableOpacity>
+  <TouchableOpacity onPress={() => scrollToSection(sectionNuevoControlRef)} style={styles.button}>
+     <Text style={styles.link}>NUEVO</Text>
+  <Text style={[styles.link, { marginTop: 5 }]}>CONTROL</Text>
+  </TouchableOpacity>
+</View>
+
+
+
+
         {animalInfo && animalInfo.foto && (
           <Image
             source={require("../assets/Imagen_Control_De_Chip.png")} // Ruta de tu logo
@@ -416,8 +456,10 @@ export default function ControlH_Screen({ navigation, route }) {
             source={require("../assets/Imagen_Pesos_Registrados.png")} 
             style={styles.imagePesoVacuna}
           />
+  <View ref={sectionPesosRef} style={styles.section}>
           <Text style={styles.subtitle1}>PESOS</Text>
           <Text style={styles.subtitle2}>REGISTRADOS</Text>
+        </View>
         </View>
 
         {historicoPesaje.length > 0 ? (
@@ -506,6 +548,19 @@ export default function ControlH_Screen({ navigation, route }) {
                 maximumDate={new Date()} // Deshabilita fechas futuras
               />
               <View style={styles.buttonsContainer}>
+
+                 {/* Botón Cancelar */}
+                <TouchableOpacity
+                  style={styles.buttonCancelarPeso}
+                  onPress={() => setModalVisible(false)}
+                >
+                  <Image
+                    source={require("../assets/FechaDeNacimieto.png")} // Reemplaza con la ruta de tu logo
+                    style={styles.buttonLogo}
+                  />
+                  <Text style={styles.buttonText}>CANCELAR</Text>
+                </TouchableOpacity>
+                
                 {/* Botón Guardar Cambios */}
                 <TouchableOpacity
                   style={styles.buttonGuardarPeso}
@@ -518,17 +573,8 @@ export default function ControlH_Screen({ navigation, route }) {
                   <Text style={styles.buttonText}>GUARDAR</Text>
                 </TouchableOpacity>
 
-                {/* Botón Cancelar */}
-                <TouchableOpacity
-                  style={styles.buttonCancelarPeso}
-                  onPress={() => setModalVisible(false)}
-                >
-                  <Image
-                    source={require("../assets/FechaDeNacimieto.png")} // Reemplaza con la ruta de tu logo
-                    style={styles.buttonLogo}
-                  />
-                  <Text style={styles.buttonText}>CANCELAR</Text>
-                </TouchableOpacity>
+               
+
               </View>
             </View>
           </View>
@@ -543,8 +589,10 @@ export default function ControlH_Screen({ navigation, route }) {
             source={require("../assets/Imagen_Vacunas_Registradas.png")} // Reemplaza con la ruta de tu imagen
             style={styles.imagePesoVacuna}
           />
+         <View ref={sectionVacunasRef} style={styles.section}>
           <Text style={styles.subtitle1}>VACUNAS</Text>
           <Text style={styles.subtitle2}>REGISTRADAS</Text>
+        </View>
         </View>
 
 
@@ -727,6 +775,19 @@ export default function ControlH_Screen({ navigation, route }) {
               </View>
 
               <View style={styles.buttonsContainer}>
+
+    {/* Botón Cancelar */}
+                <TouchableOpacity
+                  style={styles.buttonCancelarVacuna}
+                  onPress={() => setModalVacunaVisible(false)}
+                >
+                  <Image
+                    source={require("../assets/FechaDeNacimieto.png")} // Reemplaza con la ruta de tu logo
+                    style={styles.buttonLogo}
+                  />
+                  <Text style={styles.buttonText}>CANCELAR</Text>
+                </TouchableOpacity>
+
                 {/* Botón Guardar Cambios */}
                 <TouchableOpacity
                   style={styles.buttonGuardarVacuna}
@@ -739,17 +800,7 @@ export default function ControlH_Screen({ navigation, route }) {
                   <Text style={styles.buttonText}>GUARDAR</Text>
                 </TouchableOpacity>
 
-                {/* Botón Cancelar */}
-                <TouchableOpacity
-                  style={styles.buttonCancelarVacuna}
-                  onPress={() => setModalVacunaVisible(false)}
-                >
-                  <Image
-                    source={require("../assets/FechaDeNacimieto.png")} // Reemplaza con la ruta de tu logo
-                    style={styles.buttonLogo}
-                  />
-                  <Text style={styles.buttonText}>CANCELAR</Text>
-                </TouchableOpacity>
+            
               </View>
             </View>
           </View>
@@ -759,9 +810,9 @@ export default function ControlH_Screen({ navigation, route }) {
           style={styles.newControlButton}
           onPress={() => navigation.navigate("FormScreen", { chip })}
         >
-          <Text style={styles.newControlButtonText}>
-            REALIZA UN NUEVO CONTROL
-          </Text>
+          <View ref={sectionNuevoControlRef} style={styles.section}>
+          <Text style={styles.newControlButtonText}>REALIZA UN NUEVO CONTROL</Text>
+        </View>
         </TouchableOpacity>
       </ScrollView>
     </Layout>

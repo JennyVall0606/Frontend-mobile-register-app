@@ -6,23 +6,24 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
-    paddingTop: 80,
+    padding: 50,
+    paddingTop: 40,
   },
 
-  logo: {
-    width: 210, // Ajusta el tamaño según sea necesario
-    height: 210, // Ajusta el tamaño según sea necesario
-    marginTop: 1, // Si quieres agregar espacio entre el título y la imagen
-    marginBottom: 190, // Agrega espacio entre el logo y el campo de entrada (input)
-  },
+logo: {
+  width: 210, // Ajusta el tamaño según sea necesario
+  height: 210, // Ajusta el tamaño según sea necesario
+  alignSelf: 'center', // Esto centra el logo horizontalmente
+  marginTop: 100, // Espacio entre el título y la imagen
+  marginBottom: 50, // Espacio entre el logo y el campo de entrada (input)
+},
 
   inputContainer: {
    width: "140%", // Asegura que el ancho esté dentro de los límites (puedes reducir el valor si es más grande de lo necesario)
   height: 60, // Reduce la altura del contenedor para hacerlo más pequeño
   borderRadius: 10, // Bordes más pequeños (ajustar según el diseño deseado)
   marginBottom: 35, // Reduce el espacio entre campos de texto
-  backgroundColor: "rgb(252, 252, 252)", // Color de fondo
+  backgroundColor: "rgb(255, 255, 255)", // Color de fondo
   padding: 5, // Reduce el padding para que el contenedor no esté tan "relleno"
   borderTopLeftRadius: 20, // Redondea la esquina superior izquierda
   borderTopRightRadius: 0, // No redondea la esquina superior derecha
@@ -37,6 +38,12 @@ const styles = StyleSheet.create({
   elevation: 5, // Reduce la prominencia de la sombra en Android
   },
 
+
+
+
+
+
+  
   label: {
     fontSize: 15,
     fontWeight: "normal",
@@ -61,9 +68,9 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 30,
     borderRadius: 8,
-    marginTop: 60,
+    marginTop: 40,
     alignSelf: "center",
-    width: "70%",
+    width: "100%",
      borderTopLeftRadius: 20, // Redondea la esquina superior izquierda
     borderTopRightRadius: 0, // No redondea la esquina superior derecha
   },

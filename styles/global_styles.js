@@ -64,7 +64,7 @@ export default StyleSheet.create({
 
   searchInput: {
     flex: 1,
-    backgroundColor: "rgb(88, 88, 209)",
+    backgroundColor: "rgb(34, 34, 143)",
     padding: 8,
     borderRadius: 20,
     fontSize: 16, 
@@ -83,9 +83,9 @@ export default StyleSheet.create({
 
   dropdownMenuLeft: {
     position: "absolute",
-    top: 105, 
-    left: 30,
-    backgroundColor: "rgb(192, 197, 194)",
+    top: 100, 
+    left: 1,
+    backgroundColor: "#7dac53",
     padding: 2,
     borderRadius: 8,
     elevation: 5,
@@ -103,8 +103,8 @@ export default StyleSheet.create({
   dropdownMenuRight: {
     position: "absolute",
     top: 105, 
-    right: 30,
-    backgroundColor: "rgb(192, 197, 194)",
+    right: -1,
+    backgroundColor: "#7dac53",
     padding: 2,
     borderRadius: 8, 
     elevation: 5,

@@ -59,7 +59,7 @@ export default function FormsScreen({ route }) {
   const [fechaPeso, setFechaPeso] = useState("");
   // Estados para formulario de vacunas
   const [chipVacuna, setChipVacuna] = useState("");
-  const API_URL = "http://192.168.1.10:3000";
+  const API_URL = "http://192.168.1.11:3000";
 
   useEffect(() => {
     axios
@@ -132,13 +132,9 @@ export default function FormsScreen({ route }) {
         fecha_pesaje: fechaPeso,
         peso_kg: parseFloat(peso),
       });
-      Alert.alert("Éxito", "Pesaje guardado");
+      Alert.alert("Éxito", "Pesaje guardado. Puedes revisar el registro en la lista de pesos");
       resetPesoFields();
-      navigation.navigate("ControlScreen", {
-        chip,
-        shouldRefresh: true,
-        nuevoPeso: response.data,
-      });
+     
     } catch (error) {
       console.error(error);
     }
@@ -187,13 +183,8 @@ export default function FormsScreen({ route }) {
         dosis_administrada: dosisFinal,
         observaciones: observations,
       });
-      Alert.alert("Éxito", "Vacuna guardada");
+      Alert.alert("Éxito", "Vacuna guardada. Puedes revisar tu registro en la lista de vacunaciones");
       resetVacunaFields();
-      navigation.navigate("ControlScreen", {
-        chip,
-        shouldRefresh: true,
-        nuevaVacuna: response.data,
-      });
     } catch (error) {
       // Mostrar mensaje claro al usuario
       if (error.response && error.response.data) {
@@ -568,35 +559,6 @@ style={styles.dropdownListStyle}
                 maxLength={500} // Puedes ajustar el límite según necesidad
               />
             </View>
-
-
-
-
-
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
