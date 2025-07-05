@@ -72,7 +72,7 @@ export default function RegisterCattleScreen({ route }) {
     weight: false,
   });
 
-  const API_URL = "http://192.168.1.11:3000";
+  const API_URL = "http://shortline.proxy.rlwy.net:3000";
 
   const navigation = useNavigation();
   const { width, height } = Dimensions.get("window");
