@@ -59,7 +59,7 @@ export default function FormsScreen({ route }) {
   const [fechaPeso, setFechaPeso] = useState("");
   // Estados para formulario de vacunas
   const [chipVacuna, setChipVacuna] = useState("");
-  const API_URL = "http://shortline.proxy.rlwy.net:3000";
+  const API_URL = "http://shortline.proxy.rlwy.net:51747";
 
   useEffect(() => {
     axios

@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Frontend-mobile-register-app",
-    "slug": "Frontend-mobile-register-app",
+    "slug": "frontend-mobile-register-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -31,8 +31,15 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "b993ff58-d949-4f31-beaf-59ffb8f4d7a3"
+        "projectId": "580a386b-db8e-4b3f-b121-5d33a43668b1"
       }
+    },
+    "owner": "jaov669",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/580a386b-db8e-4b3f-b121-5d33a43668b1"
     }
   }
 }

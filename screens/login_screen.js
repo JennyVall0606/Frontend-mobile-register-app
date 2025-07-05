@@ -6,7 +6,7 @@ import styles from "../styles/login_styles";
 import { login } from "../services/api";  
 import AsyncStorage from '@react-native-async-storage/async-storage'; 
 
-const API_URL = "http://shortline.proxy.rlwy.net:3000";
+const API_URL = "http://shortline.proxy.rlwy.net:51747";
 
 export default function LoginScreen() {
   const navigation = useNavigation();

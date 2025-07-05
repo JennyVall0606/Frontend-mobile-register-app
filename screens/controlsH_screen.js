@@ -66,7 +66,7 @@ const scrollToSection = (sectionRef) => {
   };
 
   const [showVacunaDatePicker, setShowVacunaDatePicker] = useState(false);
-  const API_URL = "http://shortline.proxy.rlwy.net:3000";
+  const API_URL = "http://shortline.proxy.rlwy.net:51747";
 
   // Función para formatear fecha
   const formatDate = (dateString) => {
