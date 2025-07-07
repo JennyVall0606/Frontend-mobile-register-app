@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 
-const API_URL = "http://shortline.proxy.rlwy.net:51747";
+const API_URL = "webmobileregister-production.up.railway.app";
 
 
 

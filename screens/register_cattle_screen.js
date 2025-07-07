@@ -72,7 +72,7 @@ export default function RegisterCattleScreen({ route }) {
     weight: false,
   });
 
-  const API_URL = "http://shortline.proxy.rlwy.net:51747";
+  const API_URL = "webmobileregister-production.up.railway.app";
 
   const navigation = useNavigation();
   const { width, height } = Dimensions.get("window");

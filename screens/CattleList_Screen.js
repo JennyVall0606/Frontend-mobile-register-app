@@ -20,7 +20,7 @@ export default function CattleScreen({ navigation }) {
   const [ganado, setGanado] = useState([]);
   const [loading, setLoading] = useState(true);
   const { width, height } = Dimensions.get("window");
-  const API_URL = "http://shortline.proxy.rlwy.net:51747";
+  const API_URL = "webmobileregister-production.up.railway.app";
 
   useEffect(() => {
     const fetchAnimals = async () => {
