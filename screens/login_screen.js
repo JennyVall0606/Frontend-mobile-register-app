@@ -6,7 +6,7 @@ import styles from "../styles/login_styles";
 import { login } from "../services/api";  
 import AsyncStorage from '@react-native-async-storage/async-storage'; 
 
-const API_URL = "webmobileregister-production.up.railway.app";
+const API_URL = "https://webmobileregister-production.up.railway.app";
 
 export default function LoginScreen() {
   const navigation = useNavigation();

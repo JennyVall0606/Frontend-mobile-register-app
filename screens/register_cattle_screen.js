@@ -72,7 +72,7 @@ export default function RegisterCattleScreen({ route }) {
     weight: false,
   });
 
-  const API_URL = "webmobileregister-production.up.railway.app";
+  const API_URL = "https://webmobileregister-production.up.railway.app";
 
   const navigation = useNavigation();
   const { width, height } = Dimensions.get("window");

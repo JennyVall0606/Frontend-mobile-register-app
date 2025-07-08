@@ -59,7 +59,7 @@ export default function FormsScreen({ route }) {
   const [fechaPeso, setFechaPeso] = useState("");
   // Estados para formulario de vacunas
   const [chipVacuna, setChipVacuna] = useState("");
-  const API_URL = "webmobileregister-production.up.railway.app";
+  const API_URL = "https://webmobileregister-production.up.railway.app";
 
   useEffect(() => {
     axios

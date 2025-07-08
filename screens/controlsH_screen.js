@@ -66,7 +66,7 @@ const scrollToSection = (sectionRef) => {
   };
 
   const [showVacunaDatePicker, setShowVacunaDatePicker] = useState(false);
-  const API_URL = "webmobileregister-production.up.railway.app";
+  const API_URL = "https://webmobileregister-production.up.railway.app";
 
   // Función para formatear fecha
   const formatDate = (dateString) => {
