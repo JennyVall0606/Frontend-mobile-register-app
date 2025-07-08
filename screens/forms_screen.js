@@ -430,7 +430,8 @@ export default function FormsScreen({ route }) {
                  
               ]}
 style={styles.dropdownListStyle}  
-    listMode="SCROLLVIEW"
+   listMode="SCROLLVIEW"
+          maxHeight={200} // Ajusta la altura máxima del dropdown
     onChangeValue={() => setOpenTipoVacuna(false)}
     arrowIconStyle={styles.arrowIconStyle}
   />
@@ -460,6 +461,7 @@ style={styles.dropdownListStyle}
               ]}
               style={styles.dropdownListStyle}  
               listMode="SCROLLVIEW"
+          maxHeight={200} // Ajusta la altura máxima del dropdown
               onChangeValue={() => setOpenVacunaNombre(false)}
                arrowIconStyle={styles.arrowIconStyle}
             />
@@ -499,6 +501,7 @@ style={styles.dropdownListStyle}
                   open && styles.dropdownBelowUnidad, // Estilo cuando está abierto
                  
                   errors.unidad && styles.inputError, // Aplica el estilo de error si hay un error
+                   { zIndex: 9999 },
                 ]}
                 listMode="SCROLLVIEW"
                 arrowIconStyle={styles.arrowIconStyle}

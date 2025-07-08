@@ -406,7 +406,8 @@ export default function RegisterCattleScreen({ route }) {
     placeholder={breed ? "" : "Selecciona una raza*"}
     style={[styles.dropdown, errors.breed && styles.inputError1]} // Aplica el estilo de error al DropDownPicker
     textStyle={styles.dropdownText}
-    listMode="SCROLLVIEW"
+     listMode="SCROLLVIEW"
+    maxHeight={200} // Ajusta la altura máxima del dropdown
      arrowIconStyle={styles.arrowIconStyle} // Estilo para la flecha hacia abajo
   />
 </View>
@@ -540,6 +541,7 @@ export default function RegisterCattleScreen({ route }) {
           style={styles.dropdownEnfermedad}
           textStyle={styles.dropdownTextEnfermedad}
           listMode="SCROLLVIEW"
+          maxHeight={200} // Ajusta la altura máxima del dropdown
           multipleText={`${disease.length} enfermedade${
             disease.length === 1 ? "" : "s"
           } seleccionada${disease.length === 1 ? "" : "s"}`}
