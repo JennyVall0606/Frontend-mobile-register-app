@@ -392,11 +392,8 @@ export default function RegisterCattleScreen({ route }) {
 
 
 
-<View style={[styles.dropdownContainer, errors.breed && styles.inputError]}>
-  <Image 
-    source={require("../assets/SeleccionarRaza.png")} // Ajusta la ruta de tu logo
-    style={styles.dropdownLogoRaza} 
-  />
+
+
   <DropDownPicker
     open={openRaza}
     setOpen={setOpenRaza}
@@ -404,13 +401,15 @@ export default function RegisterCattleScreen({ route }) {
     value={breed}
     setValue={setBreed}
     placeholder={breed ? "" : "Selecciona una raza*"}
-    style={[styles.dropdown, errors.breed && styles.inputError1]} // Aplica el estilo de error al DropDownPicker
+    style={[styles.dropdown, errors.breed && styles.inputError]}
     textStyle={styles.dropdownText}
-     listMode="SCROLLVIEW"
+    listMode="SCROLLVIEW"
     maxHeight={200} // Ajusta la altura máxima del dropdown
-     arrowIconStyle={styles.arrowIconStyle} // Estilo para la flecha hacia abajo
+    arrowIconStyle={styles.arrowIconStyle} // Estilo para la flecha hacia abajo
+    
   />
-</View>
+
+
 
         <TouchableOpacity
           style={[styles.dateButton, errors.birthDate && styles.inputError]}
@@ -517,39 +516,41 @@ export default function RegisterCattleScreen({ route }) {
 
 
 
-<View style={[styles.dropdownContainer]}>
-  <Image 
-    source={require("../assets/Enfermedades.png")} // Ajusta la ruta de tu logo
-    style={styles.dropdownLogo} 
+
+
+  <DropDownPicker
+    multiple={true}
+    min={0}
+    max={20}
+    open={openEnfermedad}
+    setOpen={setOpenEnfermedad}
+    items={itemsEnfermedad}
+    value={disease}
+    setValue={(value) => {
+      const newValue = value;
+      setDisease(newValue);
+    }}
+    placeholder="Selecciona una o más enfermedades"
+    style={styles.dropdownEnfermedad}
+    textStyle={styles.dropdownTextEnfermedad}
+    listMode="SCROLLVIEW"
+    maxHeight={200}
+    multipleText={`${disease.length} enfermedade${
+      disease.length === 1 ? "" : "s"
+    } seleccionada${disease.length === 1 ? "" : "s"}`}
+    arrowIconStyle={styles.arrowIconStyle}
+   
+    
   />
 
 
-        <DropDownPicker
-          multiple={true}
-          min={0}
-          max={20}
-          open={openEnfermedad}
-          setOpen={setOpenEnfermedad}
-          items={itemsEnfermedad}
-          value={disease}
-          setValue={(value) => {
-            // Si el valor ya existe en el arreglo, lo eliminamos, de lo contrario lo agregamos
-            const newValue = value;
-            setDisease(newValue);
-          }}
-          placeholder="Selecciona una o más enfermedades"
-          style={styles.dropdownEnfermedad}
-          textStyle={styles.dropdownTextEnfermedad}
-          listMode="SCROLLVIEW"
-          maxHeight={200} // Ajusta la altura máxima del dropdown
-          multipleText={`${disease.length} enfermedade${
-            disease.length === 1 ? "" : "s"
-          } seleccionada${disease.length === 1 ? "" : "s"}`}
-          arrowIconStyle={styles.arrowIconStyle} // Estilo para la flecha hacia abajo
-        />
 
 
-</View>
+
+
+
+
+
 
 
         <Text style={styles.selectedDiseases}>

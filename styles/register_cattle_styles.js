@@ -108,14 +108,14 @@ export default StyleSheet.create({
   logo: {
     width: 31,
     height: 26,
-    marginRight: 8, 
+    marginRight: 8,
     marginLeft: -5,
   },
 
   imagePickerText: {
-     fontSize: 16, // Ajusta el tamaño del texto
+    fontSize: 16, // Ajusta el tamaño del texto
     color: "#000", // Cambia el color del texto
-   marginLeft: -7, 
+    marginLeft: -7,
   },
 
   deleteButton: {
@@ -138,14 +138,14 @@ export default StyleSheet.create({
   iconStyle: {
     width: 30, // Ajusta el tamaño de la imagen
     height: 30,
-     marginLeft: -5,
+    marginLeft: -5,
   },
   ////////////////////////////////////////////////////////////////
 
-  dropdownContainer: {
+  dropdown: {
     flexDirection: "row",
     alignItems: "center",
-    borderWidth: 1,
+    borderWidth: 1, // Borde normal
     borderColor: "rgb(255, 255, 255)",
     padding: 12,
     paddingHorizontal: 15,
@@ -153,46 +153,37 @@ export default StyleSheet.create({
     marginBottom: 30,
     backgroundColor: "rgb(255, 255, 255)",
     marginHorizontal: 20,
-    zIndex: 10,
     borderTopRightRadius: 0,
     borderRadius: 10,
-
+    width: "89%", // Ajusta el anch
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 5,
     shadowRadius: 4,
-
     elevation: 10,
   },
+
+  
+
+
 
   dropdownLogo: {
     width: 30,
     height: 30,
-    marginLeft: -5, 
+    marginLeft: -5,
   },
 
-  
   dropdownLogoRaza: {
     width: 34,
     height: 30,
-     marginRight: 6,
-    marginLeft: -5, 
+    marginRight: 6,
+    marginLeft: -5,
   },
 
   dropdownText: {
     fontSize: 16, // Ajusta el tamaño del texto
     color: "#000", // Cambia el color del texto
-   marginLeft: -7, 
-  },
-
-
-
-  dropdown: {
-    borderWidth: 1, // Borde normal
-    borderColor: "rgb(255, 255, 255)",
-    backgroundColor: "rgb(255, 255, 255)",
-    width: "95%", // Ajusta el anch
-     marginLeft: -5, 
+    marginLeft: -7,
   },
 
   arrowIconStyle: {
@@ -201,27 +192,6 @@ export default StyleSheet.create({
   },
 
   ///////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   dateButton: {
     flexDirection: "row",
@@ -252,7 +222,7 @@ export default StyleSheet.create({
   },
 
   dateButtonText: {
-        fontSize: 16,
+    fontSize: 16,
     color: "rgb(15, 15, 15)",
     paddingLeft: 5,
   },
@@ -303,10 +273,10 @@ export default StyleSheet.create({
   },
 
   iconStylePeso: {
-   width: 30,
+    width: 30,
     height: 33,
-     marginRight: 6,
-    marginLeft: -5, 
+    marginRight: 6,
+    marginLeft: -5,
   },
 
   // ///////////////////////////CHIP#CHIPMADRE#CHIPPADRE#
@@ -342,10 +312,7 @@ export default StyleSheet.create({
   iconStyleChipsP: {
     width: 35,
     height: 25,
-    marginLeft: -5, 
-
-
-    
+    marginLeft: -5,
   },
   inputChips: {
     flex: 1, // El TextInput ocupará todo el espacio disponible
@@ -354,20 +321,37 @@ export default StyleSheet.create({
     paddingLeft: 5, // Evita que el texto se solape con el logo
   },
 
-      dropdownTextEnfermedad: {
+  dropdownTextEnfermedad: {
     fontSize: 16, // Ajusta el tamaño del texto
     color: "#000", // Cambia el color del texto
-   marginLeft: -7, 
-   
+    marginLeft: -7,
   },
 
-    dropdownEnfermedad: {
+  dropdownEnfermedad: {
+  flexDirection: "row",
+    alignItems: "center",
     borderWidth: 1, // Borde normal
     borderColor: "rgb(255, 255, 255)",
+    padding: 12,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+    marginBottom: 30,
     backgroundColor: "rgb(255, 255, 255)",
-    width: "95%", // Ajusta el anch
-     marginLeft: 3, 
+    marginHorizontal: 20,
+    borderTopRightRadius: 0,
+    borderRadius: 10,
+    width: "89%", // Ajusta el anch
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 5,
+    shadowRadius: 4,
+    elevation: 10,
   },
+
+
+
+
+
 
   inputWrapper: {
     flexDirection: "row", // Alineación horizontal
@@ -396,7 +380,7 @@ export default StyleSheet.create({
     width: 30, // Ajusta el tamaño de la imagen
     height: 30,
     marginRight: 6,
-     marginLeft: -5, 
+    marginLeft: -5,
   },
 
   inputobs: {
@@ -409,8 +393,6 @@ export default StyleSheet.create({
     selectionColor: "#000", // Color de la selección (cuando el texto está seleccionado)
   },
 
-
-
   selectedDiseases: {
     fontSize: 16, // Ajusta el tamaño de la fuente
     color: "rgb(9, 167, 9)",
@@ -420,7 +402,7 @@ export default StyleSheet.create({
     flexDirection: "column", // Alinea el texto en una columna
     flexWrap: "wrap", // Asegura que el texto no se desborde y se ajuste
     marginBottom: 20,
-     marginTop: -25, 
+    marginTop: -25,
   },
 
   registerButton: {

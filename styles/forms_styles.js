@@ -7,7 +7,7 @@ export default StyleSheet.create({
     paddingTop: 80,
   },
 
-   image: {
+  image: {
     width: 260,
     height: 220,
     marginTop: 20,
@@ -173,38 +173,47 @@ export default StyleSheet.create({
   },
 
   /////////////////////////////////////////////////////////////////////////////////////
-  dropdownContainerTipoVacuna: {
-    backgroundColor: "rgb(255, 255, 255)",
-    borderWidth: 1,
-    borderColor: "rgb(255, 255, 255)",
+  //  dropdownContainerNombreVacuna: {
+  //     backgroundColor: "rgb(255, 255, 255)",
+  //     borderWidth: 1,
+  //     borderColor: "rgb(255, 255, 255)",
+  //     marginBottom: 30,
+  //     flexDirection: "row",
+  //     position: "relative", // Esto asegura que zIndex funcione correctamente
+  //     zIndex: 10, // Se coloca debajo de "Tipo Vacuna"
+  //     alignItems: "center",
+  //     marginHorizontal: 10,
+  //     borderTopRightRadius: 0,
+  //     borderRadius: 10,
+  //     padding: 5,
+  //     shadowColor: "#000",
+  //     shadowOffset: { width: 0, height: 2 },
+  //     shadowOpacity: 5,
+  //     shadowRadius: 4,
+  //     elevation: 10,
+  //   },
+
+  dropdownContainerPicker: {
     marginBottom: 30,
     flexDirection: "row",
+    position: "relative", // Esto asegura que zIndex funcione correctamente
     alignItems: "center",
-    marginHorizontal: 10,
+    marginHorizontal: 5,
+
+    padding: 5,
+    width: "97%", // Asegura que el contenedor ocupe todo el ancho disponible
+    borderRadius: 5, // Bordes redondeados
+  },
+
+  dropdownListStyle: {
+    borderWidth: 0, // Elimina cualquier borde de la lista
     borderTopRightRadius: 0,
     borderRadius: 10,
-    padding: 5,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 5,
     shadowRadius: 4,
     elevation: 10,
-    position: "relative", // Esto asegura que zIndex funcione correctamente
-    zIndex: 20, // Se coloca encima de "Nombre Vacuna"
-  },
-
-  dropdownContainerPicker: {
-    width: "85%", // Asegura que el contenedor ocupe todo el ancho disponible
-    borderWidth: 1, // Borde alrededor del contenedor
-    borderColor: "rgb(255, 255, 255)", // Color del borde
-    borderRadius: 5, // Bordes redondeados
-    backgroundColor: "rgb(255, 255, 255)", // Fondo claro para el contenedor
-  },
-
-  dropdownListStyle: {
-    backgroundColor: "rgb(255, 255, 255)", // Fondo blanco para la lista
-    borderWidth: 0, // Elimina cualquier borde de la lista
-    zIndex: 15, // Asegúrate de que la lista quede encima si se necesita
   },
 
   dropdownBelow: {
@@ -212,6 +221,8 @@ export default StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1, // Borde alrededor del contenedor
     borderColor: "rgb(255, 255, 255)", // Color del borde
+    zIndex: 15, // Asegúrate de que la lista quede encima si se necesita
+    height: 90,
   },
 
   dropdownLogo: {
@@ -239,27 +250,6 @@ export default StyleSheet.create({
     transform: [{ scale: 2.0 }],
   },
 
-  dropdownContainerNombreVacuna: {
-    backgroundColor: "rgb(255, 255, 255)",
-    borderWidth: 1,
-    borderColor: "rgb(255, 255, 255)",
-    marginBottom: 30,
-    flexDirection: "row",
-    position: "relative", // Esto asegura que zIndex funcione correctamente
-    zIndex: 15, // Se coloca debajo de "Tipo Vacuna"
-    alignItems: "center",
-    marginHorizontal: 10,
-    borderTopRightRadius: 0,
-    borderRadius: 10,
-    padding: 5,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 5,
-    shadowRadius: 4,
-    elevation: 10,
-  },
-
-
   row: {
     marginBottom: 15,
     position: "relative", // Esto asegura que zIndex funcione correctamente
@@ -282,7 +272,7 @@ export default StyleSheet.create({
     padding: 5,
     backgroundColor: "rgb(252, 252, 252)",
     marginRight: 10,
-        height: 52,
+    height: 52,
     marginBottom: 20,
     borderTopRightRadius: 0,
     borderRadius: 10,
@@ -321,7 +311,6 @@ export default StyleSheet.create({
     height: 52,
     marginBottom: 20,
 
-    
     borderTopRightRadius: 0,
     borderRadius: 10,
     shadowColor: "#000",
@@ -334,8 +323,6 @@ export default StyleSheet.create({
   dropdownBelowUnidad: {
     zIndex: 5,
   },
-
-
 
   inputWrapper: {
     flexDirection: "row", // Alineación horizontal
@@ -375,16 +362,6 @@ export default StyleSheet.create({
     paddingVertical: 5,
     selectionColor: "#000", // Color de la selección (cuando el texto está seleccionado)
   },
-
-
-
-
-
-
-
-
-
-
 
   /////////////////////////////////////////////////////////////////////////////////////
 
