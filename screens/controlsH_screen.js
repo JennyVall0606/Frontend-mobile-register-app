@@ -6,6 +6,7 @@ import {
   Image,
   Modal,
   TextInput,
+  ActivityIndicator,
   Platform,
   Pressable,
   TouchableOpacity,
@@ -14,7 +15,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Layout from "../components/layout";
-import { styles } from "../styles/ControlH_styles";
+import styles  from "../styles/ControlH_styles";
 import axios from "axios";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useNavigation } from "@react-navigation/native";
@@ -286,12 +287,24 @@ const scrollToSection = (sectionRef) => {
       setNuevaFechaVacuna(selectedDate);
     }
     setShowPesoDatePicker(false);
-    setShowVacunaDatePicker(false);
+    setShowVacunaDatePicker(false);  
   };
+
+  if (loading) {
+    return (
+      <View style={styles.containerloading}>
+        <ActivityIndicator size="large" color="rgb(52, 112, 24)" />
+        <Text style={styles.loadingText}>Cargando...</Text>
+      </View>
+    )};
 
   return (
     <Layout>
-      <ScrollView ref={scrollViewRef} style={[styles.container, { width, height }]}>
+     <ScrollView
+        ref={scrollViewRef}
+        style={{ flex: 1 }} // Hace que el ScrollView ocupe todo el espacio disponible
+        contentContainerStyle={{ paddingBottom: 20 }} // Espacio extra al final del ScrollView
+      >
 
 <View style={styles.buttonsContainer}>
   <TouchableOpacity onPress={() => scrollToSection(sectionPesosRef)} style={styles.button}>
@@ -302,10 +315,15 @@ const scrollToSection = (sectionRef) => {
      <Text style={styles.link}>VACUNAS </Text>
   <Text style={[styles.link, { marginTop: 5 }]}>REGISTRADAS</Text>
   </TouchableOpacity>
-  <TouchableOpacity onPress={() => scrollToSection(sectionNuevoControlRef)} style={styles.button}>
-     <Text style={styles.link}>NUEVO</Text>
-  <Text style={[styles.link, { marginTop: 5 }]}>CONTROL</Text>
-  </TouchableOpacity>
+    <TouchableOpacity
+          style={styles.newControlButton}
+          onPress={() => navigation.navigate("FormScreen", { chip })}
+        >
+          <View ref={sectionNuevoControlRef} style={styles.section}>
+          <Text style={styles.newControlButtonText}>REALIZA UN </Text>
+          <Text style={styles.newControlButtonText}>NUEVO CONTROL</Text>
+        </View>
+        </TouchableOpacity>
 </View>
 
 
@@ -450,7 +468,7 @@ const scrollToSection = (sectionRef) => {
 {/* TABLA DE PESO */}
 
 
-        <View style={styles.container}>
+        <View style={styles.containerPesos}>
   
           <Image
             source={require("../assets/Imagen_Pesos_Registrados.png")} 
@@ -647,11 +665,6 @@ const scrollToSection = (sectionRef) => {
 
 
 
-
-
-
-
-
         ) : (
            <Text style={styles.noRecordsText}>No se encontraron registros de vacunas.</Text>
         )}
@@ -806,14 +819,9 @@ const scrollToSection = (sectionRef) => {
           </View>
         </Modal>
 
-        <TouchableOpacity
-          style={styles.newControlButton}
-          onPress={() => navigation.navigate("FormScreen", { chip })}
-        >
-          <View ref={sectionNuevoControlRef} style={styles.section}>
-          <Text style={styles.newControlButtonText}>REALIZA UN NUEVO CONTROL</Text>
-        </View>
-        </TouchableOpacity>
+  
+       
+       
       </ScrollView>
     </Layout>
   );

@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
+  
  const { width, height } = Dimensions.get('window');
   return (
     <Layout>

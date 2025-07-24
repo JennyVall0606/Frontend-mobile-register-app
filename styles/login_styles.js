@@ -11,31 +11,31 @@ const styles = StyleSheet.create({
   },
 
 logo: {
-  width: 210, // Ajusta el tamaño según sea necesario
-  height: 210, // Ajusta el tamaño según sea necesario
-  alignSelf: 'center', // Esto centra el logo horizontalmente
-  marginTop: 100, // Espacio entre el título y la imagen
-  marginBottom: 50, // Espacio entre el logo y el campo de entrada (input)
+  width: 210,
+  height: 210, 
+  alignSelf: 'center', 
+  marginTop: 100,
+  marginBottom: 50, 
 },
 
   inputContainer: {
-   width: "140%", // Asegura que el ancho esté dentro de los límites (puedes reducir el valor si es más grande de lo necesario)
-  height: 60, // Reduce la altura del contenedor para hacerlo más pequeño
-  borderRadius: 10, // Bordes más pequeños (ajustar según el diseño deseado)
-  marginBottom: 35, // Reduce el espacio entre campos de texto
-  backgroundColor: "rgb(255, 255, 255)", // Color de fondo
-  padding: 5, // Reduce el padding para que el contenedor no esté tan "relleno"
-  borderTopLeftRadius: 20, // Redondea la esquina superior izquierda
-  borderTopRightRadius: 0, // No redondea la esquina superior derecha
+   width: "140%", 
+  height: 60, 
+  borderRadius: 10, 
+  marginBottom: 35, 
+  backgroundColor: "rgb(255, 255, 255)", 
+  padding: 5, 
+  borderTopLeftRadius: 20,
+  borderTopRightRadius: 0, 
 
   // Sombra para iOS
-  shadowColor: "rgb(0, 0, 0)", // Color de la sombra
-  shadowOffset: { width: 0, height: 5 }, // Sombra desplazada hacia abajo
-  shadowOpacity: 0.9, // Menos opacidad para que la sombra sea más sutil
-  shadowRadius: 5, // Radio más pequeño para la sombra
+  shadowColor: "rgb(0, 0, 0)", 
+  shadowOffset: { width: 0, height: 5 }, 
+  shadowOpacity: 0.9, 
+  shadowRadius: 5,
 
   // Sombra para Android
-  elevation: 5, // Reduce la prominencia de la sombra en Android
+  elevation: 5, 
   },
 
 

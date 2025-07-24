@@ -91,6 +91,17 @@ export default StyleSheet.create({
     elevation: 5,
     zIndex: 999,
   },
+  dropdownMenuLeftuser:{
+position: "absolute",
+  top: 100,  // Ajusta esta posición vertical según lo necesites
+  left: 280,// Asegura que el menú esté alineado completamente a la izquierda
+  backgroundColor: "#7dac53",
+  padding: 2,
+  borderRadius: 8,
+  elevation: 5,
+  zIndex: 999,
+  width: 140,
+  },
 
   dropdownItem: {
     paddingVertical: 10,
@@ -99,6 +110,8 @@ export default StyleSheet.create({
     color: "rgb(40, 43, 41)",
     marginBottom: 4, 
   },
+
+  
 
   dropdownMenuRight: {
     position: "absolute",

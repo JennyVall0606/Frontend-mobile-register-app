@@ -70,13 +70,13 @@ export default function CattleScreen({ navigation }) {
   };
 
   if (loading) {
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
-  }
-
+  return (
+    <View style={styles.containerloading}>
+      <ActivityIndicator size="large" color="rgb(52, 112, 24)" />
+      <Text style={styles.loadingText}>Cargando...</Text>
+    </View>
+  );
+}
   return (
     <Layout>
       <ScrollView

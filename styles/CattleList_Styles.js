@@ -9,7 +9,17 @@ export const styles = StyleSheet.create({
     paddingTop: 20,
    
   },
-
+containerloading: {
+    flex: 1, // Esto hace que el contenedor ocupe toda la pantalla
+    justifyContent: 'center', // Centra los elementos verticalmente
+    alignItems: 'center', // Centra los elementos horizontalmente
+    backgroundColor: '#fff', // Fondo blanco, puedes cambiarlo
+  },
+  loadingText: {
+    marginTop: 10, // Espacio entre el indicador de carga y el texto
+    fontSize: 18, // Tamaño del texto
+    color: "rgb(52, 112, 24)",
+  },
   imageStyle: {
     width: 200, 
     height: 200, 

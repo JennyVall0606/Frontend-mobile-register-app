@@ -8,20 +8,20 @@ export default StyleSheet.create({
   },
 
   image: {
-    width: 260,
-    height: 220,
-    marginTop: 20,
+    width: 160,
+    height: 120,
+    marginTop: 80,
     alignSelf: "center",
-    marginBottom: 20,
+    marginBottom: 10,
   },
 
   title1: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
   },
   title2: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: "bold",
     marginBottom: 30,
     textAlign: "center",
@@ -61,20 +61,20 @@ export default StyleSheet.create({
 
   imagePeso: {
     width: 380, // Ajusta el tamaño de la imagen
-    height: 50, // Ajusta el tamaño de la imagen
+    height: 40, // Ajusta el tamaño de la imagen
     marginBottom: 10, // Espacio entre la imagen y el texto
     resizeMode: "contain", // Mantiene la proporción de la imagen
   },
 
   subtitle1: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
   },
   subtitle2: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
-    marginBottom: 50,
+    marginBottom: 40,
     color: "#7dac53",
     textAlign: "center",
   },

@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  scrollViewRef,
   Image,
   ScrollView,
   StyleSheet,
@@ -116,31 +117,37 @@ export default function FormsScreen({ route }) {
     setFechaPeso("");
   };
 
-  const guardarPeso = async () => {
-    if (!fechaPeso || !peso) {
-      setErrors({ ...errors, fechaPeso: !fechaPeso, peso: !peso });
-      Alert.alert(
-        "⚠️ Campos obligatorios",
-        "Por favor, completa todos los campos obligatorios en el Control de Peso."
-      );
-      return;
-    }
+ const guardarPeso = async () => {
+  if (!fechaPeso || !peso) {
+    setErrors({ ...errors, fechaPeso: !fechaPeso, peso: !peso });
+    Alert.alert(
+      "⚠️ Campos obligatorios",
+      "Por favor, completa todos los campos obligatorios en el Control de Peso."
+    );
+    return;
+  }
 
-    try {
-      const response = await axios.post(`${API_URL}/weighing/add`, {
-        chip_animal: chipPeso,
-        fecha_pesaje: fechaPeso,
-        peso_kg: parseFloat(peso),
-      });
-      Alert.alert(
-        "Éxito",
-        "Pesaje guardado. Puedes revisar el registro en la lista de pesos"
-      );
+  try {
+    const response = await axios.post(`${API_URL}/weighing/add`, {
+      chip_animal: chipPeso,
+      fecha_pesaje: fechaPeso,
+      peso_kg: parseFloat(peso),
+    });
+
+  Alert.alert("Éxito", "Pesaje guardado");
       resetPesoFields();
+      navigation.navigate("ControlScreen", {
+        chip,
+        shouldRefresh: true,
+        nuevoPeso: response.data,
+      });
     } catch (error) {
       console.error(error);
     }
   };
+
+
+
 
   const resetVacunaFields = () => {
     setCattleVacuna(null);
@@ -185,11 +192,13 @@ export default function FormsScreen({ route }) {
         dosis_administrada: dosisFinal,
         observaciones: observations,
       });
-      Alert.alert(
-        "Éxito",
-        "Vacuna guardada. Puedes revisar tu registro en la lista de vacunaciones"
-      );
+      Alert.alert("Éxito", "Vacuna guardada");
       resetVacunaFields();
+      navigation.navigate("ControlScreen", {
+        chip,
+        shouldRefresh: true,
+        nuevaVacuna: response.data,
+      });
     } catch (error) {
       // Mostrar mensaje claro al usuario
       if (error.response && error.response.data) {
@@ -205,6 +214,7 @@ export default function FormsScreen({ route }) {
       console.error(error);
     }
   };
+
 
   const handleSelectCattle = (cattle) => {
     if (pesoChecked) {
@@ -239,9 +249,11 @@ export default function FormsScreen({ route }) {
 
   return (
     <Layout>
-      <ScrollView
-        style={[styles.container, { width, height }]} // Ajustamos el ancho y alto al de la pantalla
-      >
+     <ScrollView
+             ref={scrollViewRef}
+             style={{ flex: 1 }} // Hace que el ScrollView ocupe todo el espacio disponible
+             contentContainerStyle={{ paddingBottom: 20 }} // Espacio extra al final del ScrollView
+           >
         <Image
           source={require("../assets/Imagen_Formulario_Registro_Ganado.png")} // Ruta de la imagen
           style={styles.image} // Estilo único para la imagen

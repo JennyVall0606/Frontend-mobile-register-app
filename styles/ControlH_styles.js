@@ -1,18 +1,41 @@
 import { StyleSheet } from "react-native";
 
-export const styles = {
-  container: {
-    flex: 1,
-    padding: 12,
-    paddingTop: 50,
-   
+export default StyleSheet.create({
+ background: {
+    flex: 1, 
+    justifyContent: "center", 
+    alignItems: "center", 
+    position: 'relative'
   },
 
-  button: {
-    backgroundColor: "rgb(255, 255, 255)",
-    padding: 8,
+container: {
+  flex: 1,  // El contenedor ocupa el 100% del espacio disponible
+  padding: 2, // Espaciado general alrededor del contenido
+  width: "100%",  // Ancho del contenedor
+  alignSelf: "center",  // Centra el contenedor horizontalmente en su vista padre
+},
+
+containerloading: {
+    flex: 1, // Esto hace que el contenedor ocupe toda la pantalla
+    justifyContent: 'center', // Centra los elementos verticalmente
+    alignItems: 'center', // Centra los elementos horizontalmente
+    backgroundColor: '#fff', // Fondo blanco, puedes cambiarlo
+  },
+  loadingText: {
+    marginTop: 10, // Espacio entre el indicador de carga y el texto
+    fontSize: 18, // Tamaño del texto
+    color: "rgb(52, 112, 24)",
+  },
+
+  //////////////////////////////////////////  BOTON NUEVO CONTROL ///////////////////////////////////////
+ backgroundColor: "rgba(255, 255, 255, 1)",
+    
+
+  newControlButton: {
+    backgroundColor: "#2f342eff",
+   padding: 8,
     borderWidth: 1,
-    borderColor: "rgb(255, 255, 255)",
+    borderColor: '#8dc65cff',
     alignItems: "center",
     marginLeft: -1, // Eliminamos el margen a la derecha
     marginRight: 20, // Puedes ajustarlo si necesitas un pequeño espacio a la derecha
@@ -27,6 +50,32 @@ export const styles = {
     elevation: 10,
 
     alignSelf: 'flex-start', // Esto alinea el botón a la izquierda
+
+  },
+
+  newControlButtonText: {
+    color: "white",
+    fontSize: 12,
+    fontWeight: "bold",      // Cambié '20' a 'bold' ya que '20' no es un valor válido para fontWeight
+  textAlign: "center",     // Alineación horizontal del texto
+  alignSelf: "center",     // Alineación vertical del texto dentro de su contenedor
+  },
+
+
+  button: {
+    backgroundColor: "rgba(255, 255, 255, 1)",
+    padding: 8,
+    borderWidth: 1,
+    borderColor: '#7dac53',
+    alignItems: "center",
+    marginLeft: -1, // Eliminamos el margen a la derecha
+    marginRight: 20, // Puedes ajustarlo si necesitas un pequeño espacio a la derecha
+    borderTopRightRadius: 0,
+    borderRadius: 10,
+
+   
+
+    alignSelf: 'flex-start', // Esto alinea el botón a la izquierda
   },
 
   link: {
@@ -35,13 +84,9 @@ export const styles = {
       fontWeight: 'bold', // Hacer el texto en negrita
   },
 
-
-
-  
-
   image: {
-    width: "60%",
-    height: 190,
+    width: "40%",
+    height: 140,
     resizeMode: "c//over",
     borderRadius: 10,
     marginBottom: 30,
@@ -61,13 +106,15 @@ export const styles = {
   title: {
     fontSize: 24,
     fontWeight: "bold",
+   
     textAlign: "center",
   },
   title1: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 30,
+    marginBottom: 20,
     textAlign: "center",
+    marginTop: 1,
     color: "#7dac53",
   },
 
@@ -141,7 +188,7 @@ export const styles = {
     padding: 8,
     borderWidth: 1,
     borderColor: "#31502a",
-    marginBottom: 30,
+    marginBottom: 5,
     alignItems: "center",
     justifyContent: "center",
     marginHorizontal: "auto",
@@ -369,9 +416,10 @@ export const styles = {
   /////////////////////////////////////// TITULOS E IMAGENES DE CONTROL DE PESOS Y VACUNAS ///////////////////////////////////////
 
   imagePesoVacuna: {
-    width: 150, // Ancho de la imagen
-    height: 150, // Alto de la imagen
+    width: 120,
+    height: 120, // Alto de la imagen
     alignSelf: "center", // Centra la imagen horizontalmente
+    marginTop: 24,
   },
 
   subtitle1: {
@@ -393,7 +441,7 @@ export const styles = {
   modalContent: {
     backgroundColor: "#fff",
     borderRadius: 8,
-    padding: 30,
+    padding: 20,
     elevation: 5,
   },
 
@@ -401,7 +449,6 @@ export const styles = {
     flex: 1,
     justifyContent: "center",
     backgroundColor: "rgba(7, 7, 7, 0.77)",
-
     alignItems: "center",
   },
 
@@ -450,7 +497,7 @@ export const styles = {
   buttonsContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 20,
+    marginTop:65,
      marginRight: 20,
       marginLeft: 20,
       
@@ -621,24 +668,7 @@ export const styles = {
     marginBottom: 30,
   },
 
-  //////////////////////////////////////////  BOTON NUEVO CONTROL ///////////////////////////////////////
 
-  newControlButton: {
-    backgroundColor: "#292929",
-    padding: 20,
-    alignItems: "center",
-    borderRadius: 10,
-    borderTopRightRadius: 0,
-    marginTop: 60,
-    marginBottom:120,
-    borderWidth: 1,
-    width: "75%",
-    alignSelf: "center",
-  },
 
-  newControlButtonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "500",
-  },
-};
+ 
+});
