@@ -23,23 +23,15 @@ export default function Layout({ children }) {
   const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
   const userMenuAnim = useState(new Animated.Value(-250))[0]; // Para el menú de usuario
 
-  // Función para manejar la navegación de regreso
-  const handleGoBack = () => {
-    const currentScreen = route.name || ''; // Aseguramos que route.name no sea undefined
+const handleGoBack = () => {
+  const currentScreen = route.name || ''; // Aseguramos que route.name no sea undefined
 
-    console.log("Pantalla actual:", currentScreen); // Log para verificar qué pantalla estamos obteniendo
+  console.log("Pantalla actual:", currentScreen); // Log para verificar qué pantalla estamos obteniendo
 
-    // Lógica de navegación dependiendo de la pantalla actual
-    if (currentScreen === "FormScreen") {
-      navigation.navigate("ControlScreen");
-    } else if (currentScreen === "ControlScreen") {
-      navigation.navigate("CattleScreen");
-    } else if (currentScreen === "CattleScreen") {
-      navigation.navigate("Home");
-    } else {
-      console.log("Pantalla no identificada para el botón regresar");
-    }
-  };
+  // Usamos navigation.goBack() para regresar a la pantalla anterior en la pila de navegación
+  navigation.goBack();
+};
+
 
   // Función para abrir el menú
   const toggleMenu = () => {
@@ -120,10 +112,7 @@ export default function Layout({ children }) {
             <TouchableOpacity onPress={() => navigation.navigate("Home")}>
               <Text style={globalStyles.dropdownItem}>Inicio</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate("RegisterCattleScreen")}>
-              <Text style={globalStyles.dropdownItem}>Registro</Text>
-            </TouchableOpacity>
-            {/* Agregar otros ítems aquí */}
+           
           </Animated.View>
         )}
 

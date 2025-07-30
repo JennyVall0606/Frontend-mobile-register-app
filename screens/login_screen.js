@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Alert, TextInput, Image, ActivityIndicator, Platform, KeyboardAvoidingView, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, Alert, TextInput,  scrollViewRef, Image, ActivityIndicator, Platform, KeyboardAvoidingView, ScrollView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Layout from "../components/layoutlogin";
 import styles from "../styles/login_styles";

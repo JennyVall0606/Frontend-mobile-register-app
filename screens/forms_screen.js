@@ -136,11 +136,14 @@ export default function FormsScreen({ route }) {
 
   Alert.alert("Éxito", "Pesaje guardado");
       resetPesoFields();
-      navigation.navigate("ControlScreen", {
+      navigation.replace("ControlScreen", {
         chip,
         shouldRefresh: true,
         nuevoPeso: response.data,
       });
+
+    
+     
     } catch (error) {
       console.error(error);
     }
@@ -194,7 +197,7 @@ export default function FormsScreen({ route }) {
       });
       Alert.alert("Éxito", "Vacuna guardada");
       resetVacunaFields();
-      navigation.navigate("ControlScreen", {
+      navigation.replace("ControlScreen", {
         chip,
         shouldRefresh: true,
         nuevaVacuna: response.data,

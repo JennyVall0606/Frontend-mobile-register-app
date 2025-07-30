@@ -4,6 +4,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  scrollViewRef,
   Alert,
   Image,
   ScrollView,
@@ -345,7 +346,11 @@ export default function RegisterCattleScreen({ route }) {
 
   return (
     <Layout>
-      <ScrollView style={[styles.container, { width, height }]}>
+     <ScrollView
+             ref={scrollViewRef}
+             style={{ flex: 1 }} // Hace que el ScrollView ocupe todo el espacio disponible
+             contentContainerStyle={{ paddingBottom: 20 }} // Espacio extra al final del ScrollView
+           >
         <Image
           source={
             isEditing

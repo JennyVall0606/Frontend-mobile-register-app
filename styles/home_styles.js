@@ -21,7 +21,7 @@ export default StyleSheet.create({
     height: 220,
     marginBottom: 50,
     alignSelf: 'center',
-    marginTop: 30,
+    marginTop: 90,
   },
 
   buttonRow: {

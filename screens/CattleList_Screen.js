@@ -4,6 +4,7 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
+   scrollViewRef,
   ActivityIndicator,
   Image,
   Dimensions,
@@ -79,9 +80,11 @@ export default function CattleScreen({ navigation }) {
 }
   return (
     <Layout>
-      <ScrollView
-        style={[styles.container, { width, height }]} // Ajustamos el ancho y alto al de la pantalla
-      >
+     <ScrollView
+             ref={scrollViewRef}
+             style={{ flex: 1 }} // Hace que el ScrollView ocupe todo el espacio disponible
+             contentContainerStyle={{ paddingBottom: 20 }} // Espacio extra al final del ScrollView
+           >
         <View style={styles.titleContainer}>
           <Image
             source={require("../assets/Imagen_Resumen_Ganado.png")} // Coloca la ruta de tu imagen aquí

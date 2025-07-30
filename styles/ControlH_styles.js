@@ -5,7 +5,7 @@ export default StyleSheet.create({
     flex: 1, 
     justifyContent: "center", 
     alignItems: "center", 
-    position: 'relative'
+    position: 'absolute'
   },
 
 container: {
@@ -28,61 +28,58 @@ containerloading: {
   },
 
   //////////////////////////////////////////  BOTON NUEVO CONTROL ///////////////////////////////////////
- backgroundColor: "rgba(255, 255, 255, 1)",
+ 
     
 
   newControlButton: {
-    backgroundColor: "#2f342eff",
-   padding: 8,
-    borderWidth: 1,
-    borderColor: '#8dc65cff',
-    alignItems: "center",
-    marginLeft: -1, // Eliminamos el margen a la derecha
-    marginRight: 20, // Puedes ajustarlo si necesitas un pequeño espacio a la derecha
-    borderTopRightRadius: 0,
-    borderRadius: 10,
-
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 5,
-    shadowRadius: 4,
-
-    elevation: 10,
-
-    alignSelf: 'flex-start', // Esto alinea el botón a la izquierda
+   backgroundColor: "#3f4e3cff", // Color de fondo verde
+  paddingVertical: 12, // Aumentar el padding para hacerlo más grande verticalmente
+  paddingHorizontal: 24, // Aumentar el padding horizontalmente para mayor tamaño
+  borderWidth: 1,
+  borderColor: '#8dc65cff',
+  alignItems: "center",
+marginTop: 15,
+marginBottom: 12,
+  borderTopRightRadius: 0,
+  borderRadius: 20, // Aumenté el radio del borde para hacerlo más redondeado
+  shadowColor: "#000",
+  shadowOffset: { width: 0, height: 4 }, // Más profundidad en la sombra
+  shadowOpacity: 0.8, // Opacidad de sombra más suave
+  shadowRadius: 8, // Radio de sombra más grande
+  elevation: 10, // Añadir sombra para Android
+  alignSelf: 'center', // Centra el botón horizontalmente en su contenedor
 
   },
 
   newControlButtonText: {
     color: "white",
-    fontSize: 12,
+    fontSize: 16,
     fontWeight: "bold",      // Cambié '20' a 'bold' ya que '20' no es un valor válido para fontWeight
   textAlign: "center",     // Alineación horizontal del texto
   alignSelf: "center",     // Alineación vertical del texto dentro de su contenedor
   },
 
 
-  button: {
-    backgroundColor: "rgba(255, 255, 255, 1)",
-    padding: 8,
-    borderWidth: 1,
-    borderColor: '#7dac53',
-    alignItems: "center",
-    marginLeft: -1, // Eliminamos el margen a la derecha
-    marginRight: 20, // Puedes ajustarlo si necesitas un pequeño espacio a la derecha
-    borderTopRightRadius: 0,
-    borderRadius: 10,
-
+ button: {
+  backgroundColor: "rgba(255, 255, 255, 1)",
+  padding: 8,
+  borderWidth: 1,
+  borderColor: '#7dac53',
+  alignItems: "center",
+  marginTop: 6,
    
+ 
+  marginRight:15, // Ajusta este margen según sea necesario
+  borderTopRightRadius: 0,
+  borderRadius: 10,
+  alignSelf: 'flex-end', // Esto centra el botón dentro de su contenedor
+},
 
-    alignSelf: 'flex-start', // Esto alinea el botón a la izquierda
-  },
-
-  link: {
-    fontSize: 12, // Tamaño del texto
-    color: '#7dac53', // Color azul del enlace
-      fontWeight: 'bold', // Hacer el texto en negrita
-  },
+link: {
+  fontSize: 14, // Tamaño del texto
+  color: '#40532fff', // Color del enlace
+  fontWeight: 'bold', // Texto en negrita
+},
 
   image: {
     width: "40%",
@@ -382,43 +379,43 @@ containerloading: {
 
   // Estilo para la celda de observaciones
   tableCellDatosVacunaObs: {
-    fontSize: 11, // Tamaño del texto
-    color: "#7dac53", // Color del texto
-    textAlign: "center", // Alinea el texto a la izquierda
-    flex: 1, // Hace que ocupe el mismo espacio que las otras celdas
+    fontSize: 11, 
+    color: "#7dac53", 
+    textAlign: "center", 
+    flex: 1, 
     paddingRight: 25,
   },
 
   // Estilo para la celda de edición
   editCellVacuna: {
-    justifyContent: "center", // Centra el contenido dentro de la celda
-    alignItems: "center", // Centra la imagen dentro de la celda
-    flex: 0.3, // Asegura que ocupe un espacio más pequeño
+    justifyContent: "center", 
+    alignItems: "center", 
+    flex: 0.3, 
   },
 
   // Estilo para la imagen del botón de editar (en la fila)
   editButtonImageVacuna2: {
-    width: 27, // Ajusta el tamaño de la imagen
-    height: 27, // Ajusta el tamaño de la imagen
-    resizeMode: "contain", // Mantiene la proporción de la imagen
-    marginBottom: 10, // Ajusta el espacio inferior
+    width: 27, 
+    height: 27, 
+    resizeMode: "contain", 
+    marginBottom: 10, 
     marginLeft: -12,
   },
 
   // Estilo para el botón de editar en la tabla
   editButtonTextVacuna: {
-    fontSize: 10, // Tamaño del texto del botón
-    color: "#7dac53", // Color verde para el texto
-    textAlign: "left", // Alinea el texto a la izquierda
-    paddingHorizontal: 10, // Espacio dentro de la celda
+    fontSize: 10, 
+    color: "#7dac53", 
+    textAlign: "left", 
+    paddingHorizontal: 10, 
   },
 
   /////////////////////////////////////// TITULOS E IMAGENES DE CONTROL DE PESOS Y VACUNAS ///////////////////////////////////////
 
   imagePesoVacuna: {
     width: 120,
-    height: 120, // Alto de la imagen
-    alignSelf: "center", // Centra la imagen horizontalmente
+    height: 120, 
+    alignSelf: "center", 
     marginTop: 24,
   },
 
@@ -426,14 +423,14 @@ containerloading: {
     fontSize: 20,
     fontWeight: "600",
     marginTop: 24,
-    textAlign: "center", // centra el texto
+    textAlign: "center", 
   },
   subtitle2: {
     fontSize: 20,
     fontWeight: "600",
     marginBottom: 8,
     color: "#7dac53",
-    textAlign: "center", // centra el texto
+    textAlign: "center", 
   },
 
   ////////////////////////////////// MODAL PESO ///////////////////////////////////////
@@ -536,6 +533,102 @@ containerloading: {
   },
 
   ////////////////////////////////// MODAL VACUNA ///////////////////////////////////////
+
+
+   row: {
+    marginBottom: 10,
+    position: "relative",
+    zIndex: 10,
+    alignItems: "center",
+    marginHorizontal: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    justifyContent: "space-between",
+  },
+
+  inputDosisContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 5,
+    borderTopRightRadius: 0,
+    borderRadius: 10,
+    marginBottom: 10,
+    width: "40%",
+    alignSelf: "center",
+  },
+
+
+  inputDosis: {
+   flex: 1,                    
+    height: 40,                 
+    borderColor: 'white',       
+    borderWidth: 1,            
+    borderRadius: 5,            
+    paddingHorizontal: 5,      
+    fontSize: 16,            
+    color: '#000',          
+  },
+
+
+  dropdownLogo: {
+   width: 35,
+    height: 35,
+    marginRight: 12,
+    marginLeft: 8,
+  },
+
+
+  dropdownContainerUnidad: {
+   flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderRadius: 5,
+     
+    padding: 3,
+    borderTopRightRadius: 0,
+    borderRadius: 10,
+    marginBottom: 10,
+    width: "40%",
+    marginHorizontal:35,
+    alignSelf: "center",
+  },
+
+  arrowIconStyle: {
+    marginRight: 1, 
+  },
+  
+  dropdownBelowUnidad: {
+    marginTop: 4, 
+    zIndex: 9999, 
+  },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   modalContentVacuna: {
     backgroundColor: "#fff",

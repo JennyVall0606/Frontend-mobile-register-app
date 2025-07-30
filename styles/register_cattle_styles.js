@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 export default StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
+    padding: 20,
     paddingTop: 80,
   },
 
@@ -34,7 +34,7 @@ export default StyleSheet.create({
   editImage: {
     width: 170,
     height: 140,
-    marginTop: 20,
+    marginTop: 80,
     alignSelf: "center",
     marginBottom: 20,
     borderRadius: 15,
@@ -43,7 +43,7 @@ export default StyleSheet.create({
   registerImage: {
     width: 260,
     height: 220,
-    marginTop: 20,
+    marginTop: 90,
     alignSelf: "center",
     marginBottom: 20,
   },
@@ -155,7 +155,7 @@ export default StyleSheet.create({
     marginHorizontal: 20,
     borderTopRightRadius: 0,
     borderRadius: 10,
-    width: "89%", // Ajusta el anch
+    width: "90%", // Ajusta el anch
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 5,

@@ -62,7 +62,7 @@ containerloading: {
 
   totalCount: {
     fontSize: 16, 
-    color: "rgb(39, 85, 18)",
+    color: "rgba(46, 49, 45, 1)",
     fontWeight: "bold",
   },
 
@@ -155,7 +155,7 @@ DatosTextChip: {
 
 
 DatosTextNacimiento: {
-   fontSize:16,
+   fontSize:13,
    width: '23%',
   color: "#7dac53", 
   textAlign: 'Left', 
@@ -164,7 +164,7 @@ DatosTextNacimiento: {
 },
 
 DatosTextPeso: {
-   fontSize:16,
+   fontSize:15,
    width: '23%',
   color: "#7dac53", 
   textAlign: 'Left', 
@@ -173,7 +173,7 @@ DatosTextPeso: {
 },
 
 DatosTextEstado: {
-   fontSize:16,
+   fontSize:15,
    width: '23%',
   color: "#7dac53", 
   textAlign: 'Left', 

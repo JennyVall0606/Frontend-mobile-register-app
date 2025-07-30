@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect,  useCallback, useRef } from "react";
 import {
   View,
   Text,
@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Layout from "../components/layout";
-import styles  from "../styles/ControlH_styles";
+import styles from "../styles/ControlH_styles";
 import axios from "axios";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useNavigation } from "@react-navigation/native";
@@ -45,26 +45,27 @@ export default function ControlH_Screen({ navigation, route }) {
   const [openTipoVacuna, setOpenTipoVacuna] = useState(false);
   const [openNombreVacuna, setOpenNombreVacuna] = useState(false);
   const [showPesoDatePicker, setShowPesoDatePicker] = useState(false);
+  const [fechaVacuna, setFechaVacuna] = useState(""); // Aquí declaras el estado y la función para actualizarlo
 
-  const scrollViewRef = useRef(null);
+  const [openUnidad, setOpenUnidad] = useState(false);
+  const [cantidad, setCantidad] = useState("");
+  const [unidad, setUnidad] = useState(""); // Para almacenar la unidad seleccionada
+const [showAllPesos, setShowAllPesos] = useState(false); // Estado para mostrar más/menos pesos
+  const [showAllVacunas, setShowAllVacunas] = useState(false); // Estado para mostrar más/menos vacunas
 
+  const [items, setItems] = useState([
+    { label: "ml", value: "ml" },
+    { label: "cc", value: "cc" },
+    { label: "mg", value: "mg" },
+    { label: "mg/kg", value: "mg_kg" },
+    { label: "ml/kg", value: "ml_kg" },
+  ]);
+
+   const scrollViewRef = useRef(null);
+  const sectionNuevoControlRef =useRef (null);
+ 
   
-  // Refs para las secciones a las que vamos a navegar
-  const sectionPesosRef = useRef(null);
-  const sectionVacunasRef = useRef(null);
-  const sectionNuevoControlRef = useRef(null);
 
-const scrollToSection = (sectionRef) => {
-    sectionRef.current?.measureLayout(
-      scrollViewRef.current, // Pasamos el scrollViewRef
-      (x, y, width, height) => {
-        scrollViewRef.current?.scrollTo({ y, animated: true }); // Desplazar hacia la posición 'y'
-      },
-      (error) => {
-        console.error("Error al medir la posición de la sección", error);
-      }
-    );
-  };
 
   const [showVacunaDatePicker, setShowVacunaDatePicker] = useState(false);
   const API_URL = "https://webmobileregister-production.up.railway.app";
@@ -88,11 +89,8 @@ const scrollToSection = (sectionRef) => {
     return d.toISOString().substring(0, 10);
   };
 
-  useEffect(() => {
-    if (route.params?.nuevaVacuna) {
-      setHistoricoVacunas((prev) => [route.params.nuevaVacuna, ...prev]);
-    }
-  }, [route.params]);
+
+
 
   useEffect(() => {
     if (chip) {
@@ -163,6 +161,17 @@ const scrollToSection = (sectionRef) => {
     }, [chip])
   );
 
+
+ const registrosPesajeVisibles = showAllPesos ? historicoPesaje : historicoPesaje.slice(0, 4);
+  const registrosVacunasVisibles = showAllVacunas ? historicoVacunas : historicoVacunas.slice(0, 4);
+
+  const mostrarBotonPesos = historicoPesaje.length > 4;
+const mostrarBotonVacunas = historicoVacunas.length > 4;
+
+  const toggleMostrarPesos = () => setShowAllPesos(!showAllPesos);
+  const toggleMostrarVacunas = () => setShowAllVacunas(!showAllVacunas);
+
+
   useEffect(() => {
     axios
       .get(`${API_URL}/vaccines/tipos-vacuna`)
@@ -224,8 +233,12 @@ const scrollToSection = (sectionRef) => {
 
     setSelectedVacuna(vac);
     setNuevaFechaVacuna(vac.fecha.slice(0, 10));
-    setNuevaDosisVacuna(vac.dosis);
+
     setNuevaObsVacuna(vac.obs || "");
+
+    const dosisParts = vac.dosis.split(" ");
+    setNuevaDosisVacuna(dosisParts[0]); // Set the dosis value separately
+    setUnidad(dosisParts[1] || "");
 
     const tipoItem = itemsTipoVacuna.find((i) => i.label === vac.tipo);
     if (tipoItem) setTipoVacuna(tipoItem.value);
@@ -237,11 +250,13 @@ const scrollToSection = (sectionRef) => {
   };
 
   const handleGuardarCambiosVacuna = async () => {
+    const dosisFinal = `${nuevaDosisVacuna} ${unidad}`;
+
     const datosParaApi = {
       fecha_vacuna: nuevaFechaVacuna.split("T")[0],
       tipo_vacunas_id_tipo_vacuna: tipoVacuna,
       nombre_vacunas_id_vacuna: nombreVacuna,
-      dosis_administrada: nuevaDosisVacuna,
+      dosis_administrada: dosisFinal,
       observaciones: nuevaObsVacuna,
     };
 
@@ -261,7 +276,7 @@ const scrollToSection = (sectionRef) => {
           fecha: datosParaApi.fecha_vacuna,
           tipo: tipoLabel || v.tipo,
           nombre: nombreLabel || v.nombre,
-          dosis: datosParaApi.dosis_administrada,
+          dosis: dosisFinal,
           observaciones: datosParaApi.observaciones, // <- El campo correcto
           obs: datosParaApi.observaciones,
         };
@@ -287,7 +302,7 @@ const scrollToSection = (sectionRef) => {
       setNuevaFechaVacuna(selectedDate);
     }
     setShowPesoDatePicker(false);
-    setShowVacunaDatePicker(false);  
+    setShowVacunaDatePicker(false);
   };
 
   if (loading) {
@@ -296,38 +311,23 @@ const scrollToSection = (sectionRef) => {
         <ActivityIndicator size="large" color="rgb(52, 112, 24)" />
         <Text style={styles.loadingText}>Cargando...</Text>
       </View>
-    )};
+    );
+  }
 
   return (
     <Layout>
-     <ScrollView
+      <ScrollView
         ref={scrollViewRef}
         style={{ flex: 1 }} // Hace que el ScrollView ocupe todo el espacio disponible
         contentContainerStyle={{ paddingBottom: 20 }} // Espacio extra al final del ScrollView
       >
+        <View style={styles.buttonsContainer}>
 
-<View style={styles.buttonsContainer}>
-  <TouchableOpacity onPress={() => scrollToSection(sectionPesosRef)} style={styles.button}>
-     <Text style={styles.link}>PESOS</Text>
-  <Text style={[styles.link, { marginTop: 5 }]}>REGISTRADOS</Text>
-  </TouchableOpacity>
-  <TouchableOpacity onPress={() => scrollToSection(sectionVacunasRef)} style={styles.button}>
-     <Text style={styles.link}>VACUNAS </Text>
-  <Text style={[styles.link, { marginTop: 5 }]}>REGISTRADAS</Text>
-  </TouchableOpacity>
-    <TouchableOpacity
-          style={styles.newControlButton}
-          onPress={() => navigation.navigate("FormScreen", { chip })}
-        >
-          <View ref={sectionNuevoControlRef} style={styles.section}>
-          <Text style={styles.newControlButtonText}>REALIZA UN </Text>
-          <Text style={styles.newControlButtonText}>NUEVO CONTROL</Text>
+
+        
+
+          
         </View>
-        </TouchableOpacity>
-</View>
-
-
-
 
         {animalInfo && animalInfo.foto && (
           <Image
@@ -350,11 +350,7 @@ const scrollToSection = (sectionRef) => {
 
         <View style={styles.card}>
           <View style={styles.tableRow}>
-         
-            <Image
-              source={require("../assets/Chip.png")} 
-              style={styles.logo}
-            />
+            <Image source={require("../assets/Chip.png")} style={styles.logo} />
             <Text style={styles.tableCellChip}>Chip:</Text>
             <Text style={styles.tableCellDatoChip}>
               {animalInfo?.chip_animal ||
@@ -362,10 +358,7 @@ const scrollToSection = (sectionRef) => {
             </Text>
           </View>
           <View style={styles.tableRow}>
-            <Image
-              source={require("../assets/Raza.png")} 
-              style={styles.logo}
-            />
+            <Image source={require("../assets/Raza.png")} style={styles.logo} />
             <Text style={styles.tableCellChip}>Raza:</Text>
             <Text style={styles.tableCellDatoChip}>
               {animalInfo?.raza || "No especificado"}
@@ -373,7 +366,7 @@ const scrollToSection = (sectionRef) => {
           </View>
           <View style={styles.tableRow}>
             <Image
-              source={require("../assets/FechaDeNacimieto.png")} 
+              source={require("../assets/FechaDeNacimieto.png")}
               style={styles.logo}
             />
             <Text style={styles.tableCellChip}>Fecha Nacimiento:</Text>
@@ -384,10 +377,7 @@ const scrollToSection = (sectionRef) => {
             </Text>
           </View>
           <View style={styles.tableRow}>
-            <Image
-              source={require("../assets/Peso.png")} 
-              style={styles.logo}
-            />
+            <Image source={require("../assets/Peso.png")} style={styles.logo} />
             <Text style={styles.tableCellChip}>Peso Nacimiento:</Text>
             <Text style={styles.tableCellDatoChip}>
               {animalInfo?.peso_nacimiento
@@ -397,7 +387,7 @@ const scrollToSection = (sectionRef) => {
           </View>
           <View style={styles.tableRow}>
             <Image
-              source={require("../assets/Id_Madre.png")} 
+              source={require("../assets/Id_Madre.png")}
               style={styles.logoId}
             />
             <Text style={styles.tableCellChip}>ID Madre:</Text>
@@ -405,7 +395,7 @@ const scrollToSection = (sectionRef) => {
           </View>
           <View style={styles.tableRow}>
             <Image
-              source={require("../assets/Id_Padre.png")} 
+              source={require("../assets/Id_Padre.png")}
               style={styles.logoId}
             />
             <Text style={styles.tableCellChip}>ID Padre:</Text>
@@ -413,7 +403,7 @@ const scrollToSection = (sectionRef) => {
           </View>
           <View style={styles.tableRow}>
             <Image
-              source={require("../assets/Enfermedades.png")} 
+              source={require("../assets/Enfermedades.png")}
               style={styles.logo}
             />
             <Text style={styles.tableCellChip}>Enfermedades:</Text>
@@ -425,7 +415,7 @@ const scrollToSection = (sectionRef) => {
           </View>
           <View style={styles.tableRow}>
             <Image
-              source={require("../assets/Observaciones.png")} 
+              source={require("../assets/Observaciones.png")}
               style={styles.logoObs}
             />
             <Text style={styles.tableCellChip}>Observaciones:</Text>
@@ -435,7 +425,7 @@ const scrollToSection = (sectionRef) => {
           </View>
           <View style={styles.tableRow}>
             <Image
-              source={require("../assets/Estado.png")} 
+              source={require("../assets/Estado.png")}
               style={styles.logo}
             />
             <Text style={styles.tableCellChip}>Estado:</Text>
@@ -445,16 +435,15 @@ const scrollToSection = (sectionRef) => {
           <TouchableOpacity
             style={styles.editButton}
             onPress={() => {
-              console.log("Pasando razaId:", animalInfo.raza); 
+              console.log("Pasando razaId:", animalInfo.raza);
               navigation.navigate("RegisterCattle", {
                 chip: animalInfo.chip_animal,
-                razaId: animalInfo.raza, 
+                razaId: animalInfo.raza,
                 isEditing: true,
               });
             }}
           >
             <View style={styles.containerEditChip}>
-    
               <Image
                 source={require("../assets/Editar_Chip.png")}
                 style={styles.logoEditarChip}
@@ -464,35 +453,31 @@ const scrollToSection = (sectionRef) => {
           </TouchableOpacity>
         </View>
 
+        {/* TABLA DE PESO */}
 
-{/* TABLA DE PESO */}
-
-
-        <View style={styles.containerPesos}>
-  
+        <View style={styles.containerPesos} >
           <Image
-            source={require("../assets/Imagen_Pesos_Registrados.png")} 
+            source={require("../assets/Imagen_Pesos_Registrados.png")}
             style={styles.imagePesoVacuna}
           />
-  <View ref={sectionPesosRef} style={styles.section}>
-          <Text style={styles.subtitle1}>PESOS</Text>
-          <Text style={styles.subtitle2}>REGISTRADOS</Text>
-        </View>
+    <View style={styles.section}>
+            <Text style={styles.subtitle1}>PESOS</Text>
+            <Text style={styles.subtitle2}>REGISTRADOS</Text>
+          </View>
         </View>
 
-        {historicoPesaje.length > 0 ? (
+        {registrosPesajeVisibles.length > 0 ? (
           <View style={styles.tablePesoVacuna}>
             <View style={styles.tableHeaderPesoVacuna}>
-              
               <Text style={styles.tableHeaderTextPeso}>Fecha</Text>
               <Text style={styles.tableHeaderTextPeso}>Peso</Text>
-             <Image 
-  source={require('../assets/Peso.png')} 
-  style={styles.editButtonImagePeso1}
-/>
+              <Image
+                source={require("../assets/Peso.png")}
+                style={styles.editButtonImagePeso1}
+              />
             </View>
 
-            {historicoPesaje.map((peso, index) => (
+            {registrosPesajeVisibles.map((peso, index) => (
               <View key={index} style={styles.tableRowPeso}>
                 <Text style={styles.tableCellPeso}>
                   {peso.fecha ? peso.fecha.substring(0, 10) : ""}
@@ -502,20 +487,26 @@ const scrollToSection = (sectionRef) => {
                   onPress={() => handleEditPeso(peso.id)}
                   style={styles.editCell}
                 >
-                 <Image 
-  source={require('../assets/Editar_Peso.png')} 
-  style={styles.editButtonImagePeso2}
-/>
+                  <Image
+                    source={require("../assets/Editar_Peso.png")}
+                    style={styles.editButtonImagePeso2}
+                  />
                 </TouchableOpacity>
               </View>
             ))}
           </View>
         ) : (
-          <Text style={styles.noRecordsText}>No se encontraron registros de peso.</Text>
+          <Text style={styles.noRecordsText}>
+            No se encontraron registros de peso.
+          </Text>
         )}
+         {mostrarBotonPesos && (
+  <TouchableOpacity onPress={toggleMostrarPesos} style={styles.button}>
+    <Text style={styles.link}>{showAllPesos ? "-  Ver menos" : "+  Ver más"}</Text>
+  </TouchableOpacity>
+)}
 
-{/* EDITAR PESO */}
-
+        {/* EDITAR PESO */}
 
         <Modal visible={modalVisible} transparent animationType="slide">
           <View style={styles.modalContainer}>
@@ -566,8 +557,7 @@ const scrollToSection = (sectionRef) => {
                 maximumDate={new Date()} // Deshabilita fechas futuras
               />
               <View style={styles.buttonsContainer}>
-
-                 {/* Botón Cancelar */}
+                {/* Botón Cancelar */}
                 <TouchableOpacity
                   style={styles.buttonCancelarPeso}
                   onPress={() => setModalVisible(false)}
@@ -578,7 +568,7 @@ const scrollToSection = (sectionRef) => {
                   />
                   <Text style={styles.buttonText}>CANCELAR</Text>
                 </TouchableOpacity>
-                
+
                 {/* Botón Guardar Cambios */}
                 <TouchableOpacity
                   style={styles.buttonGuardarPeso}
@@ -590,59 +580,53 @@ const scrollToSection = (sectionRef) => {
                   />
                   <Text style={styles.buttonText}>GUARDAR</Text>
                 </TouchableOpacity>
-
-               
-
               </View>
             </View>
           </View>
         </Modal>
 
+        {/* TABLA DE VACUNAS */}
 
-{/* TABLA DE VACUNAS */}        
-
-        <View style={styles.container}>
+   <View  style={styles.container} >
           {/* Imagen encima del texto */}
           <Image
             source={require("../assets/Imagen_Vacunas_Registradas.png")} // Reemplaza con la ruta de tu imagen
             style={styles.imagePesoVacuna}
           />
-         <View ref={sectionVacunasRef} style={styles.section}>
-          <Text style={styles.subtitle1}>VACUNAS</Text>
-          <Text style={styles.subtitle2}>REGISTRADAS</Text>
+ <View style={styles.section} >
+            <Text style={styles.subtitle1}>VACUNAS</Text>
+            <Text style={styles.subtitle2}>REGISTRADAS</Text>
+          </View>
         </View>
-        </View>
 
-
-
-
-
-
-        {historicoVacunas.length > 0 ? (
+        {registrosVacunasVisibles.length > 0 ? (
           <View style={styles.tablePesoVacuna}>
             <View style={styles.tableHeaderPesoVacuna}>
-
-
               <Text style={styles.tableHeaderTextVacuna}>Fecha</Text>
               <Text style={styles.tableHeaderTextVacuna}>Nombre</Text>
               <Text style={styles.tableHeaderTextVacuna}>Tipo</Text>
               <Text style={styles.tableHeaderTextVacuna}>Dosis</Text>
               <Text style={styles.tableHeaderTextVacuna}>Obs</Text>
 
-             <Image 
-  source={require('../assets/Vacuna.png')} // Ajusta la ruta de tu imagen de lápiz
-  style={styles.editButtonImageVacuna1}
-/>
-
+              <Image
+                source={require("../assets/Vacuna.png")} // Ajusta la ruta de tu imagen de lápiz
+                style={styles.editButtonImageVacuna1}
+              />
             </View>
-            {historicoVacunas.map((vacuna, index) => (
+            {registrosVacunasVisibles.map((vacuna, index) => (
               <View key={index} style={styles.tableRowVacuna}>
                 <Text style={styles.tableCellFechaVacuna}>
                   {vacuna.fecha ? vacuna.fecha.substring(0, 10) : ""}
                 </Text>
-                <Text style={styles.tableCellDatosVacunaNombre}>{vacuna.nombre}</Text>
-                <Text style={styles.tableCellDatosVacunaTipo}>{vacuna.tipo}</Text>
-                <Text style={styles.tableCellDatosVacunaDosis}>{vacuna.dosis}</Text>
+                <Text style={styles.tableCellDatosVacunaNombre}>
+                  {vacuna.nombre}
+                </Text>
+                <Text style={styles.tableCellDatosVacunaTipo}>
+                  {vacuna.tipo}
+                </Text>
+                <Text style={styles.tableCellDatosVacunaDosis}>
+                  {vacuna.dosis}
+                </Text>
                 <Text style={styles.tableCellDatosVacunaObs}>
                   {vacuna.obs || "No disponible"}
                 </Text>
@@ -650,36 +634,48 @@ const scrollToSection = (sectionRef) => {
                   onPress={() => handleEditVacuna(vacuna.id)}
                   style={styles.editCellVacuna}
                 >
-                               <Image 
-  source={require('../assets/Editar_Vacunas.png')} // Ajusta la ruta de tu imagen de lápiz
-  style={styles.editButtonImageVacuna2}
-/>
+                  <Image
+                    source={require("../assets/Editar_Vacunas.png")} // Ajusta la ruta de tu imagen de lápiz
+                    style={styles.editButtonImageVacuna2}
+                  />
                 </TouchableOpacity>
               </View>
             ))}
           </View>
-
-
-
-
-
-
-
         ) : (
-           <Text style={styles.noRecordsText}>No se encontraron registros de vacunas.</Text>
+          <Text style={styles.noRecordsText}>
+            No se encontraron registros de vacunas.
+          </Text>
         )}
 
-{/* EDITAR VACUNAS */}
+      {mostrarBotonVacunas && (
+  <TouchableOpacity onPress={toggleMostrarVacunas} style={styles.button}>
+    <Text style={styles.link}>{showAllVacunas ? "-  Ver menos" : "+  Ver más"}</Text>
+  </TouchableOpacity>
+)}
+
+
+          <TouchableOpacity
+            style={styles.newControlButton}
+            onPress={() => navigation.navigate("FormScreen", { chip })}
+          >
+            <View ref={sectionNuevoControlRef} style={styles.section}>
+              <Text style={styles.newControlButtonText}>REALIZA UN </Text>
+              <Text style={styles.newControlButtonText}>NUEVO CONTROL</Text>
+            </View>
+          </TouchableOpacity>
+
+        {/* EDITAR VACUNAS */}
 
         <Modal visible={modalVacunaVisible} transparent animationType="slide">
           <View style={styles.modalContainerVacuna}>
             <View style={styles.modalContentVacuna}>
+              {/* Imagen del encabezado */}
               <Image
                 source={require("../assets/Editar_Vacunas.png")}
                 style={styles.modalImageVacuna}
               />
-
-              <Text style={styles.modalTitle1}>EDITAR </Text>
+              <Text style={styles.modalTitle1}>EDITAR</Text>
               <Text style={styles.modalTitle2}>VACUNA</Text>
 
               <Pressable
@@ -699,18 +695,7 @@ const scrollToSection = (sectionRef) => {
                 />
               </Pressable>
 
-              <DateTimePickerModal
-                isVisible={showVacunaDatePicker}
-                mode="date"
-                date={
-                  nuevaFechaVacuna ? new Date(nuevaFechaVacuna) : new Date()
-                }
-                onConfirm={(date) => handleFechaConfirm(date, "vacuna")}
-                themeVariant="light"
-                onCancel={() => setShowVacunaDatePicker(false)}
-                maximumDate={new Date()} // Deshabilita fechas futuras
-              />
-
+              {/* Selección de tipo de vacuna */}
               <View style={styles.datePickerWrapper}>
                 <Image
                   source={require("../assets/CC.png")}
@@ -728,19 +713,19 @@ const scrollToSection = (sectionRef) => {
                     openTipoVacuna && styles.dropdownBelowVacuna,
                   ]}
                   listMode="SCROLLVIEW"
-                  style={styles.dropdownStyle} // Estilo personalizado para eliminar la línea negra
-                  dropDownStyle={styles.dropDownStyle} // Estilo para la lista desplegable
-                  arrowIconStyle={styles.arrowIconStyle} // Estilo para la flecha hacia abajo
-                  textStyle={styles.textStyle} // Estilo para el tamaño de la letra
+                  style={styles.dropdownStyle}
+                  dropDownStyle={styles.dropDownStyle}
+                  arrowIconStyle={styles.arrowIconStyle}
+                  textStyle={styles.textStyle}
                 />
               </View>
 
+              {/* Selección de nombre de vacuna */}
               <View style={styles.datePickerWrapper}>
                 <Image
                   source={require("../assets/Nombre.png")}
                   style={styles.datePickerLogo}
                 />
-
                 <DropDownPicker
                   open={openNombreVacuna}
                   value={nombreVacuna}
@@ -754,29 +739,61 @@ const scrollToSection = (sectionRef) => {
                     { zIndex: openNombreVacuna ? 10 : 1 },
                   ]}
                   listMode="SCROLLVIEW"
-                  style={styles.dropdownStyle} // Estilo personalizado para eliminar la línea negra
-                  dropDownStyle={styles.dropdownStyle} // Estilo para la lista desplegable
-                  arrowIconStyle={styles.arrowIconStyle} // Estilo para la flecha hacia abajo
-                  textStyle={styles.textStyle} // Estilo para el tamaño de la letra
+                  style={styles.dropdownStyle}
+                  dropDownStyle={styles.dropdownStyle}
+                  arrowIconStyle={styles.arrowIconStyle}
+                  textStyle={styles.textStyle}
                 />
               </View>
 
-              <View style={styles.inputContainerVacuna}>
-                <Image
-                  source={require("../assets/Vacuna.png")} // Ajusta la ruta del logo
-                  style={styles.datePickerLogo}
-                />
-                <TextInput
-                  value={nuevaDosisVacuna}
-                  onChangeText={setNuevaDosisVacuna}
-                  placeholder="Dosis"
-                  style={styles.inputVacuna}
+              {/* Dosis */}
+              <View style={styles.row}>
+                {/* Dosis */}
+                <View style={[styles.inputDosisContainer]}>
+                  <Image
+                    source={require("../assets/Vacuna.png")}
+                    style={styles.dropdownLogo}
+                  />
+                  <TextInput
+                    style={[styles.inputDosis]}
+                    value={nuevaDosisVacuna} // Mostramos la dosis aquí
+                    onChangeText={setNuevaDosisVacuna}
+                    placeholder="Dosis*"
+                    placeholderTextColor="#000"
+                    keyboardType="numeric"
+                  />
+                </View>
+
+                {/* Unidad */}
+                <DropDownPicker
+                  open={openUnidad}
+                  value={unidad} // Mostramos la unidad aquí
+                  items={items} // Las opciones disponibles para la unidad
+                  setOpen={setOpenUnidad}
+                  setValue={setUnidad}
+                  setItems={setItems}
+                  placeholder="Unidad*"
+                  containerStyle={[
+                    styles.dropdownContainerUnidad,
+                    openUnidad && styles.dropdownBelowUnidad,
+                    { zIndex: 9999 },
+                  ]}
+                  listMode="SCROLLVIEW"
+                  arrowIconStyle={styles.arrowIconStyle}
+                  onChangeValue={() => setOpenUnidad(false)}
+                  dropDownStyle={{
+                    borderWidth: 0,
+                    padding: 0,
+                  }}
+                  style={{
+                    borderWidth: 0,
+                  }}
                 />
               </View>
-
+              {/* Campo Observaciones */}
               <View style={styles.inputContainerVacuna}>
                 <Image
-                  source={require("../assets/Obs.png")} // Ajusta la ruta del logo
+                  source={require("../assets/Obs.png")}
                   style={styles.datePickerLogo}
                 />
                 <TextInput
@@ -787,15 +804,15 @@ const scrollToSection = (sectionRef) => {
                 />
               </View>
 
+              {/* Botones para cancelar y guardar */}
               <View style={styles.buttonsContainer}>
-
-    {/* Botón Cancelar */}
+                {/* Botón Cancelar */}
                 <TouchableOpacity
                   style={styles.buttonCancelarVacuna}
                   onPress={() => setModalVacunaVisible(false)}
                 >
                   <Image
-                    source={require("../assets/FechaDeNacimieto.png")} // Reemplaza con la ruta de tu logo
+                    source={require("../assets/FechaDeNacimieto.png")}
                     style={styles.buttonLogo}
                   />
                   <Text style={styles.buttonText}>CANCELAR</Text>
@@ -807,21 +824,15 @@ const scrollToSection = (sectionRef) => {
                   onPress={handleGuardarCambiosVacuna}
                 >
                   <Image
-                    source={require("../assets/FechaDeNacimieto.png")} // Reemplaza con la ruta de tu logo
+                    source={require("../assets/FechaDeNacimieto.png")}
                     style={styles.buttonLogo}
                   />
                   <Text style={styles.buttonText}>GUARDAR</Text>
                 </TouchableOpacity>
-
-            
               </View>
             </View>
           </View>
         </Modal>
-
-  
-       
-       
       </ScrollView>
     </Layout>
   );

@@ -189,9 +189,6 @@ export default function Layout({ children }) {
               <TouchableOpacity onPress={() => handleNavigate("RegisterCattle")}>
                 <Text style={globalStyles.dropdownItem}>Registro</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => handleNavigate("CattleScreen")}>
-                <Text style={globalStyles.dropdownItem}>Ver ganado</Text>
-              </TouchableOpacity>
             </Animated.View>
           )}
 

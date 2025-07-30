@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Frontend-mobile-register-app",
+    "name": "AgroGestor",
     "slug": "frontend-mobile-register-app",
-    "version": "1.0.0",
+    "version": "1.2.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -15,7 +15,8 @@
     "ios": {
       "bundleIdentifier": "com.complemento360.agrogestor",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSPhotoLibraryUsageDescription": "Este aplicativo necesita acceder a tus fotos para poder registrarlas."
       }
     },
     "android": {
@@ -24,7 +25,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.complemento360.agrogestor",
-      "versionCode": 1
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/favicon.png"
