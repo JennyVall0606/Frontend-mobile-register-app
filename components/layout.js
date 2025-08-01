@@ -77,59 +77,11 @@ const handleGoBack = () => {
 
   return (
     <ImageBackground
-      source={require("../assets/acuarela.Home.png")}
+      source={require("../assets/lupa.png")}
       style={{ flex: 1, position: "absolute", width: "100%", height: "100%" }}
     >
       <View style={{ flex: 1 }}>
-        {/* Header */}
-        <View style={[globalStyles.topBar, globalStyles.topBarContainer]}>
-          <View style={globalStyles.topBarGreen}>
-            <TouchableOpacity onPress={toggleMenu}>
-              <Image
-                source={require("../assets/Menu.png")}
-                style={globalStyles.icon}
-              />
-            </TouchableOpacity>
 
-            <TouchableOpacity onPress={toggleUserMenu}>
-              <Image
-                source={require("../assets/user.png")}
-                style={globalStyles.iconUser}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* Menú lateral */}
-        {showMenu && (
-          <Animated.View
-            style={[
-              globalStyles.dropdownMenuLeft,
-              { transform: [{ translateX: menuAnim }] },
-              { zIndex: 1 }, // Asegura que el menú esté encima
-            ]}
-          >
-            <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-              <Text style={globalStyles.dropdownItem}>Inicio</Text>
-            </TouchableOpacity>
-           
-          </Animated.View>
-        )}
-
-        {/* Menú de usuario */}
-        {showUserMenu && (
-          <Animated.View
-            style={[
-              globalStyles.dropdownMenuLeftuser,
-              { transform: [{ translateX: userMenuAnim }] },
-              { zIndex: 1 }, // Asegura que el menú esté encima
-            ]}
-          >
-            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-              <Text style={globalStyles.dropdownItem}>Cerrar sesión</Text>
-            </TouchableOpacity>
-          </Animated.View>
-        )}
 
         {/* Contenido principal */}
         <ScrollView
@@ -141,32 +93,7 @@ const handleGoBack = () => {
         </ScrollView>
       </View>
 
-      {/* Barra inferior */}
-      <View style={globalStyles.greenBar}>
-        <View style={globalStyles.bottomImageContainer}>
-          {/* Imagen Inicio */}
-          <TouchableOpacity onPress={navigateToHome}>
-            <View style={globalStyles.imageContainer}>
-              <Image
-                source={require("../assets/Inicio.png")}
-                style={globalStyles.imageStyle}
-              />
-              <Text style={globalStyles.imageText}>Inicio</Text>
-            </View>
-          </TouchableOpacity>
-
-          {/* Imagen Regresar */}
-          <TouchableOpacity onPress={handleGoBack}>
-            <View style={globalStyles.imageContainer}>
-              <Image
-                source={require("../assets/Regresar.png")}
-                style={globalStyles.imageStyle}
-              />
-              <Text style={globalStyles.imageText}>Regresar</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-      </View>
+    
     </ImageBackground>
   );
 }

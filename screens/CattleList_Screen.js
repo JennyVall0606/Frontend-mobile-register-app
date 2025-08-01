@@ -5,23 +5,80 @@ import {
   ScrollView,
   TouchableOpacity,
    scrollViewRef,
+       Animated,
+        ImageBackground,
   ActivityIndicator,
   Image,
   Dimensions,
   Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import Layout from "../components/layout";
+
 import { styles } from "../styles/CattleList_Styles";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function CattleScreen({ navigation }) {
+export default function CattleScreen({ navigation, route }) {
   const [search, setSearch] = useState("");
   const [ganado, setGanado] = useState([]);
   const [loading, setLoading] = useState(true);
   const { width, height } = Dimensions.get("window");
   const API_URL = "https://webmobileregister-production.up.railway.app";
+
+  //============================================================================
+const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
+  const userMenuAnim = useState(new Animated.Value(-250))[0]; // Para el menú de usuario
+
+  const [showMenu, setShowMenu] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+
+  const toggleMenu = () => {
+    if (showMenu) {
+      Animated.spring(menuAnim, {
+        toValue: -250,
+        bounciness: 10,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      Animated.spring(menuAnim, {
+        toValue: 0,
+        bounciness: 10,
+        useNativeDriver: true,
+      }).start();
+    }
+    setShowMenu(!showMenu);
+    setShowUserMenu(false); // Cerrar el menú de usuario si se abre el otro
+  };
+
+    // Función para abrir el menú de usuario
+    const toggleUserMenu = () => {
+      if (showUserMenu) {
+        Animated.spring(userMenuAnim, {
+          toValue: -250,
+          bounciness: 10,
+          useNativeDriver: true,
+        }).start();
+      } else {
+        Animated.spring(userMenuAnim, {
+          toValue: 0,
+          bounciness: 10,
+          useNativeDriver: true,
+        }).start();
+      }
+      setShowUserMenu(!showUserMenu);
+      setShowMenu(false); 
+    };
+
+   const navigateToHome = () => {
+    navigation.navigate("Home");
+  };
+ 
+ const handleGoBack = () => {
+  // Navega directamente a la pantalla CattleListScreen
+  navigation.navigate("Home");
+};
+  //========================================================================
+
 
   useEffect(() => {
     const fetchAnimals = async () => {
@@ -79,7 +136,66 @@ export default function CattleScreen({ navigation }) {
   );
 }
   return (
-    <Layout>
+<ImageBackground
+  source={require('../assets/acuarela.Home.png')}  // Correcta si 'CattleList_Screen.js' está en 'screens'
+  style={{ flex: 1, position: "absolute", width: "100%", height: "100%" }}
+>
+
+
+   
+         <View >
+           {/* Header */}
+           <View style={[styles.topBar, styles.topBarContainer]}>
+             <View style={styles.topBarGreen}>
+               <TouchableOpacity onPress={toggleMenu}>
+                 <Image
+                   source={require("../assets/Menu.png")}
+                   style={styles.icon}
+                 />
+               </TouchableOpacity>
+   
+               <TouchableOpacity onPress={toggleUserMenu}>
+                 <Image
+                   source={require("../assets/user.png")}
+                   style={styles.iconUser}
+                 />
+               </TouchableOpacity>
+             </View>
+           </View>
+   
+           {/* Menú lateral */}
+           {showMenu && (
+             <Animated.View
+               style={[
+                 styles.dropdownMenuLeft,
+                 { transform: [{ translateX: menuAnim }] },
+                 { zIndex: 1 }, // Asegura que el menú esté encima
+               ]}
+             >
+               <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+                 <Text style={styles.dropdownItem}>Inicio</Text>
+               </TouchableOpacity>
+              
+             </Animated.View>
+           )}
+   
+           {/* Menú de usuario */}
+           {showUserMenu && (
+             <Animated.View
+               style={[
+                 styles.dropdownMenuLeftuser,
+                 { transform: [{ translateX: userMenuAnim }] },
+                 { zIndex: 1 }, // Asegura que el menú esté encima
+               ]}
+             >
+               <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+                 <Text style={styles.dropdownItem}>Cerrar sesión</Text>
+               </TouchableOpacity>
+             </Animated.View>
+           )}
+   
+         </View>
+
      <ScrollView
              ref={scrollViewRef}
              style={{ flex: 1 }} // Hace que el ScrollView ocupe todo el espacio disponible
@@ -181,6 +297,35 @@ export default function CattleScreen({ navigation }) {
           </View>
         ))}
       </ScrollView>
-    </Layout>
+    
+            {/* Barra inferior */}
+          <View style={styles.greenBar}>
+            <View style={styles.bottomImageContainer}>
+              {/* Imagen Inicio */}
+              <TouchableOpacity onPress={navigateToHome}>
+                <View style={styles.imageContainer}>
+                  <Image
+                    source={require("../assets/Inicio.png")}
+                    style={styles.imageStyleG}
+                  />
+                  <Text style={styles.imageText}>Inicio</Text>
+                </View>
+              </TouchableOpacity>
+    
+              {/* Imagen Regresar */}
+              <TouchableOpacity onPress={handleGoBack}>
+                <View style={styles.imageContainer}>
+                  <Image
+                    source={require("../assets/Regresar.png")}
+                    style={styles.imageStyleG}
+                  />
+                  <Text style={styles.imageText}>Regresar</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View> 
+    
+    
+        </ImageBackground>
   );
 }

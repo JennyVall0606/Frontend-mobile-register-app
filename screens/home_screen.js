@@ -14,11 +14,11 @@ export default function HomeScreen() {
               style={[styles.container, { width, height }]} // Ajustamos el ancho y alto al de la pantalla
             >
         
-        <Image
-          source={require('../assets/Logo_Positivo.png')}
-          style={styles.logo}
-          resizeMode="contain"
-        />
+<Image
+  source={require('../assets/Logo_Positivo.png')}  // Ajusta la ruta según corresponda
+  style={styles.logo}
+  resizeMode="contain"
+/>
 
        <View style={styles.buttonRow}>
   {/* Botón "Registrar Ganado" con imagen */}
