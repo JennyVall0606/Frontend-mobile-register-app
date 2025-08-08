@@ -484,7 +484,7 @@ position: "absolute",
   dropdownEnfermedad: {
   flexDirection: "row",
     alignItems: "center",
-    borderWidth: 1, // Borde normal
+    borderWidth: 1, 
     borderColor: "rgb(255, 255, 255)",
     padding: 12,
     paddingHorizontal: 15,
@@ -494,7 +494,7 @@ position: "absolute",
     marginHorizontal: 20,
     borderTopRightRadius: 0,
     borderRadius: 10,
-    width: "89%", // Ajusta el anch
+    width: "89%", 
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 5,
@@ -508,7 +508,7 @@ position: "absolute",
 
 
   inputWrapper: {
-    flexDirection: "row", // Alineación horizontal
+    flexDirection: "row", 
     alignItems: "flex-start", // Alineación vertical hacia la parte superior
     borderWidth: 1,
     borderColor: "rgb(255, 255, 255)",

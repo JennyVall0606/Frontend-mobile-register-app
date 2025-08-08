@@ -80,39 +80,34 @@ const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
   //========================================================================
 
 
-  useEffect(() => {
-    const fetchAnimals = async () => {
-      try {
-        const token = await AsyncStorage.getItem("token");
+  const fetchAnimals = async (page = 1) => {
+  try {
+    const token = await AsyncStorage.getItem("token");
 
-        if (!token) {
-          Alert.alert(
-            "❌ Error",
-            "Token no encontrado. Inicia sesión nuevamente."
-          );
-          return;
-        }
+    if (!token) {
+      Alert.alert("❌ Error", "Token no encontrado. Inicia sesión nuevamente.");
+      return;
+    }
 
-        const response = await axios.get(`${API_URL}/api/mis-animales`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+    const response = await axios.get(`${API_URL}/api/mis-animales?page=${page}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-        setGanado(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error al obtener el ganado:", error);
-        setLoading(false);
-        Alert.alert(
-          "❌ Error",
-          "Hubo un problema al obtener los datos del ganado."
-        );
-      }
-    };
+    setGanado((prevGanado) => [...prevGanado, ...response.data]);  // Agregar nuevos datos al estado existente
+    setLoading(false);
+  } catch (error) {
+    console.error("Error al obtener el ganado:", error);
+    setLoading(false);
+    Alert.alert("❌ Error", "Hubo un problema al obtener los datos del ganado.");
+  }
+};
 
-    fetchAnimals();
-  }, []);
+useEffect(() => {
+  fetchAnimals();  // Llama inicialmente con la primera página
+}, []);
+
 
   const filteredGanado = ganado.filter(
     (animal) =>
@@ -239,6 +234,7 @@ const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
                     : "https://via.placeholder.com/100",
                 }}
                 style={styles.cardImage}
+                resizeMode="contain"
               />
               <View style={styles.column}>
   {/* Chip */}

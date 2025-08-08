@@ -243,7 +243,7 @@ link: {
 
   image: {
     width: "40%",
-    height: 140,
+    height: 130,
     resizeMode: "c//over",
     borderRadius: 10,
     marginBottom: 30,
@@ -512,7 +512,7 @@ link: {
 
   // Estilo para la celda de nombre
   tableCellDatosVacunaNombre: {
-    fontSize: 11, // Tamaño del texto
+    fontSize: 10, // Tamaño del texto
     color: "#7dac53", // Color del texto
     textAlign: "center", // Alinea el texto a la izquierda
     flex: 1, // Hace que ocupe el mismo espacio que las otras celdas
@@ -521,11 +521,11 @@ link: {
 
   // Estilo para la celda de tipo
   tableCellDatosVacunaTipo: {
-    fontSize: 11, // Tamaño del texto
+    fontSize: 10, // Tamaño del texto
     color: "#7dac53", // Color del texto
     textAlign: "center", // Alinea el texto a la izquierda
     flex: 1, // Hace que ocupe el mismo espacio que las otras celdas
-    paddingRight: 10,
+    paddingRight: 6,
   },
 
   // Estilo para la celda de dosis
@@ -654,7 +654,7 @@ link: {
   buttonsContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop:65,
+    marginTop:-5,
      marginRight: 20,
       marginLeft: 20,
       
@@ -696,7 +696,7 @@ link: {
 
 
    row: {
-    marginBottom: 10,
+    marginBottom: 5,
     position: "relative",
     zIndex: 10,
     alignItems: "center",
@@ -738,6 +738,7 @@ link: {
     height: 35,
     marginRight: 12,
     marginLeft: 8,
+    
   },
 
 
@@ -746,7 +747,7 @@ link: {
     alignItems: "center",
     borderWidth: 1,
     borderRadius: 5,
-     
+     zIndex: 10001,
     padding: 3,
     borderTopRightRadius: 0,
     borderRadius: 10,
@@ -762,7 +763,7 @@ link: {
   
   dropdownBelowUnidad: {
     marginTop: 4, 
-    zIndex: 9999, 
+    zIndex: 10001, 
   },
 
 
@@ -802,7 +803,7 @@ link: {
     height: 72,
     marginBottom: 15,
     alignSelf: "center",
-    marginTop: 20,
+    marginTop:30,
   },
   modalContainerVacuna: {
     flex: 1,
@@ -810,6 +811,7 @@ link: {
     backgroundColor: "rgba(7, 7, 7, 0.77)",
     alignItems: "center",
   },
+  
 
   datePickerLogo: {
     width: 35,
@@ -832,7 +834,8 @@ link: {
     padding: 8,
     borderTopRightRadius: 0,
     borderRadius: 10,
-    marginBottom: 20,
+     marginTop: 25,
+    marginBottom: 38,
     width: "90%",
     alignSelf: "center",
   },
@@ -847,39 +850,37 @@ link: {
     height: 60,
     borderTopRightRadius: 0,
     borderRadius: 10,
-    marginBottom: 20,
+    marginBottom: 22,
     width: "90%",
     alignSelf: "center",
     
   },
 
   dropdownStyle: {
-    marginTop: -10,
+    marginTop: -9,
     borderWidth: 1,
-    borderColor: "rgb(250, 250, 250)",
+    borderColor: "rgba(255, 255, 255, 1)",
     borderRadius: 10,
     padding: 8,
     height: 50,
     width: "99%",
-    marginBottom: 10,
+    marginBottom: 20,
   },
 
   dropdownContainerVacuna: {
     flex: 1,
     height: 30,
+    
     borderWidth: 0,
     marginLeft: -10,
   },
 
   dropdownBelowVacuna: {
-    marginTop: 20,
+    marginTop: 10,
     borderWidth: 0,
   },
 
-  dropDownStyle: {
-    borderWidth: 0,
-    backgroundColor: "#7dac53",
-  },
+
 
   arrowIconStyle: {
     tintColor: "#7dac53",

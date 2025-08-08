@@ -1,4 +1,4 @@
-import React, { useState, useEffect,  useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   View,
   Text,
@@ -25,6 +25,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useFocusEffect } from "@react-navigation/native";
 
 export default function ControlH_Screen({ navigation, route }) {
+  const API_URL = "https://webmobileregister-production.up.railway.app";
   const { chip } = route.params || {};
   const { width, height } = Dimensions.get("window");
   const [animalInfo, setAnimalInfo] = useState(null);
@@ -49,65 +50,64 @@ export default function ControlH_Screen({ navigation, route }) {
   const [showPesoDatePicker, setShowPesoDatePicker] = useState(false);
   const [fechaVacuna, setFechaVacuna] = useState(""); // Aquí declaras el estado y la función para actualizarlo
 
-    //============================================================================
+  //============================================================================
   const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
-    const userMenuAnim = useState(new Animated.Value(-250))[0]; // Para el menú de usuario
-  
-    const [showMenu, setShowMenu] = useState(false);
-    const [showUserMenu, setShowUserMenu] = useState(false);
-  
-    const toggleMenu = () => {
-      if (showMenu) {
-        Animated.spring(menuAnim, {
-          toValue: -250,
-          bounciness: 10,
-          useNativeDriver: true,
-        }).start();
-      } else {
-        Animated.spring(menuAnim, {
-          toValue: 0,
-          bounciness: 10,
-          useNativeDriver: true,
-        }).start();
-      }
-      setShowMenu(!showMenu);
-      setShowUserMenu(false); // Cerrar el menú de usuario si se abre el otro
-    };
-  
-      // Función para abrir el menú de usuario
-      const toggleUserMenu = () => {
-        if (showUserMenu) {
-          Animated.spring(userMenuAnim, {
-            toValue: -250,
-            bounciness: 10,
-            useNativeDriver: true,
-          }).start();
-        } else {
-          Animated.spring(userMenuAnim, {
-            toValue: 0,
-            bounciness: 10,
-            useNativeDriver: true,
-          }).start();
-        }
-        setShowUserMenu(!showUserMenu);
-        setShowMenu(false); 
-      };
-  
-     const navigateToHome = () => {
-      navigation.navigate("Home");
-    };
-   
- const handleGoBack = () => {
-  // Navega directamente a la pantalla CattleListScreen
-  navigation.navigate("CattleScreen");
-};
-    //========================================================================
-  
+  const userMenuAnim = useState(new Animated.Value(-250))[0]; // Para el menú de usuario
+
+  const [showMenu, setShowMenu] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+
+  const toggleMenu = () => {
+    if (showMenu) {
+      Animated.spring(menuAnim, {
+        toValue: -250,
+        bounciness: 10,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      Animated.spring(menuAnim, {
+        toValue: 0,
+        bounciness: 10,
+        useNativeDriver: true,
+      }).start();
+    }
+    setShowMenu(!showMenu);
+    setShowUserMenu(false); // Cerrar el menú de usuario si se abre el otro
+  };
+
+  // Función para abrir el menú de usuario
+  const toggleUserMenu = () => {
+    if (showUserMenu) {
+      Animated.spring(userMenuAnim, {
+        toValue: -250,
+        bounciness: 10,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      Animated.spring(userMenuAnim, {
+        toValue: 0,
+        bounciness: 10,
+        useNativeDriver: true,
+      }).start();
+    }
+    setShowUserMenu(!showUserMenu);
+    setShowMenu(false);
+  };
+
+  const navigateToHome = () => {
+    navigation.navigate("Home");
+  };
+
+  const handleGoBack = () => {
+    // Navega directamente a la pantalla CattleListScreen
+    navigation.navigate("CattleScreen");
+  };
+  //========================================================================
 
   const [openUnidad, setOpenUnidad] = useState(false);
   const [cantidad, setCantidad] = useState("");
   const [unidad, setUnidad] = useState(""); // Para almacenar la unidad seleccionada
-const [showAllPesos, setShowAllPesos] = useState(false); // Estado para mostrar más/menos pesos
+  const [showAllPesos, setShowAllPesos] = useState(false); // Estado para mostrar más/menos pesos
   const [showAllVacunas, setShowAllVacunas] = useState(false); // Estado para mostrar más/menos vacunas
 
   const [items, setItems] = useState([
@@ -118,14 +118,10 @@ const [showAllPesos, setShowAllPesos] = useState(false); // Estado para mostrar 
     { label: "ml/kg", value: "ml_kg" },
   ]);
 
-   const scrollViewRef = useRef(null);
-  const sectionNuevoControlRef =useRef (null);
- 
-  
-
+  const scrollViewRef = useRef(null);
+  const sectionNuevoControlRef = useRef(null);
 
   const [showVacunaDatePicker, setShowVacunaDatePicker] = useState(false);
-  const API_URL = "https://webmobileregister-production.up.railway.app";
 
   // Función para formatear fecha
   const formatDate = (dateString) => {
@@ -146,21 +142,14 @@ const [showAllPesos, setShowAllPesos] = useState(false); // Estado para mostrar 
     return d.toISOString().substring(0, 10);
   };
 
-
-
-
   useEffect(() => {
     if (chip) {
+      console.log("Chip enviado:", chip); // Verificar el valor del chip
       axios
-        .get(`${API_URL}/register/animal/${chip}`)
+        .get(`${API_URL}/register/animal/${encodeURIComponent(chip)}`)
         .then((response) => {
           setAnimalInfo(response.data);
           console.log("Datos del animal recibidos:", response.data); // Aquí verificamos los datos del animal
-
-          // Aseguramos que raza_id_raza se pase correctamente
-          if (response.data.raza_id_raza) {
-            console.log("raza_id_raza:", response.data.raza_id_raza); // Verificamos el valor de raza_id_raza
-          }
         })
         .catch((error) => {
           console.error("Error al obtener el animal:", error);
@@ -218,16 +207,18 @@ const [showAllPesos, setShowAllPesos] = useState(false); // Estado para mostrar 
     }, [chip])
   );
 
-
- const registrosPesajeVisibles = showAllPesos ? historicoPesaje : historicoPesaje.slice(0, 4);
-  const registrosVacunasVisibles = showAllVacunas ? historicoVacunas : historicoVacunas.slice(0, 4);
+  const registrosPesajeVisibles = showAllPesos
+    ? historicoPesaje
+    : historicoPesaje.slice(0, 4);
+  const registrosVacunasVisibles = showAllVacunas
+    ? historicoVacunas
+    : historicoVacunas.slice(0, 4);
 
   const mostrarBotonPesos = historicoPesaje.length > 4;
-const mostrarBotonVacunas = historicoVacunas.length > 4;
+  const mostrarBotonVacunas = historicoVacunas.length > 4;
 
   const toggleMostrarPesos = () => setShowAllPesos(!showAllPesos);
   const toggleMostrarVacunas = () => setShowAllVacunas(!showAllVacunas);
-
 
   useEffect(() => {
     axios
@@ -372,75 +363,66 @@ const mostrarBotonVacunas = historicoVacunas.length > 4;
   }
 
   return (
-<ImageBackground
-  source={require('../assets/acuarela.Home.png')} // Usa la ruta relativa correcta
-  style={{ flex: 1, position: "absolute", width: "100%", height: "100%" }}
->
-      
-            <View >
-              {/* Header */}
-              <View style={[styles.topBar, styles.topBarContainer]}>
-                <View style={styles.topBarGreen}>
-                  <TouchableOpacity onPress={toggleMenu}>
-                    <Image
-                      source={require("../assets/Menu.png")}
-                      style={styles.icon}
-                    />
-                  </TouchableOpacity>
-      
-                  <TouchableOpacity onPress={toggleUserMenu}>
-                    <Image
-                      source={require("../assets/user.png")}
-                      style={styles.iconUser}
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-      
-              {/* Menú lateral */}
-              {showMenu && (
-                <Animated.View
-                  style={[
-                    styles.dropdownMenuLeft,
-                    { transform: [{ translateX: menuAnim }] },
-                    { zIndex: 1 }, // Asegura que el menú esté encima
-                  ]}
-                >
-                  <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-                    <Text style={styles.dropdownItem}>Inicio</Text>
-                  </TouchableOpacity>
-                 
-                </Animated.View>
-              )}
-      
-              {/* Menú de usuario */}
-              {showUserMenu && (
-                <Animated.View
-                  style={[
-                    styles.dropdownMenuLeftuser,
-                    { transform: [{ translateX: userMenuAnim }] },
-                    { zIndex: 1 }, // Asegura que el menú esté encima
-                  ]}
-                >
-                  <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-                    <Text style={styles.dropdownItem}>Cerrar sesión</Text>
-                  </TouchableOpacity>
-                </Animated.View>
-              )}
-      
-            </View>
+    <ImageBackground
+      source={require("../assets/acuarela.Home.png")} // Usa la ruta relativa correcta
+      style={{ flex: 1, position: "absolute", width: "100%", height: "100%" }}
+    >
+      <View>
+        {/* Header */}
+        <View style={[styles.topBar, styles.topBarContainer]}>
+          <View style={styles.topBarGreen}>
+            <TouchableOpacity onPress={toggleMenu}>
+              <Image
+                source={require("../assets/Menu.png")}
+                style={styles.icon}
+              />
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={toggleUserMenu}>
+              <Image
+                source={require("../assets/user.png")}
+                style={styles.iconUser}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Menú lateral */}
+        {showMenu && (
+          <Animated.View
+            style={[
+              styles.dropdownMenuLeft,
+              { transform: [{ translateX: menuAnim }] },
+              { zIndex: 1 }, // Asegura que el menú esté encima
+            ]}
+          >
+            <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+              <Text style={styles.dropdownItem}>Inicio</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        )}
+
+        {/* Menú de usuario */}
+        {showUserMenu && (
+          <Animated.View
+            style={[
+              styles.dropdownMenuLeftuser,
+              { transform: [{ translateX: userMenuAnim }] },
+              { zIndex: 1 }, // Asegura que el menú esté encima
+            ]}
+          >
+            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+              <Text style={styles.dropdownItem}>Cerrar sesión</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        )}
+      </View>
       <ScrollView
         ref={scrollViewRef}
         style={{ flex: 1 }} // Hace que el ScrollView ocupe todo el espacio disponible
         contentContainerStyle={{ paddingBottom: 20 }} // Espacio extra al final del ScrollView
       >
-        <View style={styles.buttonsContainer}>
-
-
-        
-
-          
-        </View>
+        <View style={styles.buttonsContainer}></View>
 
         {animalInfo && animalInfo.foto && (
           <Image
@@ -568,12 +550,12 @@ const mostrarBotonVacunas = historicoVacunas.length > 4;
 
         {/* TABLA DE PESO */}
 
-        <View style={styles.containerPesos} >
+        <View style={styles.containerPesos}>
           <Image
             source={require("../assets/Imagen_Pesos_Registrados.png")}
             style={styles.imagePesoVacuna}
           />
-    <View style={styles.section}>
+          <View style={styles.section}>
             <Text style={styles.subtitle1}>PESOS</Text>
             <Text style={styles.subtitle2}>REGISTRADOS</Text>
           </View>
@@ -613,11 +595,13 @@ const mostrarBotonVacunas = historicoVacunas.length > 4;
             No se encontraron registros de peso.
           </Text>
         )}
-         {mostrarBotonPesos && (
-  <TouchableOpacity onPress={toggleMostrarPesos} style={styles.button}>
-    <Text style={styles.link}>{showAllPesos ? "-  Ver menos" : "+  Ver más"}</Text>
-  </TouchableOpacity>
-)}
+        {mostrarBotonPesos && (
+          <TouchableOpacity onPress={toggleMostrarPesos} style={styles.button}>
+            <Text style={styles.link}>
+              {showAllPesos ? "-  Ver menos" : "+  Ver más"}
+            </Text>
+          </TouchableOpacity>
+        )}
 
         {/* EDITAR PESO */}
 
@@ -700,13 +684,13 @@ const mostrarBotonVacunas = historicoVacunas.length > 4;
 
         {/* TABLA DE VACUNAS */}
 
-   <View  style={styles.container} >
+        <View style={styles.container}>
           {/* Imagen encima del texto */}
           <Image
             source={require("../assets/Imagen_Vacunas_Registradas.png")} // Reemplaza con la ruta de tu imagen
             style={styles.imagePesoVacuna}
           />
- <View style={styles.section} >
+          <View style={styles.section}>
             <Text style={styles.subtitle1}>VACUNAS</Text>
             <Text style={styles.subtitle2}>REGISTRADAS</Text>
           </View>
@@ -761,22 +745,26 @@ const mostrarBotonVacunas = historicoVacunas.length > 4;
           </Text>
         )}
 
-      {mostrarBotonVacunas && (
-  <TouchableOpacity onPress={toggleMostrarVacunas} style={styles.button}>
-    <Text style={styles.link}>{showAllVacunas ? "-  Ver menos" : "+  Ver más"}</Text>
-  </TouchableOpacity>
-)}
-
-
+        {mostrarBotonVacunas && (
           <TouchableOpacity
-            style={styles.newControlButton}
-            onPress={() => navigation.navigate("FormScreen", { chip })}
+            onPress={toggleMostrarVacunas}
+            style={styles.button}
           >
-            <View ref={sectionNuevoControlRef} style={styles.section}>
-              <Text style={styles.newControlButtonText}>REALIZA UN </Text>
-              <Text style={styles.newControlButtonText}>NUEVO CONTROL</Text>
-            </View>
+            <Text style={styles.link}>
+              {showAllVacunas ? "-  Ver menos" : "+  Ver más"}
+            </Text>
           </TouchableOpacity>
+        )}
+
+        <TouchableOpacity
+          style={styles.newControlButton}
+          onPress={() => navigation.navigate("FormScreen", { chip })}
+        >
+          <View ref={sectionNuevoControlRef} style={styles.section}>
+            <Text style={styles.newControlButtonText}>REALIZA UN </Text>
+            <Text style={styles.newControlButtonText}>NUEVO CONTROL</Text>
+          </View>
+        </TouchableOpacity>
 
         {/* EDITAR VACUNAS */}
 
@@ -790,24 +778,6 @@ const mostrarBotonVacunas = historicoVacunas.length > 4;
               />
               <Text style={styles.modalTitle1}>EDITAR</Text>
               <Text style={styles.modalTitle2}>VACUNA</Text>
-
-              <Pressable
-                onPress={() => setShowVacunaDatePicker(true)}
-                style={styles.inputContainerVacuna}
-              >
-                <Image
-                  source={require("../assets/FechaDeNacimieto.png")} // Reemplaza con la ruta de tu logo
-                  style={styles.datePickerLogo} // Aplica estilo para el logo
-                />
-                <TextInput
-                  value={formatDateDisplay(nuevaFechaVacuna)}
-                  placeholder="YYYY-MM-DD"
-                  style={styles.inputVacunaFecha}
-                  editable={false}
-                  pointerEvents="none"
-                />
-              </Pressable>
-
               {/* Selección de tipo de vacuna */}
               <View style={styles.datePickerWrapper}>
                 <Image
@@ -827,13 +797,44 @@ const mostrarBotonVacunas = historicoVacunas.length > 4;
                   ]}
                   listMode="SCROLLVIEW"
                   style={styles.dropdownStyle}
-                  dropDownStyle={styles.dropDownStyle}
+                  dropDownStyle={[styles.dropDownStyle, { maxHeight: 50 }]}
+                  dropDownContainerStyle={{
+                    width: "90%", // Aplica el mismo ancho al contenedor de las opciones
+                    marginLeft: "1%", 
+                     marginTop: "-25",// Asegura que el contenedor no llegue al borde
+                    zIndex: 9999, // Asegura que el dropdown se muestre por encima de otros elementos
+                    elevation: 20, // Eleva el dropdown
+                    maxHeight: 152, // Limita la altura del listado (aplica scroll si la lista es mayor a esta altura)
+                    minHeight: 100,
+                     borderWidth: 1,  // Define el grosor del borde
+    borderColor: '#060606ff',
+                  }}
                   arrowIconStyle={styles.arrowIconStyle}
                   textStyle={styles.textStyle}
                 />
               </View>
 
-              {/* Selección de nombre de vacuna */}
+              <Pressable
+                onPress={() => setShowVacunaDatePicker(true)}
+                style={styles.inputContainerVacuna}
+              >
+                <Image
+                  source={require("../assets/FechaDeNacimieto.png")} // Reemplaza con la ruta de tu logo
+                  style={styles.datePickerLogo} // Aplica estilo para el logo
+                />
+                <TextInput
+                  value={formatDateDisplay(nuevaFechaVacuna)}
+                  placeholder="YYYY-MM-DD"
+                  style={styles.inputVacunaFecha}
+                  editable={false}
+                  pointerEvents="none"
+                />
+              </Pressable>
+
+             
+
+            
+ {/* Selección de nombre de vacuna */}
               <View style={styles.datePickerWrapper}>
                 <Image
                   source={require("../assets/Nombre.png")}
@@ -849,18 +850,28 @@ const mostrarBotonVacunas = historicoVacunas.length > 4;
                   containerStyle={[
                     styles.dropdownContainerVacuna,
                     openNombreVacuna && styles.dropdownBelowVacuna,
-                    { zIndex: openNombreVacuna ? 10 : 1 },
                   ]}
                   listMode="SCROLLVIEW"
                   style={styles.dropdownStyle}
                   dropDownStyle={styles.dropdownStyle}
+                   dropDownContainerStyle={{
+                    width: "90%", // Aplica el mismo ancho al contenedor de las opciones
+                    marginLeft: "1%", 
+                     marginTop: "-25",// Asegura que el contenedor no llegue al borde
+                    zIndex: 9999, // Asegura que el dropdown se muestre por encima de otros elementos
+                    elevation: 20, // Eleva el dropdown
+                    maxHeight: 132, // Limita la altura del listado (aplica scroll si la lista es mayor a esta altura)
+                    minHeight: 100,
+                     borderWidth: 1,  // Define el grosor del borde
+    borderColor: '#060606ff',
+                  }}
                   arrowIconStyle={styles.arrowIconStyle}
                   textStyle={styles.textStyle}
                 />
               </View>
 
-              {/* Dosis */}
-              <View style={styles.row}>
+  {/* Dosis */}
+             <View style={styles.row}>
                 {/* Dosis */}
                 <View style={[styles.inputDosisContainer]}>
                   <Image
@@ -889,7 +900,7 @@ const mostrarBotonVacunas = historicoVacunas.length > 4;
                   containerStyle={[
                     styles.dropdownContainerUnidad,
                     openUnidad && styles.dropdownBelowUnidad,
-                    { zIndex: 9999 },
+                    { zIndex: 10001 },
                   ]}
                   listMode="SCROLLVIEW"
                   arrowIconStyle={styles.arrowIconStyle}
@@ -897,12 +908,16 @@ const mostrarBotonVacunas = historicoVacunas.length > 4;
                   dropDownStyle={{
                     borderWidth: 0,
                     padding: 0,
+                    position: "absolute", // Coloca el dropdown encima de los demás elementos
+                    zIndex: 100010,
+                    top: 0, // Establece un zIndex más alto para asegurarse de que quede encima
                   }}
                   style={{
                     borderWidth: 0,
                   }}
                 />
               </View>
+
               {/* Campo Observaciones */}
               <View style={styles.inputContainerVacuna}>
                 <Image
@@ -946,36 +961,36 @@ const mostrarBotonVacunas = historicoVacunas.length > 4;
             </View>
           </View>
         </Modal>
+
+        
       </ScrollView>
-   
-               {/* Barra inferior */}
-             <View style={styles.greenBar}>
-               <View style={styles.bottomImageContainer}>
-                 {/* Imagen Inicio */}
-                 <TouchableOpacity onPress={navigateToHome}>
-                   <View style={styles.imageContainer}>
-                     <Image
-                       source={require("../assets/Inicio.png")}
-                       style={styles.imageStyleG}
-                     />
-                     <Text style={styles.imageText}>Inicio</Text>
-                   </View>
-                 </TouchableOpacity>
-       
-                 {/* Imagen Regresar */}
-                 <TouchableOpacity onPress={handleGoBack}>
-                   <View style={styles.imageContainer}>
-                     <Image
-                       source={require("../assets/Regresar.png")}
-                       style={styles.imageStyleG}
-                     />
-                     <Text style={styles.imageText}>Regresar</Text>
-                   </View>
-                 </TouchableOpacity>
-               </View>
-             </View> 
-       
-       
-           </ImageBackground>
+
+      {/* Barra inferior */}
+      <View style={styles.greenBar}>
+        <View style={styles.bottomImageContainer}>
+          {/* Imagen Inicio */}
+          <TouchableOpacity onPress={navigateToHome}>
+            <View style={styles.imageContainer}>
+              <Image
+                source={require("../assets/Inicio.png")}
+                style={styles.imageStyleG}
+              />
+              <Text style={styles.imageText}>Inicio</Text>
+            </View>
+          </TouchableOpacity>
+
+          {/* Imagen Regresar */}
+          <TouchableOpacity onPress={handleGoBack}>
+            <View style={styles.imageContainer}>
+              <Image
+                source={require("../assets/Regresar.png")}
+                style={styles.imageStyleG}
+              />
+              <Text style={styles.imageText}>Regresar</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </ImageBackground>
   );
 }
