@@ -1,6 +1,6 @@
 {
-  "name": "frontend-mobile-register-app",
-  "version": "1.0.0",
+  "name": "Agro Gestor",
+  "version": "1.5.0",
   "main": "index.js",
   "scripts": {
     "start": "expo start",
@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo/config-plugins": "~10.1.1",
     "@expo/metro-runtime": "~5.0.4",
     "@react-native-async-storage/async-storage": "2.1.2",
     "@react-native-community/datetimepicker": "8.4.1",
@@ -17,12 +18,15 @@
     "@react-navigation/native": "^7.1.16",
     "@react-navigation/native-stack": "^7.3.10",
     "axios": "^1.11.0",
-    "expo": "53.0.9",
+    "expo": "53.0.20",
     "expo-av": "~15.1.4",
     "expo-image-picker": "~16.1.4",
     "expo-status-bar": "~2.2.3",
     "expo-updates": "~0.28.16",
     "expo-video": "~2.2.2",
+    "metro": "^0.82.5",
+    "metro-config": "^0.82.5",
+    "metro-resolver": "^0.82.5",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-native": "0.79.5",
@@ -48,6 +52,7 @@
   "expo": {
     "doctor": {
       "reactNativeDirectoryCheck": {
+        "listUnknownPackages": false,
         "exclude": [
           "react-native-keyboard-aware-scroll-view",
           "react-native-material-datetime-picker",

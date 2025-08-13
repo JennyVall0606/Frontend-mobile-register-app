@@ -8,6 +8,7 @@ import {
   Alert,
   Animated,
   ImageBackground,
+ 
   Image,
   ScrollView,
   Dimensions,
@@ -22,9 +23,9 @@ import styles from "../styles/register_cattle_styles";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function RegisterCattleScreen({ route }) {
-  const API_URL = "https://webmobileregister-production.up.railway.app";
 
+
+export default function RegisterCattleScreen({ route }) {
   const { chip: chipFromParams, razaId, isEditing } = route.params || {};
   const [chip, setChip] = useState(chipFromParams || "");
   const [animalData, setAnimalData] = useState(null);
@@ -34,19 +35,15 @@ export default function RegisterCattleScreen({ route }) {
   const [weight, setWeight] = useState("");
   const [father, setFather] = useState("");
   const [mother, setMother] = useState("");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   const [observations, setObservations] = useState("");
-  const [isFocused, setIsFocused] = useState(false);
+    const [isFocused, setIsFocused] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [currentDateType, setCurrentDateType] = useState("");
   const [openRaza, setOpenRaza] = useState(false);
   const [itemsRaza, setItemsRaza] = useState([]);
   const [breed, setBreed] = useState(""); // Estado para la raza seleccionada
-
   const [openEnfermedad, setOpenEnfermedad] = useState(false);
-  const handleDropdownToggle = (isOpen) => {
-    setIsDropdownOpen(isOpen); // Cambia el estado de scrollEnabled
-  };
   const [pendingBreedId, setPendingBreedId] = useState(null);
   const [disease, setDisease] = useState([]);
   const [itemsEnfermedad, setItemsEnfermedad] = useState([
@@ -73,7 +70,7 @@ export default function RegisterCattleScreen({ route }) {
   ]);
 
   //============================================================================
-  const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
+const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
   const userMenuAnim = useState(new Animated.Value(-250))[0]; // Para el menú de usuario
 
   const [showMenu, setShowMenu] = useState(false);
@@ -97,33 +94,33 @@ export default function RegisterCattleScreen({ route }) {
     setShowUserMenu(false); // Cerrar el menú de usuario si se abre el otro
   };
 
-  // Función para abrir el menú de usuario
-  const toggleUserMenu = () => {
-    if (showUserMenu) {
-      Animated.spring(userMenuAnim, {
-        toValue: -250,
-        bounciness: 10,
-        useNativeDriver: true,
-      }).start();
-    } else {
-      Animated.spring(userMenuAnim, {
-        toValue: 0,
-        bounciness: 10,
-        useNativeDriver: true,
-      }).start();
-    }
-    setShowUserMenu(!showUserMenu);
-    setShowMenu(false);
-  };
+    // Función para abrir el menú de usuario
+    const toggleUserMenu = () => {
+      if (showUserMenu) {
+        Animated.spring(userMenuAnim, {
+          toValue: -250,
+          bounciness: 10,
+          useNativeDriver: true,
+        }).start();
+      } else {
+        Animated.spring(userMenuAnim, {
+          toValue: 0,
+          bounciness: 10,
+          useNativeDriver: true,
+        }).start();
+      }
+      setShowUserMenu(!showUserMenu);
+      setShowMenu(false); 
+    };
 
-  const navigateToHome = () => {
+   const navigateToHome = () => {
     navigation.navigate("Home");
   };
-
-  const handleGoBack = () => {
-    // Navega directamente a la pantalla CattleListScreen
-    navigation.navigate("Home");
-  };
+ 
+ const handleGoBack = () => {
+  // Navega directamente a la pantalla CattleListScreen
+  navigation.navigate("Home");
+};
   //========================================================================
 
   const [errors, setErrors] = useState({
@@ -133,6 +130,8 @@ export default function RegisterCattleScreen({ route }) {
     birthDate: false,
     weight: false,
   });
+
+  const API_URL = "https://webmobileregister-production.up.railway.app";
 
   const navigation = useNavigation();
   const { width, height } = Dimensions.get("window");
@@ -248,6 +247,8 @@ export default function RegisterCattleScreen({ route }) {
     }
   };
 
+  
+
   const handleConfirmDate = (date) => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -314,6 +315,9 @@ export default function RegisterCattleScreen({ route }) {
         return;
       }
 
+
+     
+        
       const fechaFormateada = birthDate.split("T")[0];
       const enfermedadesFormateadas =
         disease.length > 0 ? disease.join(",") : null;
@@ -352,6 +356,7 @@ export default function RegisterCattleScreen({ route }) {
           Authorization: `Bearer ${token}`,
         },
       });
+      
 
       if (response.status === 200 || response.status === 201) {
         Alert.alert(
@@ -388,24 +393,25 @@ export default function RegisterCattleScreen({ route }) {
 
   if (loading && chipFromParams) {
     return (
-      <ImageBackground
-        source={require("../assets/acuarela.Home.png")}
-        style={{ flex: 1, position: "absolute", width: "100%", height: "100%" }}
-      >
+    <ImageBackground
+      source={require("../assets/acuarela.Home.png")}
+      style={{ flex: 1, position: "absolute", width: "100%", height: "100%" }}
+    >
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#76ad47ff" />
+          <ActivityIndicator size="large" color="#0000ff" />
           <Text>Cargando datos del animal...</Text>
         </View>
-      </ImageBackground>
+     </ImageBackground>
     );
   }
 
   return (
-    <ImageBackground
-      source={require("../assets/acuarela.Home.png")} // Usa la ruta relativa correcta
-      style={{ flex: 1, position: "absolute", width: "100%", height: "100%" }}
-    >
-      <View>
+<ImageBackground
+  source={require('../assets/acuarela.Home.png')} // Usa la ruta relativa correcta
+  style={{ flex: 1, position: "absolute", width: "100%", height: "100%" }}
+>
+
+      <View >
         {/* Header */}
         <View style={[styles.topBar, styles.topBarContainer]}>
           <View style={styles.topBarGreen}>
@@ -437,6 +443,7 @@ export default function RegisterCattleScreen({ route }) {
             <TouchableOpacity onPress={() => navigation.navigate("Home")}>
               <Text style={styles.dropdownItem}>Inicio</Text>
             </TouchableOpacity>
+           
           </Animated.View>
         )}
 
@@ -454,14 +461,14 @@ export default function RegisterCattleScreen({ route }) {
             </TouchableOpacity>
           </Animated.View>
         )}
+
       </View>
 
-      <ScrollView
-        ref={scrollViewRef}
-        style={{ flex: 1 }} // Hace que el ScrollView ocupe todo el espacio disponible
-        contentContainerStyle={{ paddingBottom: 20 }} // Espacio extra al final del ScrollView
-        scrollEnabled={!openEnfermedad}
-      >
+     <ScrollView
+             ref={scrollViewRef}
+             style={{ flex: 1 }} // Hace que el ScrollView ocupe todo el espacio disponible
+             contentContainerStyle={{ paddingBottom: 20 }} // Espacio extra al final del ScrollView
+           >
         <Image
           source={
             isEditing
@@ -506,41 +513,26 @@ export default function RegisterCattleScreen({ route }) {
           </View>
         )}
 
-        <DropDownPicker
-          open={openRaza}
-          setOpen={(open) => {
-            setOpenRaza(open);
-            setIsDropdownOpen(open); // Toggle dropdown state when open state changes
-          }}
-          items={itemsRaza}
-          value={breed}
-          setValue={setBreed}
-          placeholder={breed ? "" : "Selecciona una raza*"}
-          style={[
-            styles.dropdown,
-            errors.breed && styles.inputError,
-            { zIndex: 10 },
-          ]}
-          textStyle={styles.dropdownText}
-          listMode="SCROLLVIEW"
-          maxHeight={200} // Ajusta la altura máxima del dropdown
-          onChangeValue={() => setOpenRaza(false)}
-          dropDownStyle={{
-            width: "70%", // Cambia el ancho del cuadro desplegable (70%)
-            marginLeft: "15%", // Asegura que el dropdown tenga margen y no llegue al borde
-            zIndex: 9999, // Asegura que el dropdown se muestre por encima de otros elementos
-          }}
-          dropDownContainerStyle={{
-            width: "85%", // Aplica el mismo ancho al contenedor de las opciones
-            marginLeft: "7%", // Asegura que el contenedor no llegue al borde
-            zIndex: 9999, // Asegura que el dropdown se muestre por encima de otros elementos
-            elevation: 20, // Eleva el dropdown
-          }}
-          arrowIconStyle={styles.arrowIconStyle} // Estilo para la flecha hacia abajo
-          scrollViewProps={{
-            nestedScrollEnabled: true, // Permite el desplazamiento dentro del dropdown sin interferir con el ScrollView principal
-          }}
-        />
+
+
+
+
+  <DropDownPicker
+    open={openRaza}
+    setOpen={setOpenRaza}
+    items={itemsRaza}
+    value={breed}
+    setValue={setBreed}
+    placeholder={breed ? "" : "Selecciona una raza*"}
+    style={[styles.dropdown, errors.breed && styles.inputError]}
+    textStyle={styles.dropdownText}
+    listMode="SCROLLVIEW"
+    maxHeight={200} // Ajusta la altura máxima del dropdown
+    arrowIconStyle={styles.arrowIconStyle} // Estilo para la flecha hacia abajo
+    
+  />
+
+
 
         <TouchableOpacity
           style={[styles.dateButton, errors.birthDate && styles.inputError]}
@@ -566,6 +558,9 @@ export default function RegisterCattleScreen({ route }) {
           maximumDate={new Date()} // Establece el día de hoy como la fecha máxima (deshabilita fechas futuras)
         />
 
+
+
+
         <View
           style={[styles.weightContainer, errors.weight && styles.inputError]}
         >
@@ -586,6 +581,8 @@ export default function RegisterCattleScreen({ route }) {
           </View>
         </View>
 
+        
+
         {/* Chip de registro vacuno */}
         <View
           style={[styles.inputWithIconChips, errors.chip && styles.inputError]}
@@ -603,6 +600,9 @@ export default function RegisterCattleScreen({ route }) {
             editable={!isEditing}
           />
         </View>
+
+
+
 
         {/* Registro del padre */}
         <View style={styles.inputWithIconChips}>
@@ -634,47 +634,47 @@ export default function RegisterCattleScreen({ route }) {
           />
         </View>
 
-        <DropDownPicker
-          multiple={true}
-          min={0}
-          max={20}
-          open={openEnfermedad}
-          setOpen={(open) => {
-            setOpenEnfermedad(open);
-            setIsDropdownOpen(open); // Cambia el estado de isDropdownOpen
-          }}
-          items={itemsEnfermedad}
-          value={disease}
-          setValue={(value) => {
-            const newValue = value;
-            setDisease(newValue);
-          }}
-          placeholder="Selecciona una o más enfermedades"
-          style={styles.dropdownEnfermedad}
-          textStyle={styles.dropdownTextEnfermedad}
-          listMode="SCROLLVIEW"
-          maxHeight={200} // Ajusta la altura máxima del cuadro desplegable
-          multipleText={`${disease.length} enfermedad${
-            disease.length === 1 ? "" : "s"
-          } seleccionada${disease.length === 1 ? "" : "s"}`}
-          arrowIconStyle={styles.arrowIconStyle}
-          // Ajuste de estilos del dropdown
-          dropDownStyle={{
-            width: "70%", // Cambia el ancho del cuadro desplegable (70%)
-            marginLeft: "15%", // Asegura que el dropdown tenga margen y no llegue al borde
-            zIndex: 9999, // Asegura que el dropdown se muestre por encima de otros elementos
-          }}
-          dropDownContainerStyle={{
-            width: "85%", // Aplica el mismo ancho al contenedor de las opciones
-            marginLeft: "7%", // Asegura que el contenedor no llegue al borde
-            zIndex: 9999, // Asegura que el dropdown se muestre por encima de otros elementos
-            elevation: 20, // Eleva el dropdown
-          }}
-          // Habilitar desplazamiento dentro del dropdown
-          scrollViewProps={{
-            nestedScrollEnabled: true, // Permite el desplazamiento dentro del dropdown sin interferir con el ScrollView principal
-          }}
-        />
+
+
+
+
+
+
+
+  <DropDownPicker
+    multiple={true}
+    min={0}
+    max={20}
+    open={openEnfermedad}
+    setOpen={setOpenEnfermedad}
+    items={itemsEnfermedad}
+    value={disease}
+    setValue={(value) => {
+      const newValue = value;
+      setDisease(newValue);
+    }}
+    placeholder="Selecciona una o más enfermedades"
+    style={styles.dropdownEnfermedad}
+    textStyle={styles.dropdownTextEnfermedad}
+    listMode="SCROLLVIEW"
+    maxHeight={200}
+    multipleText={`${disease.length} enfermedade${
+      disease.length === 1 ? "" : "s"
+    } seleccionada${disease.length === 1 ? "" : "s"}`}
+    arrowIconStyle={styles.arrowIconStyle}
+   
+    
+  />
+
+
+
+
+
+
+
+
+
+
 
         <Text style={styles.selectedDiseases}>
           {Array.isArray(disease) && disease.length > 0
@@ -682,24 +682,24 @@ export default function RegisterCattleScreen({ route }) {
             : "Selecciona las enfermedades"}
         </Text>
 
-        <View style={styles.inputWrapper}>
-          <Image
-            source={require("../assets/Obs.png")}
-            style={styles.iconStyleO}
-          />
-          <TextInput
-            style={styles.inputobs}
-            placeholder={isFocused ? "" : "Observaciones"} // Si tiene foco, no muestra el placeholder
-            value={observations}
-            onChangeText={setObservations}
-            multiline
-            textAlignVertical="top"
-            maxLength={500}
-            placeholderTextColor="#000"
-            onFocus={() => setIsFocused(true)} // Cuando el campo recibe foco
-            onBlur={() => setIsFocused(false)} // Cuando el campo pierde foco
-          />
-        </View>
+ <View style={styles.inputWrapper}>
+      <Image
+        source={require("../assets/Obs.png")}
+        style={styles.iconStyleO}
+      />
+      <TextInput
+        style={styles.inputobs}
+        placeholder={isFocused ? "" : "Observaciones"} // Si tiene foco, no muestra el placeholder
+        value={observations}
+        onChangeText={setObservations}
+        multiline
+        textAlignVertical="top"
+        maxLength={500}
+        placeholderTextColor="#000"
+        onFocus={() => setIsFocused(true)} // Cuando el campo recibe foco
+        onBlur={() => setIsFocused(false)} // Cuando el campo pierde foco
+      />
+    </View>
 
         <TouchableOpacity
           onPress={handleRegister}
@@ -711,7 +711,7 @@ export default function RegisterCattleScreen({ route }) {
         </TouchableOpacity>
       </ScrollView>
 
-      {/* Barra inferior */}
+        {/* Barra inferior */}
       <View style={styles.greenBar}>
         <View style={styles.bottomImageContainer}>
           {/* Imagen Inicio */}
@@ -736,7 +736,9 @@ export default function RegisterCattleScreen({ route }) {
             </View>
           </TouchableOpacity>
         </View>
-      </View>
+      </View> 
+
+
     </ImageBackground>
   );
 }
