@@ -89,55 +89,55 @@ export default function Layout({ children }) {
 
 
   
-  // Función para abrir el menú
+  
   const toggleMenu = () => {
     if (showMenu) {
-      // Reiniciar la animación al valor inicial cada vez que se abra el menú
+      
       menuAnim.setValue(-250);
 
-      // Animar el menú fuera de la vista con un efecto suave
+     
       Animated.spring(menuAnim, {
         toValue: 0,
-        bounciness: 10, // Efecto de rebote
+        bounciness: 10, 
         useNativeDriver: true,
       }).start();
     } else {
-      // Reiniciar la animación al valor inicial cada vez que se abra el menú
+      
       menuAnim.setValue(-250);
 
-      // Animar el menú entrando desde la izquierda con un rebote
+      
       Animated.spring(menuAnim, {
         toValue: 0,
-        bounciness: 10, // Efecto de rebote
+        bounciness: 10, 
         useNativeDriver: true,
       }).start();
     }
     setShowMenu(!showMenu);
-    setShowUserMenu(false); // Cerrar el menú de usuario si se abre el otro
+    setShowUserMenu(false); 
   };
 
-  // Función para abrir el menú de usuario
+  
   const toggleUserMenu = () => {
     if (showUserMenu) {
-      // Animar el menú de usuario fuera de la vista
+      
       Animated.spring(userMenuAnim, {
         toValue: -250,
-        bounciness: 10, // Efecto de rebote
+        bounciness: 10, 
         useNativeDriver: true,
       }).start();
     } else {
-      // Animar el menú de usuario entrando desde la derecha
+      
       Animated.spring(userMenuAnim, {
         toValue: 0,
-        bounciness: 10, // Efecto de rebote
+        bounciness: 10, 
         useNativeDriver: true,
       }).start();
     }
     setShowUserMenu(!showUserMenu);
-    setShowMenu(false); // Cerrar el menú lateral si se abre el de usuario
+    setShowMenu(false); 
   };
 
-  // Función para cerrar cualquier menú si se toca fuera de ellos
+  
   const closeMenus = () => {
     setShowMenu(false);
     setShowUserMenu(false);
@@ -148,7 +148,7 @@ export default function Layout({ children }) {
       source={require("../assets/acuarela.Home.png")}
       style={globalStyles.background}
     >
-      {/* Agregar TouchableWithoutFeedback para capturar toques en cualquier parte */}
+      
       <TouchableWithoutFeedback onPress={closeMenus}>
         <View style={{ flex: 1 }}>
           {/* Header con barra verde */}

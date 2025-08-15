@@ -15,15 +15,15 @@ export const styles = StyleSheet.create({
     
   },
   topBarGreen: {
-    height: 150, // Altura de la barra verde
+    height: 150, 
     backgroundColor:  "#7dac53",
     width: "100%",
-    flexDirection: "row", // Alinea los elementos de manera horizontal
-    justifyContent: "space-between", // Espaciado entre los íconos
-    alignItems: "center", // Centra los íconos verticalmente dentro de la barra
-    paddingHorizontal: 15, // Ajusta el espaciado de los íconos desde los bordes
-    top: -40, // Asegura que esté en la parte superior de la pantalla
-    zIndex: 1, // Asegura que la barra esté por encima del contenido
+    flexDirection: "row", 
+    justifyContent: "space-between", 
+    alignItems: "center", 
+    paddingHorizontal: 15, 
+    top: -40, 
+    zIndex: 1, 
   },
 
   icon: {
@@ -86,8 +86,8 @@ export const styles = StyleSheet.create({
   },
   dropdownMenuLeftuser:{
 position: "absolute",
-  top: 100,  // Ajusta esta posición vertical según lo necesites
-  left: 280,// Asegura que el menú esté alineado completamente a la izquierda
+  top: 100,  
+  left: 280,
   backgroundColor: "#7dac53",
   padding: 2,
   borderRadius: 8,
@@ -121,40 +121,40 @@ position: "absolute",
     flex: 1,
   },
 
-  greenBar: {
-    height: 80, // Altura de la barra verde
-    backgroundColor: "#7dac53", // Color verde
-    width: "100%", // Asegura que la barra ocupe todo el ancho
+ greenBar: {
+    height: 90,
+    backgroundColor: "#7dac53",
+    width: "100%", 
         
   },
 
-   bottomImageContainer: {
-    position: "absolute", // Lo posiciona en la parte inferior de la barra
-    bottom: 10, // Asegura que esté en la parte inferior
+  bottomImageContainer: {
+    position: "absolute", 
+    bottom: 10, 
     left: 0,
     right: 0,
-    flexDirection: "row", // Para colocar las imágenes una al lado de la otra
-    justifyContent: "space-between", // Espaciado entre las imágenes
-    paddingHorizontal: 130, // Espacio de los bordes de la barra
-    marginBottom:5, // Espacio adicional debajo de las imágenes
+    flexDirection: "row", 
+    justifyContent: "space-between",
+    paddingHorizontal: 150,
+    marginBottom:23, 
   },
   
  imageContainer: {
-    alignItems: "center", // Centra la imagen y el texto horizontalmente
-    justifyContent: "center", // Centra la imagen y el texto verticalmente
-    marginHorizontal: 15, // Añade espacio entre los contenedores de imagen
+    alignItems: "center", 
+    justifyContent: "center", 
+    marginHorizontal: 15, 
   },
 
   imageStyleG: {
-    width: 20, // Ancho de las imágenes
-    height: 20, // Alto de las imágenes
+    width: 20, 
+    height: 20, 
   },
 
    imageText: {
-    marginTop: 3, // Añade un pequeño espacio entre la imagen y el texto
-    color: "white", // Puedes cambiar el color del texto si lo prefieres
-    fontSize: 12, // Tamaño del texto
-    fontWeight: "normal", // Estilo del texto
+    marginTop: 3, 
+    color: "white", 
+    fontSize: 12, 
+    fontWeight: "normal", 
      left: -6,
      marginBottom:8,
   },
@@ -170,14 +170,14 @@ position: "absolute",
    
   },
 containerloading: {
-    flex: 1, // Esto hace que el contenedor ocupe toda la pantalla
-    justifyContent: 'center', // Centra los elementos verticalmente
-    alignItems: 'center', // Centra los elementos horizontalmente
-    backgroundColor: '#fff', // Fondo blanco, puedes cambiarlo
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    backgroundColor: '#fff', 
   },
   loadingText: {
-    marginTop: 10, // Espacio entre el indicador de carga y el texto
-    fontSize: 18, // Tamaño del texto
+    marginTop: 10, 
+    fontSize: 18, 
     color: "rgb(52, 112, 24)",
   },
   imageStyle: {

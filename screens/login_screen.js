@@ -13,11 +13,11 @@ export default function LoginScreen() {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false); // Estado para manejar la carga
+  const [loading, setLoading] = useState(false); 
 
   const handleLogin = async () => {
     if (username && password) {
-      setLoading(true); // Activar el estado de carga
+      setLoading(true); 
       try {
         const response = await login(username, password);
   
@@ -39,7 +39,7 @@ export default function LoginScreen() {
         );
         console.error(error);
       } finally {
-        setLoading(false); // Desactivar el estado de carga
+        setLoading(false); 
       }
     } else {
       Alert.alert(
@@ -54,12 +54,12 @@ export default function LoginScreen() {
     <Layout>
 
          <Image 
-              source={require('../assets/Logo_Negativo.png')} // Ruta a tu imagen
+              source={require('../assets/Logo_Negativo.png')} 
               style={styles.logo}
             />
             
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"} // Ajuste para plataformas
+        behavior={Platform.OS === "ios" ? "padding" : "height"} 
         style={{ flex: 1 }}
       >
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">

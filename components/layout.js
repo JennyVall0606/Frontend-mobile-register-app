@@ -13,27 +13,25 @@ import globalStyles from "../styles/global_styles";
 
 export default function Layout({ children }) {
   const navigation = useNavigation();
-  const route = useRoute(); // Obtener el nombre de la pantalla actual
-
+  const route = useRoute(); 
   // -------------------- Estados --------------------
   const [showMenu, setShowMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
 
   // -------------------- Animaciones --------------------
-  const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
-  const userMenuAnim = useState(new Animated.Value(-250))[0]; // Para el menú de usuario
+  const menuAnim = useState(new Animated.Value(-250))[0]; 
+  const userMenuAnim = useState(new Animated.Value(-250))[0]; 
 
 const handleGoBack = () => {
-  const currentScreen = route.name || ''; // Aseguramos que route.name no sea undefined
+  const currentScreen = route.name || ''; 
 
-  console.log("Pantalla actual:", currentScreen); // Log para verificar qué pantalla estamos obteniendo
-
-  // Usamos navigation.goBack() para regresar a la pantalla anterior en la pila de navegación
+  console.log("Pantalla actual:", currentScreen); 
+ 
   navigation.goBack();
 };
 
 
-  // Función para abrir el menú
+  
   const toggleMenu = () => {
     if (showMenu) {
       Animated.spring(menuAnim, {
@@ -49,10 +47,10 @@ const handleGoBack = () => {
       }).start();
     }
     setShowMenu(!showMenu);
-    setShowUserMenu(false); // Cerrar el menú de usuario si se abre el otro
+    setShowUserMenu(false); 
   };
 
-  // Función para abrir el menú de usuario
+  
   const toggleUserMenu = () => {
     if (showUserMenu) {
       Animated.spring(userMenuAnim, {
@@ -68,7 +66,7 @@ const handleGoBack = () => {
       }).start();
     }
     setShowUserMenu(!showUserMenu);
-    setShowMenu(false); // Cerrar el menú lateral si se abre el de usuario
+    setShowMenu(false); 
   };
 
   const navigateToHome = () => {
@@ -83,7 +81,7 @@ const handleGoBack = () => {
       <View style={{ flex: 1 }}>
 
 
-        {/* Contenido principal */}
+       
         <ScrollView
           contentContainerStyle={{ flexGrow: 1 }}
           style={{ flex: 1 }}

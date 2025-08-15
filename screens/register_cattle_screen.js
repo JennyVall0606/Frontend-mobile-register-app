@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, SafeAreaView  } from "react";
 import {
   View,
   Text,
@@ -42,7 +42,7 @@ export default function RegisterCattleScreen({ route }) {
   const [currentDateType, setCurrentDateType] = useState("");
   const [openRaza, setOpenRaza] = useState(false);
   const [itemsRaza, setItemsRaza] = useState([]);
-  const [breed, setBreed] = useState(""); // Estado para la raza seleccionada
+  const [breed, setBreed] = useState(""); 
   const [openEnfermedad, setOpenEnfermedad] = useState(false);
   const [pendingBreedId, setPendingBreedId] = useState(null);
   const [disease, setDisease] = useState([]);
@@ -70,8 +70,8 @@ export default function RegisterCattleScreen({ route }) {
   ]);
 
   //============================================================================
-const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
-  const userMenuAnim = useState(new Animated.Value(-250))[0]; // Para el menú de usuario
+const menuAnim = useState(new Animated.Value(-250))[0]; 
+  const userMenuAnim = useState(new Animated.Value(-250))[0]; 
 
   const [showMenu, setShowMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -91,7 +91,7 @@ const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
       }).start();
     }
     setShowMenu(!showMenu);
-    setShowUserMenu(false); // Cerrar el menú de usuario si se abre el otro
+    setShowUserMenu(false); 
   };
 
     // Función para abrir el menú de usuario
@@ -118,7 +118,7 @@ const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
   };
  
  const handleGoBack = () => {
-  // Navega directamente a la pantalla CattleListScreen
+
   navigation.navigate("Home");
 };
   //========================================================================
@@ -135,7 +135,7 @@ const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
 
   const navigation = useNavigation();
   const { width, height } = Dimensions.get("window");
-
+const screenWidth = Dimensions.get('window').width;
   useEffect(() => {
     const fetchRazas = async () => {
       try {
@@ -153,12 +153,12 @@ const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
     fetchRazas();
   }, []);
 
-  // Verificamos que la raza seleccionada esté en el listado de razas.
+  
   useEffect(() => {
     if (razaId) {
       const razaExistente = itemsRaza.find((item) => item.label === razaId);
       if (razaExistente) {
-        setBreed(razaExistente.value); // Esto asegura que el valor numérico se use en lugar del nombre
+        setBreed(razaExistente.value); 
       }
     }
   }, [itemsRaza, razaId]);
@@ -190,14 +190,14 @@ const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
           setObservations(response.data.observaciones || "");
           setPendingBreedId(response.data.raza_id_raza?.toString() || "");
 
-          // Convertir las enfermedades de un string a un arreglo
+          
           if (response.data.enfermedades) {
             const enfermedades = response.data.enfermedades.includes(",")
-              ? response.data.enfermedades.split(",") // Convertir el string a un arreglo
-              : [response.data.enfermedades]; // Si es un solo valor, convertirlo en un arreglo
+              ? response.data.enfermedades.split(",") 
+              : [response.data.enfermedades]; 
 
-            const enfermedadesUnicas = Array.from(new Set(enfermedades)); // Eliminar duplicados
-            setDisease(enfermedadesUnicas); // Actualiza el estado con las enfermedades únicas
+            const enfermedadesUnicas = Array.from(new Set(enfermedades));
+            setDisease(enfermedadesUnicas); 
           }
 
           if (response.data.foto) {
@@ -366,12 +366,12 @@ const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
             : "El ganado ha sido registrado correctamente"
         );
 
-        // Aquí enviamos la actualización a la pantalla anterior
+        
         navigation.setParams({
-          breed: breed, // Actualizamos la raza
-          disease: disease, // Actualizamos las enfermedades
-          weight: weight, // Actualizamos el peso
-          observations: observations, // Actualizamos las observaciones
+          breed: breed, 
+          disease: disease, 
+          weight: weight, 
+          observations: observations, 
         });
 
         navigation.goBack();
@@ -406,8 +406,9 @@ const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
   }
 
   return (
+    
 <ImageBackground
-  source={require('../assets/acuarela.Home.png')} // Usa la ruta relativa correcta
+  source={require('../assets/acuarela.Home.png')} 
   style={{ flex: 1, position: "absolute", width: "100%", height: "100%" }}
 >
 
@@ -437,7 +438,7 @@ const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
             style={[
               styles.dropdownMenuLeft,
               { transform: [{ translateX: menuAnim }] },
-              { zIndex: 1 }, // Asegura que el menú esté encima
+              { zIndex: 1 }, 
             ]}
           >
             <TouchableOpacity onPress={() => navigation.navigate("Home")}>
@@ -453,7 +454,7 @@ const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
             style={[
               styles.dropdownMenuLeftuser,
               { transform: [{ translateX: userMenuAnim }] },
-              { zIndex: 1 }, // Asegura que el menú esté encima
+              { zIndex: 1 }, 
             ]}
           >
             <TouchableOpacity onPress={() => navigation.navigate("Login")}>
@@ -465,15 +466,14 @@ const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
       </View>
 
      <ScrollView
-             ref={scrollViewRef}
-             style={{ flex: 1 }} // Hace que el ScrollView ocupe todo el espacio disponible
-             contentContainerStyle={{ paddingBottom: 20 }} // Espacio extra al final del ScrollView
-           >
+          contentContainerStyle={{ paddingBottom: 20, paddingTop: 10 }} 
+          style={{ flex: 1 }}
+        >
         <Image
           source={
             isEditing
-              ? require("../assets/Editar_Chip.png") // Ruta de la imagen para "Editar"
-              : require("../assets/Imagen_Formulario_Registro_Ganado.png") // Ruta de la imagen para "Registrar"
+              ? require("../assets/Editar_Chip.png") 
+              : require("../assets/Imagen_Formulario_Registro_Ganado.png")
           }
           style={isEditing ? styles.editImage : styles.registerImage}
         />
@@ -493,7 +493,7 @@ const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
             <View style={styles.rowContainer}>
               <Image
                 source={require("../assets/SubirImagen.png")}
-                style={styles.logo} // Estilo para el logo
+                style={styles.logo} 
               />
               <Text style={styles.imagePickerText}> Subir imagen*</Text>
             </View>
@@ -506,8 +506,8 @@ const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
               style={styles.deleteButton}
             >
               <Image
-                source={require("../assets/Eliminar.png")} // Ruta de tu imagen
-                style={styles.deleteButtonIcon} // Aplica los estilos a la imagen
+                source={require("../assets/Eliminar.png")} 
+                style={styles.deleteButtonIcon} 
               />
             </TouchableOpacity>
           </View>
@@ -524,11 +524,15 @@ const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
     value={breed}
     setValue={setBreed}
     placeholder={breed ? "" : "Selecciona una raza*"}
-    style={[styles.dropdown, errors.breed && styles.inputError]}
+     style={[
+    styles.dropdown,
+    errors.breed && styles.inputError,
+    { width: screenWidth * 0.9 } 
+  ]}
     textStyle={styles.dropdownText}
     listMode="SCROLLVIEW"
-    maxHeight={200} // Ajusta la altura máxima del dropdown
-    arrowIconStyle={styles.arrowIconStyle} // Estilo para la flecha hacia abajo
+    maxHeight={200} 
+    arrowIconStyle={styles.arrowIconStyle} 
     
   />
 
@@ -540,7 +544,7 @@ const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
         >
           <View style={styles.rowContainer}>
             <Image
-              source={require("../assets/FechaDeNacimieto.png")} // Ruta de la imagen local
+              source={require("../assets/FechaDeNacimieto.png")} 
               style={styles.iconStyle}
             />
             <Text style={styles.dateButtonText}>
@@ -555,7 +559,7 @@ const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
           onConfirm={handleConfirmDate}
           themeVariant="light"
           onCancel={() => setDatePickerVisibility(false)}
-          maximumDate={new Date()} // Establece el día de hoy como la fecha máxima (deshabilita fechas futuras)
+          maximumDate={new Date()} 
         />
 
 
@@ -566,7 +570,7 @@ const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
         >
           <View style={styles.inputWithIcon}>
             <Image
-              source={require("../assets/Peso.png")} // Ruta de la imagen local
+              source={require("../assets/Peso.png")} 
               style={styles.iconStylePeso}
             />
             <TextInput
@@ -689,15 +693,15 @@ const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
       />
       <TextInput
         style={styles.inputobs}
-        placeholder={isFocused ? "" : "Observaciones"} // Si tiene foco, no muestra el placeholder
+        placeholder={isFocused ? "" : "Observaciones"} 
         value={observations}
         onChangeText={setObservations}
         multiline
         textAlignVertical="top"
         maxLength={500}
         placeholderTextColor="#000"
-        onFocus={() => setIsFocused(true)} // Cuando el campo recibe foco
-        onBlur={() => setIsFocused(false)} // Cuando el campo pierde foco
+        onFocus={() => setIsFocused(true)} 
+        onBlur={() => setIsFocused(false)} 
       />
     </View>
 

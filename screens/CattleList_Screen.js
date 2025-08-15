@@ -25,9 +25,9 @@ export default function CattleScreen({ navigation, route }) {
   const { width, height } = Dimensions.get("window");
   const API_URL = "https://webmobileregister-production.up.railway.app";
 
-  //============================================================================
-const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
-  const userMenuAnim = useState(new Animated.Value(-250))[0]; // Para el menú de usuario
+
+const menuAnim = useState(new Animated.Value(-250))[0]; 
+  const userMenuAnim = useState(new Animated.Value(-250))[0]; 
 
   const [showMenu, setShowMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -47,10 +47,10 @@ const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
       }).start();
     }
     setShowMenu(!showMenu);
-    setShowUserMenu(false); // Cerrar el menú de usuario si se abre el otro
+    setShowUserMenu(false); 
   };
 
-    // Función para abrir el menú de usuario
+    
     const toggleUserMenu = () => {
       if (showUserMenu) {
         Animated.spring(userMenuAnim, {
@@ -74,10 +74,10 @@ const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
   };
  
  const handleGoBack = () => {
-  // Navega directamente a la pantalla CattleListScreen
+  
   navigation.navigate("Home");
 };
-  //========================================================================
+
 
 
   useEffect(() => {
@@ -137,7 +137,7 @@ const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
 }
   return (
 <ImageBackground
-  source={require('../assets/acuarela.Home.png')}  // Correcta si 'CattleList_Screen.js' está en 'screens'
+  source={require('../assets/acuarela.Home.png')}  
   style={{ flex: 1, position: "absolute", width: "100%", height: "100%" }}
 >
 
@@ -169,7 +169,7 @@ const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
                style={[
                  styles.dropdownMenuLeft,
                  { transform: [{ translateX: menuAnim }] },
-                 { zIndex: 1 }, // Asegura que el menú esté encima
+                 { zIndex: 1 }, 
                ]}
              >
                <TouchableOpacity onPress={() => navigation.navigate("Home")}>
@@ -185,7 +185,7 @@ const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
                style={[
                  styles.dropdownMenuLeftuser,
                  { transform: [{ translateX: userMenuAnim }] },
-                 { zIndex: 1 }, // Asegura que el menú esté encima
+                 { zIndex: 1 }, 
                ]}
              >
                <TouchableOpacity onPress={() => navigation.navigate("Login")}>
@@ -198,13 +198,13 @@ const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
 
      <ScrollView
              ref={scrollViewRef}
-             style={{ flex: 1 }} // Hace que el ScrollView ocupe todo el espacio disponible
-             contentContainerStyle={{ paddingBottom: 20 }} // Espacio extra al final del ScrollView
+             style={{ flex: 1 }} 
+             contentContainerStyle={{ paddingBottom: 20 }} 
            >
         <View style={styles.titleContainer}>
           <Image
-            source={require("../assets/Imagen_Resumen_Ganado.png")} // Coloca la ruta de tu imagen aquí
-            style={styles.imageStyle} // Define el estilo para la imagen
+            source={require("../assets/Imagen_Resumen_Ganado.png")} 
+            style={styles.imageStyle} 
           />
           <Text style={styles.title}>RESUMEN</Text>
           <Text style={styles.title1}>DE GANADO</Text>
@@ -212,8 +212,8 @@ const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
 
         <View style={styles.totalCountContainer}>
           <Image
-            source={require("../assets/TotalRegistros.png")} // Ruta de tu logo
-            style={styles.logoStyle} // Estilo para el logo
+            source={require("../assets/TotalRegistros.png")} 
+            style={styles.logoStyle} 
           />
           <Text style={styles.totalCount}>
             Total de registros:{" "}

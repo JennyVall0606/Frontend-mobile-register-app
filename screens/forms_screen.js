@@ -41,7 +41,7 @@ export default function FormsScreen({ route }) {
   const [unidad, setUnidad] = useState("");
   const [dosisFinal, setDosisFinal] = useState("");
 
-  // DropDownPicker estados
+
   const [openTipoVacuna, setOpenTipoVacuna] = useState(false);
   const [openVacunaNombre, setOpenVacunaNombre] = useState(false);
   const [tipoVacuna, setTipoVacuna] = useState(null);
@@ -55,19 +55,19 @@ export default function FormsScreen({ route }) {
   const [filteredCattle, setFilteredCattle] = useState([]);
   const [observacion, setObservacion] = useState("");
   const [fechaVacuna, setFechaVacuna] = useState("");
-  // Estados para formulario de peso
+ 
   const [observations, setObservations] = useState("");
   const [chipPeso, setChipPeso] = useState("");
   const [peso, setPeso] = useState("");
   const [fechaPeso, setFechaPeso] = useState("");
-  // Estados para formulario de vacunas
+  
   const [chipVacuna, setChipVacuna] = useState("");
   const API_URL = "https://webmobileregister-production.up.railway.app";
 
 
   //============================================================================
-  const menuAnim = useState(new Animated.Value(-250))[0]; // Para el menú lateral
-    const userMenuAnim = useState(new Animated.Value(-250))[0]; // Para el menú de usuario
+  const menuAnim = useState(new Animated.Value(-250))[0]; 
+    const userMenuAnim = useState(new Animated.Value(-250))[0]; 
   
     const [showMenu, setShowMenu] = useState(false);
     const [showUserMenu, setShowUserMenu] = useState(false);
@@ -87,10 +87,10 @@ export default function FormsScreen({ route }) {
         }).start();
       }
       setShowMenu(!showMenu);
-      setShowUserMenu(false); // Cerrar el menú de usuario si se abre el otro
+      setShowUserMenu(false); 
     };
   
-      // Función para abrir el menú de usuario
+      
       const toggleUserMenu = () => {
         if (showUserMenu) {
           Animated.spring(userMenuAnim, {
@@ -114,7 +114,7 @@ export default function FormsScreen({ route }) {
     };
    
    const handleGoBack = () => {
-  // Navega directamente a la pantalla CattleListScreen
+
   navigation.navigate("ControlScreen");
 };
     //========================================================================
@@ -132,7 +132,7 @@ export default function FormsScreen({ route }) {
   }, []);
 
   const handleConfirmDate = (date) => {
-    // Ajustar manualmente a UTC-5 (hora Colombia)
+    
     const colombiaDate = new Date(date.getTime() - 5 * 60 * 60 * 1000);
     const formattedDate = colombiaDate.toISOString().split("T")[0];
 
@@ -140,7 +140,6 @@ export default function FormsScreen({ route }) {
       .toISOString()
       .split("T")[0];
 
-    // Si la fecha es futura, mostrar la alerta
     if (formattedDate > today) {
       Alert.alert(
         "Fecha inválida",
@@ -150,14 +149,14 @@ export default function FormsScreen({ route }) {
       );
     }
 
-    // Si la fecha es válida, asignarla
+    
     if (currentDateType === "peso") {
       setFechaPeso(formattedDate);
     } else {
       setFechaVacuna(formattedDate);
     }
 
-    // Solo cerrar el modal si la fecha es válida
+    
     setDatePickerVisibility(false);
   };
 
@@ -260,15 +259,15 @@ export default function FormsScreen({ route }) {
         nuevaVacuna: response.data,
       });
     } catch (error) {
-      // Mostrar mensaje claro al usuario
+     
       if (error.response && error.response.data) {
-        // Si el backend envía un mensaje de error específico
+        
         Alert.alert(
           "Error",
           error.response.data.error || JSON.stringify(error.response.data)
         );
       } else {
-        // Error de red u otro error desconocido
+        
         Alert.alert("Error", "No se pudo guardar la vacuna. Intenta de nuevo.");
       }
       console.error(error);
@@ -288,7 +287,7 @@ export default function FormsScreen({ route }) {
       setTipoVacuna(cattle.tipoVacuna || null);
       setNombreVacuna(cattle.nombreVacuna || null);
 
-      // Asignar dosisFinal directamente desde cattle.dosis (si existe)
+     
       setDosisFinal(cattle.dosis || "");
 
       setObservacion(cattle.observacion || null);
@@ -309,7 +308,7 @@ export default function FormsScreen({ route }) {
 
   return (
 <ImageBackground
-  source={require('../assets/acuarela.Home.png')} // Usa la ruta relativa correcta
+  source={require('../assets/acuarela.Home.png')} 
   style={{ flex: 1, position: "absolute", width: "100%", height: "100%" }}
 >
          
@@ -367,12 +366,12 @@ export default function FormsScreen({ route }) {
                </View>
      <ScrollView
              ref={scrollViewRef}
-             style={{ flex: 1 }} // Hace que el ScrollView ocupe todo el espacio disponible
-             contentContainerStyle={{ paddingBottom: 20 }} // Espacio extra al final del ScrollView
+             style={{ flex: 1 }} 
+             contentContainerStyle={{ paddingBottom: 20 }}
            >
         <Image
-          source={require("../assets/Imagen_Formulario_Registro_Ganado.png")} // Ruta de la imagen
-          style={styles.image} // Estilo único para la imagen
+          source={require("../assets/Imagen_Formulario_Registro_Ganado.png")} 
+          style={styles.image}
         />
 
         <Text style={styles.title1}>Formularios </Text>
@@ -474,7 +473,7 @@ export default function FormsScreen({ route }) {
               style={[styles.weightContainer, errors.peso && styles.inputError]}
             >
               <Image
-                source={require("../assets/Peso.png")} // Ruta de la imagen local
+                source={require("../assets/Peso.png")} 
                 style={styles.iconStylePeso}
               />
               <TextInput
@@ -534,7 +533,7 @@ export default function FormsScreen({ route }) {
               </ScrollView>
             )}
 
-            {/* DropDownPicker */}
+           
             <DropDownPicker
               open={openTipoVacuna}
               setOpen={() => {
@@ -549,7 +548,7 @@ export default function FormsScreen({ route }) {
               containerStyle={[styles.dropdownContainerPicker]}
               style={styles.dropdownListStyle}
               listMode="SCROLLVIEW"
-              maxHeight={200} // Ajusta la altura máxima del dropdown
+              maxHeight={200} 
               onChangeValue={() => setOpenTipoVacuna(false)}
               arrowIconStyle={styles.arrowIconStyle}
             />
@@ -571,7 +570,7 @@ export default function FormsScreen({ route }) {
               ]}
               style={styles.dropdownListStyle}
               listMode="SCROLLVIEW"
-              maxHeight={200} // Ajusta la altura máxima del dropdown
+              maxHeight={200} 
               onChangeValue={() => setOpenVacunaNombre(false)}
               arrowIconStyle={styles.arrowIconStyle}
             />
@@ -613,22 +612,22 @@ export default function FormsScreen({ route }) {
                 setItems={setItems}
                 placeholder="Unidad*"
                 containerStyle={[
-                  styles.dropdownContainerUnidad, // Estilo base
-                  open && styles.dropdownBelowUnidad, // Estilo cuando está abierto
+                  styles.dropdownContainerUnidad, 
+                  open && styles.dropdownBelowUnidad, 
 
-                  errors.unidad && styles.inputError, // Aplica el estilo de error si hay un error
+                  errors.unidad && styles.inputError, 
                   { zIndex: 9999 },
                 ]}
                 listMode="SCROLLVIEW"
                 arrowIconStyle={styles.arrowIconStyle}
                 onChangeValue={() => setOpen(false)}
-                // Eliminar el borde extra dentro del dropdown
+                
                 dropDownStyle={{
-                  borderWidth: 0, // Elimina el borde dentro del dropdown
-                  padding: 0, // Asegura que no haya relleno adicional
+                  borderWidth: 0, 
+                  padding: 0, 
                 }}
                 style={{
-                  borderWidth: 0, // Elimina el borde interno adicional
+                  borderWidth: 0, 
                 }}
               />
             </View>
@@ -664,7 +663,7 @@ export default function FormsScreen({ route }) {
                 onChangeText={setObservations}
                 multiline
                 textAlignVertical="top"
-                maxLength={500} // Puedes ajustar el límite según necesidad
+                maxLength={500} 
               />
             </View>
 
@@ -683,13 +682,13 @@ export default function FormsScreen({ route }) {
           onConfirm={handleConfirmDate}
           themeVariant="light"
           onCancel={() => setDatePickerVisibility(false)}
-          maximumDate={new Date()} // Establece el día de hoy como la fecha máxima (deshabilita fechas futuras)
+          maximumDate={new Date()} 
         />
       </ScrollView>
         {/* Barra inferior */}
                 <View style={styles.greenBar}>
                   <View style={styles.bottomImageContainer}>
-                    {/* Imagen Inicio */}
+                    
                     <TouchableOpacity onPress={navigateToHome}>
                       <View style={styles.imageContainer}>
                         <Image
@@ -700,7 +699,7 @@ export default function FormsScreen({ route }) {
                       </View>
                     </TouchableOpacity>
           
-                    {/* Imagen Regresar */}
+                   
                     <TouchableOpacity onPress={handleGoBack}>
                       <View style={styles.imageContainer}>
                         <Image

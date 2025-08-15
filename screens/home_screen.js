@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image, Dimensions } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Image, Dimensions, SafeAreaView } from 'react-native';
 import Layout from '../components/layoutHome';
 import styles from '../styles/home_styles';
 import { useNavigation } from '@react-navigation/native';
@@ -10,39 +10,40 @@ export default function HomeScreen() {
  const { width, height } = Dimensions.get('window');
   return (
     <Layout>
+      <SafeAreaView style={{ flex: 1 }}>
       <ScrollView
-              style={[styles.container, { width, height }]} // Ajustamos el ancho y alto al de la pantalla
+              style={[styles.container, { width, height }]} 
             >
         
 <Image
-  source={require('../assets/Logo_Positivo.png')}  // Ajusta la ruta según corresponda
+  source={require('../assets/Logo_Positivo.png')}  
   style={styles.logo}
   resizeMode="contain"
 />
 
        <View style={styles.buttonRow}>
-  {/* Botón "Registrar Ganado" con imagen */}
+
   <TouchableOpacity
     style={styles.squareButton}
     onPress={() => navigation.navigate('RegisterCattle')}
   >
     <View style={styles.buttonContent}>
       <Image
-        source={require('../assets/RegistrarGanado.png')} // Ruta de la imagen para "Registrar Ganado"
+        source={require('../assets/RegistrarGanado.png')} 
         style={styles.buttonImage}
       />
       <Text style={styles.buttonText}>Registrar Ganado</Text>
     </View>
   </TouchableOpacity>
 
-  {/* Botón "Ver mi ganado" con imagen */}
+  
   <TouchableOpacity
     style={styles.squareButton}
     onPress={() => navigation.navigate('CattleScreen')}
   >
     <View style={styles.buttonContent}>
       <Image
-        source={require('../assets/VerMiGanado.png')} // Ruta de la imagen para "Ver mi ganado"
+        source={require('../assets/VerMiGanado.png')} 
         style={styles.buttonImage}
       />
       <Text style={styles.buttonText}>Ver mi ganado</Text>
@@ -50,6 +51,8 @@ export default function HomeScreen() {
   </TouchableOpacity>
 </View>
       </ScrollView>
+    
+    </SafeAreaView>
     </Layout>
   );
 }

@@ -22,15 +22,15 @@ export default StyleSheet.create({
     
   },
   topBarGreen: {
-    height: 150, // Altura de la barra verde
-    backgroundColor: "#7dac53", // Color verde
+    height: 150, 
+    backgroundColor: "#7dac53", 
     width: "100%",
-    flexDirection: "row", // Alinea los elementos de manera horizontal
-    justifyContent: "space-between", // Espaciado entre los íconos
-    alignItems: "center", // Centra los íconos verticalmente dentro de la barra
-    paddingHorizontal: 15, // Ajusta el espaciado de los íconos desde los bordes
-    top: -40, // Asegura que esté en la parte superior de la pantalla
-    zIndex: 1, // Asegura que la barra esté por encima del contenido
+    flexDirection: "row", 
+    justifyContent: "space-between", 
+    alignItems: "center",
+    paddingHorizontal: 15, 
+    top: -40,
+    zIndex: 1, 
   },
 
   icon: {
@@ -93,8 +93,8 @@ export default StyleSheet.create({
   },
   dropdownMenuLeftuser:{
 position: "absolute",
-  top: 100,  // Ajusta esta posición vertical según lo necesites
-  left: 280,// Asegura que el menú esté alineado completamente a la izquierda
+  top: 100,  
+  left: 280,
   backgroundColor: "#7dac53",
   padding: 2,
   borderRadius: 8,
@@ -129,39 +129,39 @@ position: "absolute",
   },
 
   greenBar: {
-    height: 80, // Altura de la barra verde
-    backgroundColor: "#7dac53", // Color verde
-    width: "100%", // Asegura que la barra ocupe todo el ancho
+    height: 80, 
+    backgroundColor: "#7dac53", 
+    width: "100%", 
        marginTop: 10,  
   },
 
   bottomImageContainer: {
-    position: "absolute", // Lo posiciona en la parte inferior de la barra
-    bottom: 10, // Asegura que esté en la parte inferior
+    position: "absolute", 
+    bottom: 10, 
     left: 0,
     right: 0,
-    flexDirection: "row", // Para colocar las imágenes una al lado de la otra
-    justifyContent: "space-between", // Espaciado entre las imágenes
-    paddingHorizontal: 120, // Espacio de los bordes de la barra
-    marginBottom:15, // Espacio adicional debajo de las imágenes
+    flexDirection: "row", 
+    justifyContent: "space-between",
+    paddingHorizontal: 120, 
+    marginBottom:15, 
   },
   
  imageContainer: {
-    alignItems: "center", // Centra la imagen y el texto horizontalmente
-    justifyContent: "center", // Centra la imagen y el texto verticalmente
-    marginHorizontal: 15, // Añade espacio entre los contenedores de imagen
+    alignItems: "center",
+    justifyContent: "center", 
+    marginHorizontal: 15, 
   },
 
   imageStyle: {
-    width: 20, // Ancho de las imágenes
-    height: 20, // Alto de las imágenes
+    width: 20, 
+    height: 20, 
   },
 
    imageText: {
-    marginTop: 5, // Añade un pequeño espacio entre la imagen y el texto
-    color: "white", // Puedes cambiar el color del texto si lo prefieres
-    fontSize: 12, // Tamaño del texto
-    fontWeight: "normal", // Estilo del texto
+    marginTop: 5, 
+    color: "white", 
+    fontSize: 12, 
+    fontWeight: "normal", 
   },
   
 });

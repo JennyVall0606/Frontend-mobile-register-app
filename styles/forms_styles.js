@@ -13,15 +13,15 @@ export default StyleSheet.create({
     
   },
   topBarGreen: {
-    height: 150, // Altura de la barra verde
+    height: 150, 
     backgroundColor:  "#7dac53",
     width: "100%",
-    flexDirection: "row", // Alinea los elementos de manera horizontal
-    justifyContent: "space-between", // Espaciado entre los íconos
-    alignItems: "center", // Centra los íconos verticalmente dentro de la barra
-    paddingHorizontal: 15, // Ajusta el espaciado de los íconos desde los bordes
-    top: -40, // Asegura que esté en la parte superior de la pantalla
-    zIndex: 1, // Asegura que la barra esté por encima del contenido
+    flexDirection: "row", 
+    justifyContent: "space-between", 
+    alignItems: "center", 
+    paddingHorizontal: 15, 
+    top: -40, 
+    zIndex: 1, 
   },
 
   icon: {
@@ -84,8 +84,8 @@ export default StyleSheet.create({
   },
   dropdownMenuLeftuser:{
 position: "absolute",
-  top: 100,  // Ajusta esta posición vertical según lo necesites
-  left: 280,// Asegura que el menú esté alineado completamente a la izquierda
+  top: 100,  
+  left: 280,
   backgroundColor: "#7dac53",
   padding: 2,
   borderRadius: 8,
@@ -119,40 +119,40 @@ position: "absolute",
     flex: 1,
   },
 
-  greenBar: {
-    height: 80, // Altura de la barra verde
-    backgroundColor: "#7dac53", // Color verde
-    width: "100%", // Asegura que la barra ocupe todo el ancho
+ greenBar: {
+    height: 90, 
+    backgroundColor: "#7dac53",
+    width: "100%", 
         
   },
 
-   bottomImageContainer: {
-    position: "absolute", // Lo posiciona en la parte inferior de la barra
-    bottom: 10, // Asegura que esté en la parte inferior
+  bottomImageContainer: {
+    position: "absolute", 
+    bottom: 10, 
     left: 0,
     right: 0,
-    flexDirection: "row", // Para colocar las imágenes una al lado de la otra
-    justifyContent: "space-between", // Espaciado entre las imágenes
-    paddingHorizontal: 130, // Espacio de los bordes de la barra
-    marginBottom:5, // Espacio adicional debajo de las imágenes
+    flexDirection: "row", 
+    justifyContent: "space-between", 
+    paddingHorizontal: 150,
+    marginBottom:16, 
   },
   
  imageContainer: {
-    alignItems: "center", // Centra la imagen y el texto horizontalmente
-    justifyContent: "center", // Centra la imagen y el texto verticalmente
-    marginHorizontal: 15, // Añade espacio entre los contenedores de imagen
+    alignItems: "center", 
+    justifyContent: "center", 
+    marginHorizontal: 15, 
   },
 
   imageStyleG: {
-    width: 20, // Ancho de las imágenes
-    height: 20, // Alto de las imágenes
+    width: 20, 
+    height: 20, 
   },
 
    imageText: {
-    marginTop: 3, // Añade un pequeño espacio entre la imagen y el texto
-    color: "white", // Puedes cambiar el color del texto si lo prefieres
-    fontSize: 12, // Tamaño del texto
-    fontWeight: "normal", // Estilo del texto
+    marginTop: 3, 
+    color: "white", 
+    fontSize: 12, 
+    fontWeight: "normal", 
      left: -6,
      marginBottom:8,
   },
@@ -219,10 +219,10 @@ position: "absolute",
   },
 
   imagePeso: {
-    width: 380, // Ajusta el tamaño de la imagen
-    height: 40, // Ajusta el tamaño de la imagen
-    marginBottom: 10, // Espacio entre la imagen y el texto
-    resizeMode: "contain", // Mantiene la proporción de la imagen
+    width: 380, 
+    height: 40, 
+    marginBottom: 10, 
+    resizeMode: "contain", 
   },
 
   subtitle1: {
@@ -258,13 +258,13 @@ position: "absolute",
     elevation: 10,
   },
   logo: {
-    width: 35, // Ajusta el tamaño del logo
-    height: 35, // Ajusta el tamaño del logo
-    marginRight: 8, // Espacio entre el logo y el TextInput
+    width: 35,
+    height: 35, 
+    marginRight: 8, 
   },
   inputChip: {
     padding: 10,
-    flex: 1, // El TextInput ocupa el espacio restante
+    flex: 1, 
   },
 
   dateButton: {
@@ -310,9 +310,9 @@ position: "absolute",
   },
 
   iconStylePeso: {
-    width: 32, // Ajusta el tamaño del logo
-    height: 35, // Ajusta el tamaño del logo
-    marginRight: 10, // Espacio entre el logo y el TextInput
+    width: 32, 
+    height: 35, 
+    marginRight: 10, 
     marginLeft: 12,
   },
 
@@ -326,9 +326,9 @@ position: "absolute",
   },
 
   weightUnit: {
-    fontSize: 16, // Tamaño de la fuente
-    marginLeft: 2, // Espacio entre el input y la unidad
-    color: "#000", // Color del texto
+    fontSize: 16, 
+    marginLeft: 2,
+    color: "#000", 
   },
 
   /////////////////////////////////////////////////////////////////////////////////////
@@ -355,17 +355,17 @@ position: "absolute",
   dropdownContainerPicker: {
     marginBottom: 30,
     flexDirection: "row",
-    position: "relative", // Esto asegura que zIndex funcione correctamente
+    position: "relative", 
     alignItems: "center",
     marginHorizontal: 5,
 
     padding: 5,
-    width: "97%", // Asegura que el contenedor ocupe todo el ancho disponible
-    borderRadius: 5, // Bordes redondeados
+    width: "97%", 
+    borderRadius: 5, 
   },
 
   dropdownListStyle: {
-    borderWidth: 0, // Elimina cualquier borde de la lista
+    borderWidth: 0, 
     borderTopRightRadius: 0,
     borderRadius: 10,
     shadowColor: "#000",
@@ -376,32 +376,32 @@ position: "absolute",
   },
 
   dropdownBelow: {
-    backgroundColor: "rgb(255, 255, 255)", // Cambia el fondo del dropdown cuando está abierto
+    backgroundColor: "rgb(255, 255, 255)", 
     borderRadius: 10,
-    borderWidth: 1, // Borde alrededor del contenedor
-    borderColor: "rgb(255, 255, 255)", // Color del borde
-    zIndex: 15, // Asegúrate de que la lista quede encima si se necesita
+    borderWidth: 1, 
+    borderColor: "rgb(255, 255, 255)", 
+    zIndex: 15, 
     height: 90,
   },
 
   dropdownLogo: {
-    width: 34, // Ajusta el tamaño del logo
-    height: 35, // Ajusta el tamaño del logo
-    marginRight: 3, // Espacio entre el logo y el TextInput
+    width: 34,
+    height: 35, 
+    marginRight: 3,
     marginLeft: 8,
   },
 
   dropdownLogoCC: {
-    width: 34, // Ajusta el tamaño del logo
-    height: 45, // Ajusta el tamaño del logo
-    marginRight: 3, // Espacio entre el logo y el TextInput
+    width: 34, 
+    height: 45, 
+    marginRight: 3,
     marginLeft: 8,
   },
 
   dropdownText: {
-    fontSize: 14, // Tamaño del texto
-    color: "#000", // Color del texto
-    textAlign: "left", // Alinea el texto a la izquierda
+    fontSize: 14, 
+    color: "#000", 
+    textAlign: "left", 
     marginLeft: 1,
   },
   arrowIconStyle: {
@@ -411,8 +411,8 @@ position: "absolute",
 
   row: {
     marginBottom: 15,
-    position: "relative", // Esto asegura que zIndex funcione correctamente
-    zIndex: 10, // Se coloca debajo de "Tipo Vacuna"
+    position: "relative", 
+    zIndex: 10, 
     alignItems: "center",
     marginHorizontal: 10,
     flexDirection: "row",
@@ -422,11 +422,11 @@ position: "absolute",
   },
 
   inputDosisContainer: {
-    flexDirection: "row", // Coloca la imagen y el TextInput en fila (horizontal)
-    alignItems: "center", // Alinea verticalmente los elementos en el centro
-    width: "40%", // Relleno dentro del contenedor
-    borderWidth: 1, // Bordes del contenedor
-    borderColor: "rgb(255, 255, 255)", // Color del borde del contenedor
+    flexDirection: "row", 
+    alignItems: "center", 
+    width: "40%", 
+    borderWidth: 1, 
+    borderColor: "rgb(255, 255, 255)", 
     borderRadius: 8,
     padding: 5,
     backgroundColor: "rgb(252, 252, 252)",
@@ -443,26 +443,26 @@ position: "absolute",
   },
 
   dropdownLogo: {
-    width: 30, // Tamaño de la imagen
-    height: 30, // Tamaño de la imagen
-    marginRight: 10, // Espacio entre la imagen y el TextInput
+    width: 30,
+    height: 30,
+    marginRight: 10, 
     marginLeft: 8,
   },
 
   inputDosis: {
-    flex: 1, // El TextInput ocupa el espacio restante
-    paddingVertical: 10, // Espaciado vertical para el campo de texto
+    flex: 1, 
+    paddingVertical: 10,
 
-    fontSize: 16, // Tamaño de la fuente
-    backgroundColor: "rgb(255, 255, 255)", // Fondo blanco para el campo de entrada
+    fontSize: 16, 
+    backgroundColor: "rgb(255, 255, 255)", 
   },
 
   dropdownContainerUnidad: {
-    flexDirection: "row", // Coloca la imagen y el TextInput en fila (horizontal)
-    alignItems: "center", // Alinea verticalmente los elementos en el centro
-    width: "40%", // Relleno dentro del contenedor
-    borderWidth: 1, // Bordes del contenedor
-    borderColor: "rgb(255, 255, 255)", // Color del borde del contenedor
+    flexDirection: "row", 
+    alignItems: "center", 
+    width: "40%", 
+    borderWidth: 1, 
+    borderColor: "rgb(255, 255, 255)",
     borderRadius: 8,
     padding: 2,
     backgroundColor: "rgb(255, 255, 255)",
@@ -484,8 +484,8 @@ position: "absolute",
   },
 
   inputWrapper: {
-    flexDirection: "row", // Alineación horizontal
-    alignItems: "flex-start", // Alineación vertical hacia la parte superior
+    flexDirection: "row", 
+    alignItems: "flex-start", 
     borderWidth: 1,
     borderColor: "rgb(255, 255, 255)",
     padding: 9,
@@ -507,19 +507,19 @@ position: "absolute",
   },
 
   iconStyleO: {
-    width: 30, // Ajusta el tamaño de la imagen
+    width: 30, 
     height: 30,
     marginRight: 10,
   },
 
   inputobs: {
-    flex: 1, // El TextInput ocupará todo el espacio disponible
-    fontSize: 16, // Tamaño del texto
-    textAlignVertical: "top", // Alinea el texto en la parte superior
-    height: 100, // Altura ajustada para un TextInput multilinea
-    paddingLeft: 2, // Espacio izquierdo para que no se solape con el logo
+    flex: 1, 
+    fontSize: 16, 
+    textAlignVertical: "top", 
+    height: 100, 
+    paddingLeft: 2, 
     paddingVertical: 5,
-    selectionColor: "#000", // Color de la selección (cuando el texto está seleccionado)
+    selectionColor: "#000", 
   },
 
   /////////////////////////////////////////////////////////////////////////////////////
@@ -544,7 +544,7 @@ position: "absolute",
   },
 
   inputError: {
-    borderColor: "red", // Aplica el borde rojo cuando hay error
+    borderColor: "red", 
     borderWidth: 1,
   },
 });

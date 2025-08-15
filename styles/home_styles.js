@@ -25,40 +25,40 @@ export default StyleSheet.create({
   },
 
   buttonRow: {
-     flexDirection: 'row', // Alineamos los botones de forma horizontal
-    justifyContent: 'space-between', // Distribuye los botones con espacio entre ellos
+     flexDirection: 'row',
+    justifyContent: 'space-between', 
     marginHorizontal: 20,
     marginTop: 40,
   },
 
   squareButton: {
-     width: 150, // Ancho de cada cuadro
-    height: 150, // Altura de cada cuadro
-    backgroundColor: 'rgb(248, 244, 244)', // Color de fondo del botón
-    borderRadius: 10, // Bordes redondeados
-    justifyContent: 'center', // Centra el contenido dentro del cuadro
-    alignItems: 'center', // Centra el contenido horizontalmente
-    elevation: 5, // Sombra para dar un efecto de profundidad
-    shadowColor: '#000', // Color de la sombra
-    shadowOffset: { width: 0, height: 4 }, // Desplazamiento de la sombra
-    shadowOpacity: 0.9, // Opacidad de la sombra
-    shadowRadius: 9, // Radio de la sombra
-     borderTopLeftRadius: 20, // Redondea la esquina superior izquierda
-  borderTopRightRadius: 0, // No redondea la esquina superior derecha
+     width: 150, 
+    height: 150, 
+    backgroundColor: 'rgb(248, 244, 244)', 
+    borderRadius: 10, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 }, 
+    shadowOpacity: 0.9, 
+    shadowRadius: 9, 
+     borderTopLeftRadius: 20, 
+  borderTopRightRadius: 0,
   },
 
   buttonContent: {
     flex: 1,
-  justifyContent: 'center', // Centra el contenido en el eje vertical
+  justifyContent: 'center',
   alignItems: 'center',
- marginBottom: -40,  // Elimina el espacio entre la imagen y el texto
+ marginBottom: -40,  
   },
 
    buttonImage: {
-   width: 140, // Ancho de la imagen
-  height: 140, // Alto de la imagen
-  resizeMode: 'contain', // Ajusta la imagen para que no se distorsione
-  marginBottom: 20, // Espacio entre la imagen y el texto (ajústalo según sea necesario)
+   width: 140, 
+  height: 140, 
+  resizeMode: 'contain', 
+  marginBottom: 20, 
   
   },
   

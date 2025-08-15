@@ -12,15 +12,15 @@ export default StyleSheet.create({
     
   },
   topBarGreen: {
-    height: 150, // Altura de la barra verde
+    height: 150, 
     backgroundColor:  "#7dac53",
     width: "100%",
-    flexDirection: "row", // Alinea los elementos de manera horizontal
-    justifyContent: "space-between", // Espaciado entre los íconos
-    alignItems: "center", // Centra los íconos verticalmente dentro de la barra
-    paddingHorizontal: 15, // Ajusta el espaciado de los íconos desde los bordes
-    top: -40, // Asegura que esté en la parte superior de la pantalla
-    zIndex: 1, // Asegura que la barra esté por encima del contenido
+    flexDirection: "row", 
+    justifyContent: "space-between", 
+    alignItems: "center",
+    paddingHorizontal: 15, 
+    top: -40, 
+    zIndex: 1, 
   },
 
   icon: {
@@ -83,8 +83,8 @@ export default StyleSheet.create({
   },
   dropdownMenuLeftuser:{
 position: "absolute",
-  top: 100,  // Ajusta esta posición vertical según lo necesites
-  left: 280,// Asegura que el menú esté alineado completamente a la izquierda
+  top: 100,  
+  left: 280,
   backgroundColor: "#7dac53",
   padding: 2,
   borderRadius: 8,
@@ -119,39 +119,39 @@ position: "absolute",
   },
 
   greenBar: {
-    height: 80, // Altura de la barra verde
-    backgroundColor: "#7dac53", // Color verde
-    width: "100%", // Asegura que la barra ocupe todo el ancho
+    height: 90, 
+    backgroundColor: "#7dac53",
+    width: "100%",
         
   },
 
   bottomImageContainer: {
-    position: "absolute", // Lo posiciona en la parte inferior de la barra
-    bottom: 10, // Asegura que esté en la parte inferior
+    position: "absolute", 
+    bottom: 10, 
     left: 0,
     right: 0,
-    flexDirection: "row", // Para colocar las imágenes una al lado de la otra
-    justifyContent: "space-between", // Espaciado entre las imágenes
-    paddingHorizontal: 150,// Espacio de los bordes de la barra
-    marginBottom:5, // Espacio adicional debajo de las imágenes
+    flexDirection: "row",
+    justifyContent: "space-between", 
+    paddingHorizontal: 150,
+    marginBottom:16, 
   },
   
  imageContainer: {
-    alignItems: "center", // Centra la imagen y el texto horizontalmente
-    justifyContent: "center", // Centra la imagen y el texto verticalmente
-    marginHorizontal: 15, // Añade espacio entre los contenedores de imagen
+    alignItems: "center", 
+    justifyContent: "center", 
+    marginHorizontal: 15, 
   },
 
   imageStyle: {
-    width: 20, // Ancho de las imágenes
-    height: 20, // Alto de las imágenes
+    width: 20, 
+    height: 20,
   },
 
    imageText: {
-    marginTop: 5, // Añade un pequeño espacio entre la imagen y el texto
-    color: "white", // Puedes cambiar el color del texto si lo prefieres
-    fontSize: 12, // Tamaño del texto
-    fontWeight: "normal", // Estilo del texto
+    marginTop: 5, 
+    color: "white", 
+    fontSize: 12, 
+    fontWeight: "normal", 
      left: -6,
   },
 
@@ -160,7 +160,6 @@ position: "absolute",
   
  container: {
     flex: 1,
-    padding: 20,
     paddingTop: 80,
     
   }, 
@@ -168,16 +167,16 @@ position: "absolute",
   editText: {
     fontSize: 26,
     fontWeight: "bold",
-    color: "rgb(0, 0, 0)", // Color negro para "Editar"
+    color: "rgb(0, 0, 0)", 
     textAlign: "center",
     marginBottom: 0,
   },
 
-  // Estilo para el texto "Formulario de Registro"
+
   formText: {
     fontSize: 22,
     fontWeight: "bold",
-    color: "rgb(3, 3, 3)", // Azul para "Formulario de Registro"
+    color: "rgb(3, 3, 3)", 
     textAlign: "center",
     marginBottom: 0,
   },
@@ -240,23 +239,23 @@ position: "absolute",
     borderRadius: 30,
     borderColor: "rgb(255, 255, 255)",
     borderWidth: 1,
-    borderTopLeftRadius: 20, // Redondea la esquina superior izquierda
-    borderTopRightRadius: 0, // No redondea la esquina superior derecha
+    borderTopLeftRadius: 20, 
+    borderTopRightRadius: 0, 
     marginBottom: 30,
-    // Sombra para iOS
-    shadowColor: "#000", // Sombra negra
-    shadowOffset: { width: 0, height: 9 }, // Desplazamiento de la sombra
-    shadowOpacity: 1, // Sombra completamente opaca
-    shadowRadius: 6, // Mayor difuminado
 
-    // Sombra para Android
-    elevation: 10, // Aumenta la elevación para Android
+    shadowColor: "#000", 
+    shadowOffset: { width: 0, height: 9 },
+    shadowOpacity: 1,
+    shadowRadius: 6,
+
+
+    elevation: 10, 
   },
 
   rowContainer: {
-    flexDirection: "row", // Coloca los elementos en fila (horizontal)
-    alignItems: "center", // Centra verticalmente los elementos dentro de la fila
-    justifyContent: "flex-start", // Alinea los elementos al inicio de la fila
+    flexDirection: "row", 
+    alignItems: "center", 
+    justifyContent: "flex-start", 
   },
 
   logo: {
@@ -267,8 +266,8 @@ position: "absolute",
   },
 
   imagePickerText: {
-    fontSize: 16, // Ajusta el tamaño del texto
-    color: "#000", // Cambia el color del texto
+    fontSize: 16, 
+    color: "#000", 
     marginLeft: -7,
   },
 
@@ -290,7 +289,7 @@ position: "absolute",
   },
 
   iconStyle: {
-    width: 30, // Ajusta el tamaño de la imagen
+    width: 30, 
     height: 30,
     marginLeft: -5,
   },
@@ -299,7 +298,7 @@ position: "absolute",
   dropdown: {
     flexDirection: "row",
     alignItems: "center",
-    borderWidth: 1, // Borde normal
+    borderWidth: 1, 
     borderColor: "rgb(255, 255, 255)",
     padding: 12,
     paddingHorizontal: 15,
@@ -309,7 +308,7 @@ position: "absolute",
     marginHorizontal: 20,
     borderTopRightRadius: 0,
     borderRadius: 10,
-    width: "90%", // Ajusta el anch
+    
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 5,
@@ -321,11 +320,7 @@ position: "absolute",
 
 
 
-  dropdownLogo: {
-    width: 30,
-    height: 30,
-    marginLeft: -5,
-  },
+
 
   dropdownLogoRaza: {
     width: 34,
@@ -335,9 +330,9 @@ position: "absolute",
   },
 
   dropdownText: {
-    fontSize: 16, // Ajusta el tamaño del texto
-    color: "#000", // Cambia el color del texto
-    marginLeft: -7,
+    fontSize: 16, 
+    color: "#020202ff", 
+    marginLeft: 10,
   },
 
   arrowIconStyle: {
@@ -384,8 +379,8 @@ position: "absolute",
   // ///////////////////////////PESO#
 
   weightContainer: {
-    flexDirection: "row", // Alineación horizontal
-    alignItems: "center", // Centra verticalmente el logo y el texto
+    flexDirection: "row", 
+    alignItems: "center", 
     borderWidth: 1,
     borderColor: "rgb(255, 255, 255)",
     padding: 12,
@@ -408,17 +403,17 @@ position: "absolute",
   },
 
   inputWithIcon: {
-    flexDirection: "row", // Alinea el logo y el input en una fila
+    flexDirection: "row", 
     alignItems: "center",
-    flex: 1, // Ocupa todo el espacio disponible
+    flex: 1, 
   },
 
   weightInput: {
-    flex: 1, // El input ocupará el espacio disponible
+    flex: 1, 
     fontSize: 16,
     color: "rgb(2, 2, 2)",
-    paddingVertical: 0, // Elimina padding vertical
-    paddingLeft: 5, // Para evitar que el texto se solape con el logo
+    paddingVertical: 0, 
+    paddingLeft: 5, 
   },
   weightUnit: {
     fontSize: 16,
@@ -436,8 +431,8 @@ position: "absolute",
   // ///////////////////////////CHIP#CHIPMADRE#CHIPPADRE#
 
   inputWithIconChips: {
-    flexDirection: "row", // Alineación horizontal
-    alignItems: "center", // Centra verticalmente el logo y el texto
+    flexDirection: "row", 
+    alignItems: "center",
     borderWidth: 1,
     borderColor: "rgb(255, 255, 255)",
     padding: 12,
@@ -458,9 +453,9 @@ position: "absolute",
     elevation: 10,
   },
   iconStyleChips: {
-    width: 30, // Ajusta el tamaño de la imagen
+    width: 30, 
     height: 30,
-    marginRight: 4, // Espacio entre el logo y el texto
+    marginRight: 4, 
     marginLeft: -5,
   },
   iconStyleChipsP: {
@@ -469,16 +464,16 @@ position: "absolute",
     marginLeft: -5,
   },
   inputChips: {
-    flex: 1, // El TextInput ocupará todo el espacio disponible
-    fontSize: 16, // Tamaño del texto
-    paddingVertical: 0, // Elimina padding vertical por defecto
-    paddingLeft: 5, // Evita que el texto se solape con el logo
+    flex: 1, 
+    fontSize: 16, 
+    paddingVertical: 0, 
+    paddingLeft: 5,
   },
 
   dropdownTextEnfermedad: {
-    fontSize: 16, // Ajusta el tamaño del texto
-    color: "#000", // Cambia el color del texto
-    marginLeft: -7,
+       fontSize: 16, 
+    color: "#020202ff", 
+    marginLeft: 10,
   },
 
   dropdownEnfermedad: {
@@ -509,7 +504,7 @@ position: "absolute",
 
   inputWrapper: {
     flexDirection: "row", 
-    alignItems: "flex-start", // Alineación vertical hacia la parte superior
+    alignItems: "flex-start", 
     borderWidth: 1,
     borderColor: "rgb(255, 255, 255)",
     padding: 12,
@@ -531,30 +526,30 @@ position: "absolute",
   },
 
   iconStyleO: {
-    width: 30, // Ajusta el tamaño de la imagen
+    width: 30, 
     height: 30,
     marginRight: 6,
     marginLeft: -5,
   },
 
   inputobs: {
-    flex: 1, // El TextInput ocupará todo el espacio disponible
-    fontSize: 16, // Tamaño del texto
-    textAlignVertical: "top", // Alinea el texto en la parte superior
-    height: 100, // Altura ajustada para un TextInput multilinea
-    paddingLeft: 2, // Espacio izquierdo para que no se solape con el logo
+    flex: 1, 
+    fontSize: 16,
+    textAlignVertical: "top", 
+    height: 100, 
+    paddingLeft: 2, 
     paddingVertical: 5,
-    selectionColor: "#000", // Color de la selección (cuando el texto está seleccionado)
+    selectionColor: "#000", 
   },
 
   selectedDiseases: {
-    fontSize: 16, // Ajusta el tamaño de la fuente
+    fontSize: 16, 
     color: "rgb(9, 167, 9)",
     lineHeight: 18,
     paddingVertical: 2,
     paddingHorizontal: 25,
-    flexDirection: "column", // Alinea el texto en una columna
-    flexWrap: "wrap", // Asegura que el texto no se desborde y se ajuste
+    flexDirection: "column",
+    flexWrap: "wrap", 
     marginBottom: 20,
     marginTop: -25,
   },
@@ -567,8 +562,8 @@ position: "absolute",
     marginTop: 40,
     marginHorizontal: 40,
     marginBottom: 20,
-    borderTopLeftRadius: 20, // Redondea la esquina superior izquierda
-    borderTopRightRadius: 0, // No redondea la esquina superior derecha
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 0, 
   },
 
   registerButtonText: {
@@ -578,7 +573,7 @@ position: "absolute",
   },
 
   inputError: {
-    borderColor: "red", // Aplica el borde rojo cuando hay error
+    borderColor: "red", 
     borderWidth: 1,
   },
 });
