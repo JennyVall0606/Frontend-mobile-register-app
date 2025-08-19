@@ -2,11 +2,10 @@
   "expo": {
     "name": "AgroGestor",
     "slug": "frontend-mobile-register-app",
-    "version": "1.5.3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    v5  ",
+    "version": "1.5.3",  
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",

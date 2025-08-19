@@ -68,7 +68,18 @@ export default function RegisterCattleScreen({ route }) {
     { label: "Ninguna", value: "Ninguna" },
     { label: "OTRA", value: "OTRA" },
   ]);
+  const [criadero, setCriadero] = useState(""); // Procedencia del ganado
+const [hierro, setHierro] = useState(""); // Hierro del propietario
+const [categoria, setCategoria] = useState(""); // Categoría
+const [ubicacion, setUbicacion] = useState(""); // Ubicación del ganado
+const [openCategoria, setOpenCategoria] = useState(false);  // Asegúrate de definir el estado correctamente
 
+// Definir los ítems de la categoría
+const categoriaItems = [
+  { label: "Cría", value: "cria" },
+  { label: "Levante", value: "levante" },
+  { label: "Ceba", value: "ceba" },
+];
   //============================================================================
 const menuAnim = useState(new Animated.Value(-250))[0]; 
   const userMenuAnim = useState(new Animated.Value(-250))[0]; 
@@ -285,6 +296,9 @@ const screenWidth = Dimensions.get('window').width;
       breed: !breed,
       birthDate: !birthDate,
       weight: !weight,
+       categoria: !categoria,
+       hierro: !hierro,  // Validación para "Hierro"
+    ubicacion: !ubicacion,  // Validación para "Ubicación"
     };
 
     setErrors(newErrors);
@@ -330,7 +344,10 @@ const screenWidth = Dimensions.get('window').width;
           name: "foto.jpg",
         });
       }
-
+formData.append("hierro", hierro);  
+formData.append("ubicacion", ubicacion);  
+formData.append("categoria", categoria);  
+formData.append("procedencia", criadero); 
       formData.append("chip_animal", chip);
       formData.append("raza_id_raza", breed);
       formData.append("peso_nacimiento", weight);
@@ -514,28 +531,23 @@ const screenWidth = Dimensions.get('window').width;
         )}
 
 
-
-
-
-  <DropDownPicker
-    open={openRaza}
-    setOpen={setOpenRaza}
-    items={itemsRaza}
-    value={breed}
-    setValue={setBreed}
-    placeholder={breed ? "" : "Selecciona una raza*"}
-     style={[
-    styles.dropdown,
-    errors.breed && styles.inputError,
-    { width: screenWidth * 0.9 } 
-  ]}
-    textStyle={styles.dropdownText}
-    listMode="SCROLLVIEW"
-    maxHeight={200} 
-    arrowIconStyle={styles.arrowIconStyle} 
-    
-  />
-
+        {/* Chip de registro vacuno */}
+        <View
+          style={[styles.inputWithIconChips, errors.chip && styles.inputError]}
+        >
+          <Image
+            source={require("../assets/Chip.png")}
+            style={styles.iconStyleChips}
+          />
+          <TextInput
+            style={styles.inputChips}
+            placeholder="Chip de registro vacuno*"
+            placeholderTextColor="#000"
+            value={chip}
+            onChangeText={setChip}
+            editable={!isEditing}
+          />
+        </View>
 
 
         <TouchableOpacity
@@ -553,7 +565,8 @@ const screenWidth = Dimensions.get('window').width;
           </View>
         </TouchableOpacity>
 
-        <DateTimePickerModal
+
+      <DateTimePickerModal
           isVisible={isDatePickerVisible}
           mode="date"
           onConfirm={handleConfirmDate}
@@ -561,9 +574,6 @@ const screenWidth = Dimensions.get('window').width;
           onCancel={() => setDatePickerVisibility(false)}
           maximumDate={new Date()} 
         />
-
-
-
 
         <View
           style={[styles.weightContainer, errors.weight && styles.inputError]}
@@ -585,25 +595,101 @@ const screenWidth = Dimensions.get('window').width;
           </View>
         </View>
 
+
+
+
+  <DropDownPicker
+    open={openRaza}
+    setOpen={setOpenRaza}
+    items={itemsRaza}
+    value={breed}
+    setValue={setBreed}
+    placeholder={breed ? "" : "Selecciona la raza*"}
+     style={[
+    styles.dropdown,
+    errors.breed && styles.inputError,
+    { width: screenWidth * 0.9 } 
+  ]}
+    textStyle={styles.dropdownText}
+    listMode="SCROLLVIEW"
+    maxHeight={200} 
+    arrowIconStyle={styles.arrowIconStyle} 
+    
+  />
+
+
+
+
+
+<View style={[styles.inputWithIconChips, errors.criadero && styles.inputError]}>
+  <Image
+    source={require("../assets/procedencia.png")} // Coloca una imagen adecuada si es necesario
+    style={styles.iconStyleChips}
+  />
+  <TextInput
+    style={styles.inputChips}
+    placeholder="Procedencia del ganado (Criadero)"
+    placeholderTextColor="#000"
+    value={criadero}
+    onChangeText={setCriadero}
+  />
+</View>
+
+// 3. Agregar el campo de "Hierro del propietario"
+<View style={[styles.inputWithIconChips, errors.hierro && styles.inputError]}>
+  <Image
+    source={require("../assets/hierro.png")} // Coloca una imagen adecuada si es necesario
+    style={styles.iconStyleChips}
+  />
+  <TextInput
+    style={styles.inputChips}
+    placeholder="Hierro del propietario*"
+    placeholderTextColor="#000"
+    value={hierro}
+    onChangeText={setHierro}
+  />
+</View>
+
+// 4. Agregar el campo de "Categoría" (Lista desplegable)
+<DropDownPicker
+  open={openCategoria}
+  setOpen={setOpenCategoria}
+  items={categoriaItems}
+  value={categoria}
+  setValue={setCategoria}
+  placeholder={categoria ? "" : "Selecciona una categoría*"}
+  style={[styles.dropdown, errors.categoria && styles.inputError, { width: screenWidth * 0.9 }]}
+  textStyle={styles.dropdownText}
+  listMode="SCROLLVIEW"
+  maxHeight={200}
+  arrowIconStyle={styles.arrowIconStyle}
+/>
+
+// 5. Agregar el campo de "Ubicación del ganado"
+<View style={[styles.inputWithIconChips, errors.ubicacion && styles.inputError]}>
+  <Image
+    source={require("../assets/ubicacion.png")} // Coloca una imagen adecuada si es necesario
+    style={styles.iconStyleChips}
+  />
+  <TextInput
+    style={styles.inputChips}
+    placeholder="Ubicación del ganado*"
+    placeholderTextColor="#000"
+    value={ubicacion}
+    onChangeText={setUbicacion}
+  />
+</View>
+
+
+  
+
+
+
+
+
+
         
 
-        {/* Chip de registro vacuno */}
-        <View
-          style={[styles.inputWithIconChips, errors.chip && styles.inputError]}
-        >
-          <Image
-            source={require("../assets/Chip.png")}
-            style={styles.iconStyleChips}
-          />
-          <TextInput
-            style={styles.inputChips}
-            placeholder="Chip de registro vacuno*"
-            placeholderTextColor="#000"
-            value={chip}
-            onChangeText={setChip}
-            editable={!isEditing}
-          />
-        </View>
 
 
 
