@@ -21,35 +21,51 @@ export default function HomeScreen() {
   resizeMode="contain"
 />
 
-       <View style={styles.buttonRow}>
+<View style={styles.container}>
+  {/* Botones en la parte superior */}
+  <View style={styles.buttonRow}>
+    <TouchableOpacity
+      style={styles.squareButton}
+      onPress={() => navigation.navigate('RegisterCattle')}
+    >
+      <View style={styles.buttonContent}>
+        <Image
+          source={require('../assets/RegistrarGanado.png')} 
+          style={styles.buttonImage}
+        />
+        <Text style={styles.buttonText}>Registrar Ganado</Text>
+      </View>
+    </TouchableOpacity>
 
+    <TouchableOpacity
+      style={styles.squareButton}
+      onPress={() => navigation.navigate('CattleScreen')}
+    >
+      <View style={styles.buttonContent}>
+        <Image
+          source={require('../assets/VerMiGanado.png')} 
+          style={styles.buttonImage}
+        />
+        <Text style={styles.buttonText}>Ver mi ganado</Text>
+      </View>
+    </TouchableOpacity>
+  </View>
+
+  {/* Botón Informes en la parte inferior centrado */}
   <TouchableOpacity
     style={styles.squareButton}
-    onPress={() => navigation.navigate('RegisterCattle')}
+    onPress={() => navigation.navigate('InformesScreen')}
   >
     <View style={styles.buttonContent}>
       <Image
-        source={require('../assets/RegistrarGanado.png')} 
+        source={require('../assets/informes.png')} 
         style={styles.buttonImage}
       />
-      <Text style={styles.buttonText}>Registrar Ganado</Text>
-    </View>
-  </TouchableOpacity>
-
-  
-  <TouchableOpacity
-    style={styles.squareButton}
-    onPress={() => navigation.navigate('CattleScreen')}
-  >
-    <View style={styles.buttonContent}>
-      <Image
-        source={require('../assets/VerMiGanado.png')} 
-        style={styles.buttonImage}
-      />
-      <Text style={styles.buttonText}>Ver mi ganado</Text>
+      <Text style={styles.buttonText}>Informes</Text>
     </View>
   </TouchableOpacity>
 </View>
+
       </ScrollView>
     
     </SafeAreaView>

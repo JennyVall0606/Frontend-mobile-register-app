@@ -8,6 +8,7 @@ import FormScreen from "../screens/forms_screen";
 import HomeScreen from "../screens/home_screen";
 import LoginScreen from "../screens/login_screen";
 import RegisterCattleScreen from "../screens/register_cattle_screen";
+import InformesScreen from '../screens/informes_Screen';  // Ajusta las rutas
 
 const Stack = createNativeStackNavigator();
 
@@ -44,6 +45,10 @@ export default function AppNavigator() {
         component={FormScreen}
         options={{ headerShown: false }}
       />
+       <Stack.Screen 
+       name="InformesScreen" 
+       component={InformesScreen} 
+        options={{ headerShown: false }}/>  
     </Stack.Navigator>
   );
 }

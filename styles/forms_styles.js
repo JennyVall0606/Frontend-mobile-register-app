@@ -331,6 +331,56 @@ position: "absolute",
     color: "#000", 
   },
 
+
+
+ inputprecio: {
+    backgroundColor: "rgb(255, 255, 255)",
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "rgb(255, 255, 255)",
+    marginBottom: 30,
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: 10,
+    borderTopRightRadius: 0,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 5,
+    shadowRadius: 4,
+    elevation: 10,
+  },
+  
+  weightInput: {
+    flex: 1, 
+    fontSize: 16,
+    color: "#000",
+  },
+  
+  textcosto: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 40,
+    color: "#7dac53",
+    textAlign: "center",
+  },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   /////////////////////////////////////////////////////////////////////////////////////
   //  dropdownContainerNombreVacuna: {
   //     backgroundColor: "rgb(255, 255, 255)",

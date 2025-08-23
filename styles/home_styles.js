@@ -25,10 +25,11 @@ export default StyleSheet.create({
   },
 
   buttonRow: {
+ marginBottom: 40,
      flexDirection: 'row',
     justifyContent: 'space-between', 
     marginHorizontal: 20,
-    marginTop: 40,
+    marginTop: -90,
   },
 
   squareButton: {

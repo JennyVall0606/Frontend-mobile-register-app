@@ -119,7 +119,7 @@ const [costoGanadoVenta, setCostoGanadoVenta] = useState('');
    
    const handleGoBack = () => {
 
-  navigation.navigate("ControlScreen");
+  navigation.navigate("Home");
 };
     //========================================================================
   useEffect(() => {
@@ -387,419 +387,86 @@ useEffect(() => {
              contentContainerStyle={{ paddingBottom: 20 }}
            >
         <Image
-          source={require("../assets/Imagen_Formulario_Registro_Ganado.png")} 
+          source={require("../assets/informes.png")} 
           style={styles.image}
         />
 
-        <Text style={styles.title1}>Formularios </Text>
-        <Text style={styles.title2}>de control</Text>
+        <Text style={styles.title1}>Informes  </Text>
 
-        <View style={styles.switchRow}>
-          <TouchableOpacity
-            style={[styles.switchButton]}
-            onPress={() => {
-              setPesoChecked(true);
-              setVacunaChecked(false);
-            }}
-          >
-            <Ionicons
-              name={pesoChecked ? "checkbox" : "square-outline"}
-              style={
-                pesoChecked
-                  ? formsStyles.iconChecked
-                  : formsStyles.iconUnchecked
-              }
-            />
-            <Text style={styles.switchText}>Control de Peso</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.switchButton]}
-            onPress={() => {
-              setVacunaChecked(true);
-              setPesoChecked(false);
-            }}
-          >
-            <Ionicons
-              name={vacunaChecked ? "checkbox" : "square-outline"}
-              style={
-                vacunaChecked
-                  ? formsStyles.iconChecked
-                  : formsStyles.iconUnchecked
-              }
-            />
-            <Text style={styles.switchText}>Control de Vacunas</Text>
-          </TouchableOpacity>
-        </View>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- {/* FORMULARIO DE PESO */}
-{pesoChecked && (
-  <View style={styles.formSection}>
-    <Image
-      source={require("../assets/Peso.png")}
-      style={styles.imagePeso}
-    />
-    <Text style={styles.subtitle1}>Formulario </Text>
-    <Text style={styles.subtitle2}>Control de Peso</Text>
-
-    <View style={styles.inputContainer}>
-      <Image
-        source={require("../assets/Chip.png")}
-        style={styles.logo}
-      />
-
-      <TextInput
-        style={styles.inputChip}
-        value={chipPeso}
-        editable={false}
-      />
-    </View>
-
-    {filteredCattle.length > 0 && (
-      <ScrollView vertical style={styles.cattleList}>
-        {filteredCattle.map((item) => (
-          <TouchableOpacity
-            key={item.chip}
-            style={styles.cattleItem}
-            onPress={() => handleSelectCattle(item)}
-          >
-            <Text>{item.nombre}</Text>
-            <Text>{item.chip}</Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-    )}
-
-    <TouchableOpacity
-      style={[styles.dateButton, errors.fechaPeso && styles.inputError]}
-      onPress={() => {
-        setCurrentDateType("peso");
-        setDatePickerVisibility(true);
-      }}
-    >
-      <Image
-        source={require("../assets/FechaDeNacimieto.png")}
-        style={styles.logo}
-      />
-      <Text style={styles.dateButtonText}>
-        {fechaPeso || "Fecha de pesaje*"}
-      </Text>
-    </TouchableOpacity>
-
-    <View
-      style={[styles.weightContainer, errors.peso && styles.inputError]}
-    >
-      <Image
-        source={require("../assets/Peso.png")} 
-        style={styles.iconStylePeso}
-      />
-      <TextInput
-        style={[styles.weightInput]}
-        placeholder="Peso*"
-        placeholderTextColor="#000"
-        keyboardType="numeric"
-        value={peso}
-        onChangeText={setPeso}
-      />
-      <Text style={styles.weightUnit}>(Kg)</Text>
-    </View>
-
-
-
-
-
-
-
-
-   {/* Nuevos campos agregados */}
-<View style={styles.inputprecio}>
-    <Image
-        source={require("../assets/precio.png")}
-        style={styles.logo}
-      />
-  <TextInput
-    style={styles.weightInput}
-    placeholder="Precio del Kg Compra"
-    placeholderTextColor="#000"
-    keyboardType="numeric"
-    value={precioKgCompra}
-    onChangeText={setPrecioKgCompra}
-  />
-</View>
-
-
-<Text style={styles.textcosto}>
-  Costo del Ganado Compra: ${precioKgCompra && precioKgCompra !== "" ? parseInt(costoGanadoCompra).toLocaleString() : "0"}
-</Text>
-
-
-<View style={styles.inputprecio}>
-    <Image
-        source={require("../assets/precio.png")}
-        style={styles.logo}
-      />
-  <TextInput
-    style={styles.weightInput}
-    placeholder="Precio del Kg Venta"
-    placeholderTextColor="#000"
-    keyboardType="numeric"
-    value={precioKgVenta}
-    onChangeText={setPrecioKgVenta}
-  />
-</View>
-
-<Text style={styles.textcosto}>
-  Costo del Ganado Venta: ${precioKgVenta && precioKgVenta !== "" ? parseInt(costoGanadoVenta).toLocaleString() : "0"}
-</Text>
-
-
-
-
-
-
-
-
-
-
-
-    <TouchableOpacity
-      style={styles.buttonGuardar}
-      onPress={guardarPeso}
-    >
-      <Text style={styles.buttonTextGuardar}>Guardar</Text>
-    </TouchableOpacity>
-  </View>
-)}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        {vacunaChecked && (
-          <View style={styles.formSection}>
-            <Image
-              source={require("../assets/Vacunas.png")}
-              style={styles.imagePeso}
-            />
-            <Text style={styles.subtitle1}>Formulario </Text>
-            <Text style={styles.subtitle2}>Control de Vacunas</Text>
-
-            <View style={styles.inputContainer}>
-              <Image
-                source={require("../assets/Chip.png")}
-                style={styles.logo}
-              />
-
-              <TextInput
-                style={styles.inputChip}
-                value={chipVacuna}
-                editable={false}
-              />
-            </View>
-
-            {filteredCattle.length > 0 && (
-              <ScrollView vertical style={styles.cattleList}>
-                {filteredCattle.map((item) => (
-                  <TouchableOpacity
-                    key={item.chip}
-                    style={styles.cattleItem}
-                    onPress={() => handleSelectCattle(item)}
-                  >
-                    <Text>{item.nombre}</Text>
-                    <Text>{item.chip}</Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-            )}
-
+       
            
-            <DropDownPicker
-              open={openTipoVacuna}
-              setOpen={() => {
-                setOpenVacunaNombre(false);
-                setOpenTipoVacuna(true);
-                setOpen(false);
-              }}
-              value={tipoVacuna}
-              items={itemsTipoVacuna}
-              setValue={setTipoVacuna}
-              placeholder="Tipo de vacuna"
-              containerStyle={[styles.dropdownContainerPicker]}
-              style={styles.dropdownListStyle}
-              listMode="SCROLLVIEW"
-              maxHeight={200} 
-              onChangeValue={() => setOpenTipoVacuna(false)}
-              arrowIconStyle={styles.arrowIconStyle}
-            />
 
-            <DropDownPicker
-              open={openVacunaNombre}
-              setOpen={() => {
-                setOpenTipoVacuna(false);
-                setOpenVacunaNombre(true);
-                setOpen(false);
-              }}
-              value={nombreVacuna}
-              items={itemsVacunaNombre}
-              setValue={setNombreVacuna}
-              placeholder="Nombre de vacuna"
-              containerStyle={[
-                styles.dropdownContainerPicker,
-                openTipoVacuna && styles.dropdownBelow,
-              ]}
-              style={styles.dropdownListStyle}
-              listMode="SCROLLVIEW"
-              maxHeight={200} 
-              onChangeValue={() => setOpenVacunaNombre(false)}
-              arrowIconStyle={styles.arrowIconStyle}
-            />
+          
+     
 
-            <View style={styles.row}>
-              <View
-                style={[
-                  styles.inputDosisContainer,
-                  errors.dosis && styles.inputError,
-                ]}
-              >
-                <Image
-                  source={require("../assets/Vacuna.png")}
-                  style={styles.dropdownLogo}
-                />
-                <TextInput
-                  style={[
-                    styles.inputDosis,
-                    errors.dosis && styles.inputError1,
-                  ]}
-                  value={cantidad}
-                  onChangeText={setCantidad}
-                  placeholder="Dosis*"
-                  placeholderTextColor="#000"
-                  keyboardType="numeric"
-                />
-              </View>
 
-              <DropDownPicker
-                open={open}
-                value={unidad}
-                items={items}
-                setOpen={() => {
-                  setOpenTipoVacuna(false);
-                  setOpenVacunaNombre(false);
-                  setOpen(true);
-                }}
-                setValue={setUnidad}
-                setItems={setItems}
-                placeholder="Unidad*"
-                containerStyle={[
-                  styles.dropdownContainerUnidad, 
-                  open && styles.dropdownBelowUnidad, 
 
-                  errors.unidad && styles.inputError, 
-                  { zIndex: 9999 },
-                ]}
-                listMode="SCROLLVIEW"
-                arrowIconStyle={styles.arrowIconStyle}
-                onChangeValue={() => setOpen(false)}
-                
-                dropDownStyle={{
-                  borderWidth: 0, 
-                  padding: 0, 
-                }}
-                style={{
-                  borderWidth: 0, 
-                }}
-              />
-            </View>
 
-            <TouchableOpacity
-              style={[
-                styles.dateButton,
-                errors.fechaVacuna && styles.inputError,
-              ]}
-              onPress={() => {
-                setCurrentDateType("vacuna");
-                setDatePickerVisibility(true);
-              }}
-            >
-              <Image
-                source={require("../assets/Vacunas.png")}
-                style={styles.logo}
-              />
-              <Text style={styles.dateButtonText}>
-                {fechaVacuna || "Fecha de vacunación*"}
-              </Text>
-            </TouchableOpacity>
 
-            <View style={styles.inputWrapper}>
-              <Image
-                source={require("../assets/Obs.png")}
-                style={styles.iconStyleO}
-              />
-              <TextInput
-                style={styles.inputobs}
-                placeholder="Observaciones"
-                value={observations}
-                onChangeText={setObservations}
-                multiline
-                textAlignVertical="top"
-                maxLength={500} 
-              />
-            </View>
 
-            <TouchableOpacity
-              style={styles.buttonGuardar}
-              onPress={guardarVacuna}
-            >
-              <Text style={styles.buttonTextGuardar}>Guardar</Text>
-            </TouchableOpacity>
-          </View>
-        )}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
 
         <DateTimePickerModal
           isVisible={isDatePickerVisible}

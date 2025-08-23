@@ -1,4 +1,4 @@
-import React, { useState, useEffect, SafeAreaView  } from "react";
+import React, { useState, useEffect, SafeAreaView } from "react";
 import {
   View,
   Text,
@@ -8,7 +8,6 @@ import {
   Alert,
   Animated,
   ImageBackground,
- 
   Image,
   ScrollView,
   Dimensions,
@@ -23,8 +22,6 @@ import styles from "../styles/register_cattle_styles";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
-
 export default function RegisterCattleScreen({ route }) {
   const { chip: chipFromParams, razaId, isEditing } = route.params || {};
   const [chip, setChip] = useState(chipFromParams || "");
@@ -37,12 +34,12 @@ export default function RegisterCattleScreen({ route }) {
   const [mother, setMother] = useState("");
 
   const [observations, setObservations] = useState("");
-    const [isFocused, setIsFocused] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [currentDateType, setCurrentDateType] = useState("");
   const [openRaza, setOpenRaza] = useState(false);
   const [itemsRaza, setItemsRaza] = useState([]);
-  const [breed, setBreed] = useState(""); 
+  const [breed, setBreed] = useState("");
   const [openEnfermedad, setOpenEnfermedad] = useState(false);
   const [pendingBreedId, setPendingBreedId] = useState(null);
   const [disease, setDisease] = useState([]);
@@ -69,20 +66,27 @@ export default function RegisterCattleScreen({ route }) {
     { label: "OTRA", value: "OTRA" },
   ]);
   const [criadero, setCriadero] = useState(""); // Procedencia del ganado
-const [hierro, setHierro] = useState(""); // Hierro del propietario
-const [categoria, setCategoria] = useState(""); // Categoría
-const [ubicacion, setUbicacion] = useState(""); // Ubicación del ganado
-const [openCategoria, setOpenCategoria] = useState(false);  // Asegúrate de definir el estado correctamente
+  const [hierro, setHierro] = useState(""); // Hierro del propietario
+  const [categoria, setCategoria] = useState(""); // Categoría
+  const [ubicacion, setUbicacion] = useState(""); // Ubicación del ganado
+  const [openCategoria, setOpenCategoria] = useState(false); // Asegúrate de definir el estado correctamente
 
-// Definir los ítems de la categoría
-const categoriaItems = [
-  { label: "Cría", value: "cria" },
-  { label: "Levante", value: "levante" },
-  { label: "Ceba", value: "ceba" },
-];
+  // Definir los ítems de la categoría
+  const categoriaItems = [
+    { label: "Cría", value: "cria" },
+    { label: "Levante", value: "levante" },
+    { label: "Ceba", value: "ceba" },
+  ];
+
+  const [parto, setParto] = useState(""); // Número de parto
+  const [precocidad, setPrecocidad] = useState(""); // Precocidad
+  const [tipoMonta, setTipoMonta] = useState(""); // Definir el estado tipoMonta
+
+  const [openTipoMonta, setOpenTipoMonta] = useState(false); // Nuevo estado para "Tipo de Monta"
+
   //============================================================================
-const menuAnim = useState(new Animated.Value(-250))[0]; 
-  const userMenuAnim = useState(new Animated.Value(-250))[0]; 
+  const menuAnim = useState(new Animated.Value(-250))[0];
+  const userMenuAnim = useState(new Animated.Value(-250))[0];
 
   const [showMenu, setShowMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -102,36 +106,35 @@ const menuAnim = useState(new Animated.Value(-250))[0];
       }).start();
     }
     setShowMenu(!showMenu);
-    setShowUserMenu(false); 
+    setShowUserMenu(false);
   };
 
-    // Función para abrir el menú de usuario
-    const toggleUserMenu = () => {
-      if (showUserMenu) {
-        Animated.spring(userMenuAnim, {
-          toValue: -250,
-          bounciness: 10,
-          useNativeDriver: true,
-        }).start();
-      } else {
-        Animated.spring(userMenuAnim, {
-          toValue: 0,
-          bounciness: 10,
-          useNativeDriver: true,
-        }).start();
-      }
-      setShowUserMenu(!showUserMenu);
-      setShowMenu(false); 
-    };
+  // Función para abrir el menú de usuario
+  const toggleUserMenu = () => {
+    if (showUserMenu) {
+      Animated.spring(userMenuAnim, {
+        toValue: -250,
+        bounciness: 10,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      Animated.spring(userMenuAnim, {
+        toValue: 0,
+        bounciness: 10,
+        useNativeDriver: true,
+      }).start();
+    }
+    setShowUserMenu(!showUserMenu);
+    setShowMenu(false);
+  };
 
-   const navigateToHome = () => {
+  const navigateToHome = () => {
     navigation.navigate("Home");
   };
- 
- const handleGoBack = () => {
 
-  navigation.navigate("Home");
-};
+  const handleGoBack = () => {
+    navigation.navigate("Home");
+  };
   //========================================================================
 
   const [errors, setErrors] = useState({
@@ -146,7 +149,7 @@ const menuAnim = useState(new Animated.Value(-250))[0];
 
   const navigation = useNavigation();
   const { width, height } = Dimensions.get("window");
-const screenWidth = Dimensions.get('window').width;
+  const screenWidth = Dimensions.get("window").width;
   useEffect(() => {
     const fetchRazas = async () => {
       try {
@@ -164,12 +167,11 @@ const screenWidth = Dimensions.get('window').width;
     fetchRazas();
   }, []);
 
-  
   useEffect(() => {
     if (razaId) {
       const razaExistente = itemsRaza.find((item) => item.label === razaId);
       if (razaExistente) {
-        setBreed(razaExistente.value); 
+        setBreed(razaExistente.value);
       }
     }
   }, [itemsRaza, razaId]);
@@ -201,14 +203,13 @@ const screenWidth = Dimensions.get('window').width;
           setObservations(response.data.observaciones || "");
           setPendingBreedId(response.data.raza_id_raza?.toString() || "");
 
-          
           if (response.data.enfermedades) {
             const enfermedades = response.data.enfermedades.includes(",")
-              ? response.data.enfermedades.split(",") 
-              : [response.data.enfermedades]; 
+              ? response.data.enfermedades.split(",")
+              : [response.data.enfermedades];
 
             const enfermedadesUnicas = Array.from(new Set(enfermedades));
-            setDisease(enfermedadesUnicas); 
+            setDisease(enfermedadesUnicas);
           }
 
           if (response.data.foto) {
@@ -258,8 +259,6 @@ const screenWidth = Dimensions.get('window').width;
     }
   };
 
-  
-
   const handleConfirmDate = (date) => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -287,6 +286,16 @@ const screenWidth = Dimensions.get('window').width;
     setMother("");
     setDisease(Array.isArray(value) ? value : []);
     setObservations("");
+    setParto("");
+    setPrecocidad("");
+    setTipoMonta("");
+    setUbicacion("");
+    setCriadero("");
+    setHierro("");
+    setCategoria("");
+     setParto("");        
+  setPrecocidad("");  
+  setTipoMonta("");  
   };
 
   const handleRegister = async () => {
@@ -296,9 +305,12 @@ const screenWidth = Dimensions.get('window').width;
       breed: !breed,
       birthDate: !birthDate,
       weight: !weight,
-       categoria: !categoria,
-       hierro: !hierro,  // Validación para "Hierro"
-    ubicacion: !ubicacion,  // Validación para "Ubicación"
+      categoria: !categoria,
+      hierro: !hierro, 
+      ubicacion: !ubicacion, 
+      parto: !parto,        
+  precocidad: !precocidad, 
+  tipoMonta: !tipoMonta,
     };
 
     setErrors(newErrors);
@@ -329,9 +341,6 @@ const screenWidth = Dimensions.get('window').width;
         return;
       }
 
-
-     
-        
       const fechaFormateada = birthDate.split("T")[0];
       const enfermedadesFormateadas =
         disease.length > 0 ? disease.join(",") : null;
@@ -344,14 +353,17 @@ const screenWidth = Dimensions.get('window').width;
           name: "foto.jpg",
         });
       }
-formData.append("hierro", hierro);  
-formData.append("ubicacion", ubicacion);  
-formData.append("categoria", categoria);  
-formData.append("procedencia", criadero); 
       formData.append("chip_animal", chip);
-      formData.append("raza_id_raza", breed);
-      formData.append("peso_nacimiento", weight);
       formData.append("fecha_nacimiento", fechaFormateada);
+      formData.append("peso_nacimiento", weight);
+      formData.append("raza_id_raza", breed);
+      formData.append("procedencia", criadero || null);
+      formData.append("hierro", hierro || null);
+      formData.append("categoria", categoria || null);
+      formData.append("numero_parto", parto || null);
+      formData.append("precocidad", precocidad || null);
+      formData.append("tipo_monta", tipoMonta || null);
+      formData.append("ubicacion", ubicacion || null);
       if (father) formData.append("id_madre", father);
       if (mother) formData.append("id_padre", mother);
       if (enfermedadesFormateadas)
@@ -373,7 +385,6 @@ formData.append("procedencia", criadero);
           Authorization: `Bearer ${token}`,
         },
       });
-      
 
       if (response.status === 200 || response.status === 201) {
         Alert.alert(
@@ -383,12 +394,11 @@ formData.append("procedencia", criadero);
             : "El ganado ha sido registrado correctamente"
         );
 
-        
         navigation.setParams({
-          breed: breed, 
-          disease: disease, 
-          weight: weight, 
-          observations: observations, 
+          breed: breed,
+          disease: disease,
+          weight: weight,
+          observations: observations,
         });
 
         navigation.goBack();
@@ -410,26 +420,24 @@ formData.append("procedencia", criadero);
 
   if (loading && chipFromParams) {
     return (
-    <ImageBackground
-      source={require("../assets/acuarela.Home.png")}
-      style={{ flex: 1, position: "absolute", width: "100%", height: "100%" }}
-    >
+      <ImageBackground
+        source={require("../assets/acuarela.Home.png")}
+        style={{ flex: 1, position: "absolute", width: "100%", height: "100%" }}
+      >
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#0000ff" />
           <Text>Cargando datos del animal...</Text>
         </View>
-     </ImageBackground>
+      </ImageBackground>
     );
   }
 
   return (
-    
-<ImageBackground
-  source={require('../assets/acuarela.Home.png')} 
-  style={{ flex: 1, position: "absolute", width: "100%", height: "100%" }}
->
-
-      <View >
+    <ImageBackground
+      source={require("../assets/acuarela.Home.png")}
+      style={{ flex: 1, position: "absolute", width: "100%", height: "100%" }}
+    >
+      <View>
         {/* Header */}
         <View style={[styles.topBar, styles.topBarContainer]}>
           <View style={styles.topBarGreen}>
@@ -455,13 +463,12 @@ formData.append("procedencia", criadero);
             style={[
               styles.dropdownMenuLeft,
               { transform: [{ translateX: menuAnim }] },
-              { zIndex: 1 }, 
+              { zIndex: 1 },
             ]}
           >
             <TouchableOpacity onPress={() => navigation.navigate("Home")}>
               <Text style={styles.dropdownItem}>Inicio</Text>
             </TouchableOpacity>
-           
           </Animated.View>
         )}
 
@@ -471,7 +478,7 @@ formData.append("procedencia", criadero);
             style={[
               styles.dropdownMenuLeftuser,
               { transform: [{ translateX: userMenuAnim }] },
-              { zIndex: 1 }, 
+              { zIndex: 1 },
             ]}
           >
             <TouchableOpacity onPress={() => navigation.navigate("Login")}>
@@ -479,17 +486,16 @@ formData.append("procedencia", criadero);
             </TouchableOpacity>
           </Animated.View>
         )}
-
       </View>
 
-     <ScrollView
-          contentContainerStyle={{ paddingBottom: 20, paddingTop: 10 }} 
-          style={{ flex: 1 }}
-        >
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: 20, paddingTop: 10 }}
+        style={{ flex: 1 }}
+      >
         <Image
           source={
             isEditing
-              ? require("../assets/Editar_Chip.png") 
+              ? require("../assets/Editar_Chip.png")
               : require("../assets/Imagen_Formulario_Registro_Ganado.png")
           }
           style={isEditing ? styles.editImage : styles.registerImage}
@@ -510,7 +516,7 @@ formData.append("procedencia", criadero);
             <View style={styles.rowContainer}>
               <Image
                 source={require("../assets/SubirImagen.png")}
-                style={styles.logo} 
+                style={styles.logo}
               />
               <Text style={styles.imagePickerText}> Subir imagen*</Text>
             </View>
@@ -523,13 +529,12 @@ formData.append("procedencia", criadero);
               style={styles.deleteButton}
             >
               <Image
-                source={require("../assets/Eliminar.png")} 
-                style={styles.deleteButtonIcon} 
+                source={require("../assets/Eliminar.png")}
+                style={styles.deleteButtonIcon}
               />
             </TouchableOpacity>
           </View>
         )}
-
 
         {/* Chip de registro vacuno */}
         <View
@@ -549,14 +554,13 @@ formData.append("procedencia", criadero);
           />
         </View>
 
-
         <TouchableOpacity
           style={[styles.dateButton, errors.birthDate && styles.inputError]}
           onPress={() => setDatePickerVisibility(true)}
         >
           <View style={styles.rowContainer}>
             <Image
-              source={require("../assets/FechaDeNacimieto.png")} 
+              source={require("../assets/FechaDeNacimieto.png")}
               style={styles.iconStyle}
             />
             <Text style={styles.dateButtonText}>
@@ -565,14 +569,13 @@ formData.append("procedencia", criadero);
           </View>
         </TouchableOpacity>
 
-
-      <DateTimePickerModal
+        <DateTimePickerModal
           isVisible={isDatePickerVisible}
           mode="date"
           onConfirm={handleConfirmDate}
           themeVariant="light"
           onCancel={() => setDatePickerVisibility(false)}
-          maximumDate={new Date()} 
+          maximumDate={new Date()}
         />
 
         <View
@@ -580,7 +583,7 @@ formData.append("procedencia", criadero);
         >
           <View style={styles.inputWithIcon}>
             <Image
-              source={require("../assets/Peso.png")} 
+              source={require("../assets/Peso.png")}
               style={styles.iconStylePeso}
             />
             <TextInput
@@ -595,104 +598,152 @@ formData.append("procedencia", criadero);
           </View>
         </View>
 
+        <DropDownPicker
+          open={openRaza}
+          setOpen={setOpenRaza}
+          items={itemsRaza}
+          value={breed}
+          setValue={setBreed}
+          placeholder={breed ? "" : "Selecciona la raza*"}
+          style={[
+            styles.dropdown,
+            errors.breed && styles.inputError,
+            { width: screenWidth * 0.9 },
+          ]}
+          textStyle={styles.dropdownText}
+          listMode="SCROLLVIEW"
+          maxHeight={200}
+          arrowIconStyle={styles.arrowIconStyle}
+        />
 
+        <View
+          style={[
+            styles.inputWithIconChips,
+            errors.criadero && styles.inputError,
+          ]}
+        >
+          <Image
+            source={require("../assets/procedencia.png")}
+            style={styles.iconStyleChips}
+          />
+          <TextInput
+            style={styles.inputChips}
+            placeholder="Procedencia del ganado (Criadero)"
+            placeholderTextColor="#000"
+            value={criadero}
+            onChangeText={setCriadero}
+          />
+        </View>
 
+        <View
+          style={[
+            styles.inputWithIconChips,
+            errors.hierro && styles.inputError,
+          ]}
+        >
+          <Image
+            source={require("../assets/hierro.png")}
+            style={styles.iconStyleChips}
+          />
+          <TextInput
+            style={styles.inputChips}
+            placeholder="Hierro del propietario*"
+            placeholderTextColor="#000"
+            value={hierro}
+            onChangeText={setHierro}
+          />
+        </View>
 
-  <DropDownPicker
-    open={openRaza}
-    setOpen={setOpenRaza}
-    items={itemsRaza}
-    value={breed}
-    setValue={setBreed}
-    placeholder={breed ? "" : "Selecciona la raza*"}
-     style={[
-    styles.dropdown,
-    errors.breed && styles.inputError,
-    { width: screenWidth * 0.9 } 
+        <DropDownPicker
+          open={openCategoria}
+          setOpen={setOpenCategoria}
+          items={categoriaItems}
+          value={categoria}
+          setValue={setCategoria}
+          placeholder={categoria ? "" : "Selecciona una categoría*"}
+          style={[
+            styles.dropdown,
+            errors.categoria && styles.inputError,
+            { width: screenWidth * 0.9 },
+          ]}
+          textStyle={styles.dropdownText}
+          listMode="SCROLLVIEW"
+          maxHeight={200}
+          arrowIconStyle={styles.arrowIconStyle}
+        />
+
+        {categoria === "cria" && (
+          <>
+            {/* Número de Parto */}
+            <View style={[styles.inputWithIconChips]}>
+              <Image
+                source={require("../assets/hierro.png")}
+                style={styles.iconStyleChips}
+              />
+              <TextInput
+                style={styles.inputChips}
+                placeholder="Número de Parto"
+                placeholderTextColor="#000"
+                keyboardType="numeric"
+                value={parto}
+                onChangeText={setParto}
+              />
+            </View>
+
+            {/* Precocidad */}
+            <View style={[styles.inputWithIconChips]}>
+              <Image
+                source={require("../assets/hierro.png")}
+                style={styles.iconStyleChips}
+              />
+              <TextInput
+                style={styles.inputChips}
+                placeholder="Precocidad"
+                placeholderTextColor="#000"
+                value={precocidad}
+                onChangeText={setPrecocidad}
+              />
+            </View>
+
+            {/* Tipo de Monta */}
+            <DropDownPicker
+  open={openTipoMonta}
+  setOpen={setOpenTipoMonta}
+  items={[
+    { label: "Directa", value: "directa" },
+    { label: "Inseminación", value: "inseminacion" },
   ]}
-    textStyle={styles.dropdownText}
-    listMode="SCROLLVIEW"
-    maxHeight={200} 
-    arrowIconStyle={styles.arrowIconStyle} 
-    
-  />
-
-
-
-
-
-<View style={[styles.inputWithIconChips, errors.criadero && styles.inputError]}>
-  <Image
-    source={require("../assets/procedencia.png")} // Coloca una imagen adecuada si es necesario
-    style={styles.iconStyleChips}
-  />
-  <TextInput
-    style={styles.inputChips}
-    placeholder="Procedencia del ganado (Criadero)"
-    placeholderTextColor="#000"
-    value={criadero}
-    onChangeText={setCriadero}
-  />
-</View>
-
-// 3. Agregar el campo de "Hierro del propietario"
-<View style={[styles.inputWithIconChips, errors.hierro && styles.inputError]}>
-  <Image
-    source={require("../assets/hierro.png")} // Coloca una imagen adecuada si es necesario
-    style={styles.iconStyleChips}
-  />
-  <TextInput
-    style={styles.inputChips}
-    placeholder="Hierro del propietario*"
-    placeholderTextColor="#000"
-    value={hierro}
-    onChangeText={setHierro}
-  />
-</View>
-
-// 4. Agregar el campo de "Categoría" (Lista desplegable)
-<DropDownPicker
-  open={openCategoria}
-  setOpen={setOpenCategoria}
-  items={categoriaItems}
-  value={categoria}
-  setValue={setCategoria}
-  placeholder={categoria ? "" : "Selecciona una categoría*"}
-  style={[styles.dropdown, errors.categoria && styles.inputError, { width: screenWidth * 0.9 }]}
+  value={tipoMonta}  // Asegúrate de que este valor esté actualizado correctamente
+  setValue={setTipoMonta}
+  placeholder={tipoMonta ? "" : "Selecciona el tipo de monta"}
+  style={[styles.dropdown, { width: screenWidth * 0.9 }]}
   textStyle={styles.dropdownText}
   listMode="SCROLLVIEW"
   maxHeight={200}
   arrowIconStyle={styles.arrowIconStyle}
 />
 
-// 5. Agregar el campo de "Ubicación del ganado"
-<View style={[styles.inputWithIconChips, errors.ubicacion && styles.inputError]}>
-  <Image
-    source={require("../assets/ubicacion.png")} // Coloca una imagen adecuada si es necesario
-    style={styles.iconStyleChips}
-  />
-  <TextInput
-    style={styles.inputChips}
-    placeholder="Ubicación del ganado*"
-    placeholderTextColor="#000"
-    value={ubicacion}
-    onChangeText={setUbicacion}
-  />
-</View>
+          </>
+        )}
 
-
-  
-
-
-
-
-
-
-        
-
-
-
-
+        <View
+          style={[
+            styles.inputWithIconChips,
+            errors.ubicacion && styles.inputError,
+          ]}
+        >
+          <Image
+            source={require("../assets/ubicacion.png")}
+            style={styles.iconStyleChips}
+          />
+          <TextInput
+            style={styles.inputChips}
+            placeholder="Ubicación del ganado*"
+            placeholderTextColor="#000"
+            value={ubicacion}
+            onChangeText={setUbicacion}
+          />
+        </View>
 
         {/* Registro del padre */}
         <View style={styles.inputWithIconChips}>
@@ -724,47 +775,28 @@ formData.append("procedencia", criadero);
           />
         </View>
 
-
-
-
-
-
-
-
-  <DropDownPicker
-    multiple={true}
-    min={0}
-    max={20}
-    open={openEnfermedad}
-    setOpen={setOpenEnfermedad}
-    items={itemsEnfermedad}
-    value={disease}
-    setValue={(value) => {
-      const newValue = value;
-      setDisease(newValue);
-    }}
-    placeholder="Selecciona una o más enfermedades"
-    style={styles.dropdownEnfermedad}
-    textStyle={styles.dropdownTextEnfermedad}
-    listMode="SCROLLVIEW"
-    maxHeight={200}
-    multipleText={`${disease.length} enfermedade${
-      disease.length === 1 ? "" : "s"
-    } seleccionada${disease.length === 1 ? "" : "s"}`}
-    arrowIconStyle={styles.arrowIconStyle}
-   
-    
-  />
-
-
-
-
-
-
-
-
-
-
+        <DropDownPicker
+          multiple={true}
+          min={0}
+          max={20}
+          open={openEnfermedad}
+          setOpen={setOpenEnfermedad}
+          items={itemsEnfermedad}
+          value={disease}
+          setValue={(value) => {
+            const newValue = value;
+            setDisease(newValue);
+          }}
+          placeholder="Selecciona una o más enfermedades"
+          style={styles.dropdownEnfermedad}
+          textStyle={styles.dropdownTextEnfermedad}
+          listMode="SCROLLVIEW"
+          maxHeight={200}
+          multipleText={`${disease.length} enfermedade${
+            disease.length === 1 ? "" : "s"
+          } seleccionada${disease.length === 1 ? "" : "s"}`}
+          arrowIconStyle={styles.arrowIconStyle}
+        />
 
         <Text style={styles.selectedDiseases}>
           {Array.isArray(disease) && disease.length > 0
@@ -772,24 +804,24 @@ formData.append("procedencia", criadero);
             : "Selecciona las enfermedades"}
         </Text>
 
- <View style={styles.inputWrapper}>
-      <Image
-        source={require("../assets/Obs.png")}
-        style={styles.iconStyleO}
-      />
-      <TextInput
-        style={styles.inputobs}
-        placeholder={isFocused ? "" : "Observaciones"} 
-        value={observations}
-        onChangeText={setObservations}
-        multiline
-        textAlignVertical="top"
-        maxLength={500}
-        placeholderTextColor="#000"
-        onFocus={() => setIsFocused(true)} 
-        onBlur={() => setIsFocused(false)} 
-      />
-    </View>
+        <View style={styles.inputWrapper}>
+          <Image
+            source={require("../assets/Obs.png")}
+            style={styles.iconStyleO}
+          />
+          <TextInput
+            style={styles.inputobs}
+            placeholder={isFocused ? "" : "Observaciones"}
+            value={observations}
+            onChangeText={setObservations}
+            multiline
+            textAlignVertical="top"
+            maxLength={500}
+            placeholderTextColor="#000"
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+          />
+        </View>
 
         <TouchableOpacity
           onPress={handleRegister}
@@ -801,7 +833,7 @@ formData.append("procedencia", criadero);
         </TouchableOpacity>
       </ScrollView>
 
-        {/* Barra inferior */}
+      {/* Barra inferior */}
       <View style={styles.greenBar}>
         <View style={styles.bottomImageContainer}>
           {/* Imagen Inicio */}
@@ -826,9 +858,7 @@ formData.append("procedencia", criadero);
             </View>
           </TouchableOpacity>
         </View>
-      </View> 
-
-
+      </View>
     </ImageBackground>
   );
 }
