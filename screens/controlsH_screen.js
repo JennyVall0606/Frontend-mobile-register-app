@@ -48,11 +48,13 @@ export default function ControlH_Screen({ navigation, route }) {
   const [openTipoVacuna, setOpenTipoVacuna] = useState(false);
   const [openNombreVacuna, setOpenNombreVacuna] = useState(false);
   const [showPesoDatePicker, setShowPesoDatePicker] = useState(false);
-  const [fechaVacuna, setFechaVacuna] = useState(""); 
+  const [fechaVacuna, setFechaVacuna] = useState("");
+  const [precioKgCompra, setPrecioKgCompra] = useState("");
+  const [precioKgVenta, setPrecioKgVenta] = useState("");
 
   //============================================================================
-  const menuAnim = useState(new Animated.Value(-250))[0]; 
-  const userMenuAnim = useState(new Animated.Value(-250))[0]; 
+  const menuAnim = useState(new Animated.Value(-250))[0];
+  const userMenuAnim = useState(new Animated.Value(-250))[0];
 
   const [showMenu, setShowMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -72,10 +74,9 @@ export default function ControlH_Screen({ navigation, route }) {
       }).start();
     }
     setShowMenu(!showMenu);
-    setShowUserMenu(false); 
+    setShowUserMenu(false);
   };
 
- 
   const toggleUserMenu = () => {
     if (showUserMenu) {
       Animated.spring(userMenuAnim, {
@@ -99,16 +100,14 @@ export default function ControlH_Screen({ navigation, route }) {
   };
 
   const handleGoBack = () => {
-    
     navigation.navigate("CattleScreen");
   };
-  
 
   const [openUnidad, setOpenUnidad] = useState(false);
   const [cantidad, setCantidad] = useState("");
-  const [unidad, setUnidad] = useState(""); 
-  const [showAllPesos, setShowAllPesos] = useState(false); 
-  const [showAllVacunas, setShowAllVacunas] = useState(false); 
+  const [unidad, setUnidad] = useState("");
+  const [showAllPesos, setShowAllPesos] = useState(false);
+  const [showAllVacunas, setShowAllVacunas] = useState(false);
 
   const [items, setItems] = useState([
     { label: "ml", value: "ml" },
@@ -123,13 +122,11 @@ export default function ControlH_Screen({ navigation, route }) {
 
   const [showVacunaDatePicker, setShowVacunaDatePicker] = useState(false);
 
-
   const formatDate = (dateString) => {
     if (!dateString) return "";
     return dateString.split("T")[0];
   };
 
-  
   const formatWeight = (weight) => {
     if (!weight) return "";
     const weightNum = parseFloat(weight);
@@ -149,7 +146,7 @@ export default function ControlH_Screen({ navigation, route }) {
         .get(`${API_URL}/register/animal/${encodeURIComponent(chip)}`)
         .then((response) => {
           setAnimalInfo(response.data);
-          console.log("Datos del animal recibidos:", response.data); 
+          console.log("Datos del animal recibidos:", response.data);
         })
         .catch((error) => {
           console.error("Error al obtener el animal:", error);
@@ -158,6 +155,13 @@ export default function ControlH_Screen({ navigation, route }) {
     }
   }, [chip]);
 
+  useEffect(() => {
+    if (selectedPeso) {
+      setPrecioKgCompra(selectedPeso.costo_compra || "");
+      setPrecioKgVenta(selectedPeso.costo_venta || "");
+    }
+  }, [selectedPeso]);
+
   useFocusEffect(
     useCallback(() => {
       if (chip) {
@@ -165,7 +169,6 @@ export default function ControlH_Screen({ navigation, route }) {
           .get(`${API_URL}/register/animal/${chip}`)
           .then((response) => {
             setAnimalInfo(response.data);
-           
           })
           .catch((error) => {
             console.error("Error al obtener el animal:", error);
@@ -181,8 +184,11 @@ export default function ControlH_Screen({ navigation, route }) {
         try {
           const [pesosRes, vacunasRes] = await Promise.all([
             axios.get(`${API_URL}/weighing/historico-pesaje`),
+
             axios.get(`${API_URL}/vaccines/historico-vacunas`),
           ]);
+
+          console.log("Datos de pesos:", pesosRes.data);
 
           const pesosFiltrados = pesosRes.data
             .filter((item) => item.chip === chip)
@@ -247,6 +253,8 @@ export default function ControlH_Screen({ navigation, route }) {
       const payload = {
         fecha_pesaje: nuevaFecha.split("T")[0],
         peso_kg: parseFloat(nuevoPeso),
+        costo_compra: parseFloat(precioKgCompra),
+        costo_venta: parseFloat(precioKgVenta),
       };
 
       await axios.put(`${API_URL}/weighing/${selectedPeso.id}`, payload);
@@ -257,6 +265,8 @@ export default function ControlH_Screen({ navigation, route }) {
               ...p,
               peso: payload.peso_kg,
               fecha: payload.fecha_pesaje,
+              costo_compra: payload.costo_compra,
+              costo_venta: payload.costo_venta,
             }
           : p
       );
@@ -325,7 +335,7 @@ export default function ControlH_Screen({ navigation, route }) {
           tipo: tipoLabel || v.tipo,
           nombre: nombreLabel || v.nombre,
           dosis: dosisFinal,
-          observaciones: datosParaApi.observaciones, 
+          observaciones: datosParaApi.observaciones,
           obs: datosParaApi.observaciones,
         };
       })
@@ -364,7 +374,7 @@ export default function ControlH_Screen({ navigation, route }) {
 
   return (
     <ImageBackground
-      source={require("../assets/acuarela.Home.png")} 
+      source={require("../assets/acuarela.Home.png")}
       style={{ flex: 1, position: "absolute", width: "100%", height: "100%" }}
     >
       <View>
@@ -408,7 +418,7 @@ export default function ControlH_Screen({ navigation, route }) {
             style={[
               styles.dropdownMenuLeftuser,
               { transform: [{ translateX: userMenuAnim }] },
-              { zIndex: 1 }, 
+              { zIndex: 1 },
             ]}
           >
             <TouchableOpacity onPress={() => navigation.navigate("Login")}>
@@ -419,8 +429,8 @@ export default function ControlH_Screen({ navigation, route }) {
       </View>
       <ScrollView
         ref={scrollViewRef}
-        style={{ flex: 1 }} 
-        contentContainerStyle={{ paddingBottom: 20 }} 
+        style={{ flex: 1 }}
+        contentContainerStyle={{ paddingBottom: 20 }}
       >
         <View style={styles.buttonsContainer}></View>
 
@@ -430,7 +440,6 @@ export default function ControlH_Screen({ navigation, route }) {
             style={styles.image}
           />
         )}
-
 
         <Text style={styles.title}>CONTROL</Text>
         <Text style={styles.title1}>DE CHIP</Text>
@@ -474,6 +483,86 @@ export default function ControlH_Screen({ navigation, route }) {
           </View>
           <View style={styles.tableRow}>
             <Image
+              source={require("../assets/Enfermedades.png")}
+              style={styles.logo}
+            />
+            <Text style={styles.tableCellChip}>Enfermedades:</Text>
+            <Text style={styles.tableCellDatoChip}>
+              {Array.isArray(animalInfo?.enfermedades)
+                ? animalInfo.enfermedades.join(", ")
+                : animalInfo?.enfermedades}
+            </Text>
+          </View>
+          <View style={styles.tableRow}>
+            <Image
+              source={require("../assets/procedencia.png")}
+              style={styles.logo}
+            />
+            <Text style={styles.tableCellChip}>Procedencia:</Text>
+            <Text style={styles.tableCellDatoChip}>
+              {animalInfo?.procedencia || "No disponible"}
+            </Text>
+          </View>
+          <View style={styles.tableRow}>
+            <Image
+              source={require("../assets/hierro.png")}
+              style={styles.logo}
+            />
+            <Text style={styles.tableCellChip}>Hierro del propietario:</Text>
+            <Text style={styles.tableCellDatoChip}>
+              {animalInfo?.hierro || "No disponible"}
+            </Text>
+          </View>
+          <View style={styles.tableRow}>
+            <Image
+              source={require("../assets/hierro.png")}
+              style={styles.logo}
+            />
+            <Text style={styles.tableCellChip}>Categoría:</Text>
+            <Text style={styles.tableCellDatoChip}>
+              {animalInfo?.categoria || "No disponible"}
+            </Text>
+          </View>
+          {animalInfo?.categoria === "cria" && (
+            <>
+              <View style={styles.tableRow}>
+                <Image
+                  source={require("../assets/hierro.png")}
+                  style={styles.logo}
+                />
+
+                <Text style={styles.tableCellChip}>Número de Parto:</Text>
+                <Text style={styles.tableCellDatoChip}>
+                  {animalInfo?.numero_parto || "No disponible"}
+                </Text>
+              </View>
+
+              <View style={styles.tableRow}>
+                <Image
+                  source={require("../assets/hierro.png")}
+                  style={styles.logo}
+                />
+                <Text style={styles.tableCellChip}>Precocidad:</Text>
+                <Text style={styles.tableCellDatoChip}>
+                  {animalInfo?.precocidad || "No disponible"}
+                </Text>
+              </View>
+
+              <View style={styles.tableRow}>
+                <Image
+                  source={require("../assets/hierro.png")}
+                  style={styles.logo}
+                />
+                <Text style={styles.tableCellChip}>Tipo de monta:</Text>
+                <Text style={styles.tableCellDatoChip}>
+                  {animalInfo?.tipo_monta || "No disponible"}
+                </Text>
+              </View>
+            </>
+          )}
+
+          <View style={styles.tableRow}>
+            <Image
               source={require("../assets/Id_Madre.png")}
               style={styles.logoId}
             />
@@ -487,18 +576,6 @@ export default function ControlH_Screen({ navigation, route }) {
             />
             <Text style={styles.tableCellChip}>ID Padre:</Text>
             <Text style={styles.tableCellDatoChip}>{animalInfo?.id_padre}</Text>
-          </View>
-          <View style={styles.tableRow}>
-            <Image
-              source={require("../assets/Enfermedades.png")}
-              style={styles.logo}
-            />
-            <Text style={styles.tableCellChip}>Enfermedades:</Text>
-            <Text style={styles.tableCellDatoChip}>
-              {Array.isArray(animalInfo?.enfermedades)
-                ? animalInfo.enfermedades.join(", ")
-                : animalInfo?.enfermedades}
-            </Text>
           </View>
           <View style={styles.tableRow}>
             <Image
@@ -518,7 +595,6 @@ export default function ControlH_Screen({ navigation, route }) {
             <Text style={styles.tableCellChip}>Estado:</Text>
             <Text style={styles.tableCellDatoChip}>{animalInfo?.estado}</Text>
           </View>
-
           <TouchableOpacity
             style={styles.editButton}
             onPress={() => {
@@ -558,6 +634,8 @@ export default function ControlH_Screen({ navigation, route }) {
             <View style={styles.tableHeaderPesoVacuna}>
               <Text style={styles.tableHeaderTextPeso}>Fecha</Text>
               <Text style={styles.tableHeaderTextPeso}>Peso</Text>
+              <Text style={styles.tableHeaderTextPeso}>Costo Compra</Text>
+              <Text style={styles.tableHeaderTextPeso}>Costo Venta</Text>
               <Image
                 source={require("../assets/Peso.png")}
                 style={styles.editButtonImagePeso1}
@@ -570,6 +648,18 @@ export default function ControlH_Screen({ navigation, route }) {
                   {peso.fecha ? peso.fecha.substring(0, 10) : ""}
                 </Text>
                 <Text style={styles.tableCellPeso}>{peso.peso}</Text>
+
+                <Text style={styles.tableCellPeso}>
+                  {peso.costo_compra
+                    ? `$${parseFloat(peso.costo_compra).toFixed(0)}`
+                    : "No disponible"}
+                </Text>
+                <Text style={styles.tableCellPeso}>
+                  {peso.costo_venta
+                    ? `$${parseFloat(peso.costo_venta).toFixed(0)}`
+                    : "No disponible"}
+                </Text>
+
                 <TouchableOpacity
                   onPress={() => handleEditPeso(peso.id)}
                   style={styles.editCell}
@@ -601,40 +691,75 @@ export default function ControlH_Screen({ navigation, route }) {
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
               <Image
-                source={require("../assets/Editar_Peso.png")} 
-                style={styles.modalImagePeso} 
+                source={require("../assets/Editar_Peso.png")}
+                style={styles.modalImagePeso}
               />
               <Text style={styles.modalTitle1}>Editar</Text>
               <Text style={styles.modalTitle2}>Peso</Text>
+
               <View style={styles.inputContainer}>
                 <Image
-                  source={require("../assets/Peso.png")} 
-                  style={styles.inputLogo} 
+                  source={require("../assets/Peso.png")}
+                  style={styles.inputLogo}
                 />
-                <TextInput
-                  value={nuevoPeso}
-                  onChangeText={setNuevoPeso}
-                  placeholder="Peso"
-                  keyboardType="numeric"
-                  style={styles.input} 
-                />
+
+
+                  <TextInput
+          value={nuevoPeso}
+          onChangeText={(text) => {
+            setNuevoPeso(text);
+            // Calcular el precio por kg cuando el peso cambie
+            setPrecioKgCompra((parseFloat(text) && parseFloat(precioKgCompra) / parseFloat(text)).toFixed(2));
+          }}
+          placeholder="Peso"
+          keyboardType="numeric"
+          style={styles.input}
+        />
               </View>
               <Pressable
                 onPress={() => setShowPesoDatePicker(true)}
                 style={styles.inputContainer}
               >
                 <Image
-                  source={require("../assets/FechaDeNacimieto.png")} 
+                  source={require("../assets/FechaDeNacimieto.png")}
                   style={styles.inputLogo}
                 />
                 <TextInput
                   value={formatDateDisplay(nuevaFecha)}
                   placeholder="Fecha (YYYY-MM-DD)"
-                  style={styles.input} 
+                  style={styles.input}
                   editable={false}
                   pointerEvents="none"
                 />
               </Pressable>
+
+              <View style={styles.inputContainer}>
+                <Image
+                  source={require("../assets/Obs.png")}
+                  style={styles.inputLogo}
+                />
+                <TextInput
+                
+                  placeholder="Precio del Kg Compra"
+                  placeholderTextColor="#000"
+                  keyboardType="numeric"
+                  value={precioKgCompra}
+                  onChangeText={setPrecioKgCompra}
+                />
+              </View>
+              <View style={styles.inputContainer}>
+                <Image
+                  source={require("../assets/Obs.png")}
+                  style={styles.inputLogo}
+                />
+                <TextInput
+                  placeholder="Precio del Kg Venta"
+                  placeholderTextColor="#000"
+                  keyboardType="numeric"
+                  value={precioKgVenta}
+                  onChangeText={setPrecioKgVenta}
+                />
+              </View>
 
               <DateTimePickerModal
                 isVisible={showPesoDatePicker}
@@ -643,7 +768,7 @@ export default function ControlH_Screen({ navigation, route }) {
                 onConfirm={(date) => handleFechaConfirm(date, "peso")}
                 themeVariant="light"
                 onCancel={() => setShowPesoDatePicker(false)}
-                maximumDate={new Date()} 
+                maximumDate={new Date()}
               />
               <View style={styles.buttonsContainer}>
                 {/* Botón Cancelar */}
@@ -652,7 +777,7 @@ export default function ControlH_Screen({ navigation, route }) {
                   onPress={() => setModalVisible(false)}
                 >
                   <Image
-                    source={require("../assets/FechaDeNacimieto.png")} 
+                    source={require("../assets/FechaDeNacimieto.png")}
                     style={styles.buttonLogo}
                   />
                   <Text style={styles.buttonText}>CANCELAR</Text>
@@ -664,7 +789,7 @@ export default function ControlH_Screen({ navigation, route }) {
                   onPress={handleGuardarCambiosPeso}
                 >
                   <Image
-                    source={require("../assets/FechaDeNacimieto.png")} 
+                    source={require("../assets/FechaDeNacimieto.png")}
                     style={styles.buttonLogo}
                   />
                   <Text style={styles.buttonText}>GUARDAR</Text>
@@ -677,9 +802,8 @@ export default function ControlH_Screen({ navigation, route }) {
         {/* TABLA DE VACUNAS */}
 
         <View style={styles.container}>
-         
           <Image
-            source={require("../assets/Imagen_Vacunas_Registradas.png")} 
+            source={require("../assets/Imagen_Vacunas_Registradas.png")}
             style={styles.imagePesoVacuna}
           />
           <View style={styles.section}>
@@ -698,7 +822,7 @@ export default function ControlH_Screen({ navigation, route }) {
               <Text style={styles.tableHeaderTextVacuna}>Obs</Text>
 
               <Image
-                source={require("../assets/Vacuna.png")} 
+                source={require("../assets/Vacuna.png")}
                 style={styles.editButtonImageVacuna1}
               />
             </View>
@@ -724,7 +848,7 @@ export default function ControlH_Screen({ navigation, route }) {
                   style={styles.editCellVacuna}
                 >
                   <Image
-                    source={require("../assets/Editar_Vacunas.png")} 
+                    source={require("../assets/Editar_Vacunas.png")}
                     style={styles.editButtonImageVacuna2}
                   />
                 </TouchableOpacity>
@@ -791,15 +915,15 @@ export default function ControlH_Screen({ navigation, route }) {
                   style={styles.dropdownStyle}
                   dropDownStyle={[styles.dropDownStyle, { maxHeight: 50 }]}
                   dropDownContainerStyle={{
-                    width: "90%", 
-                    marginLeft: "1%", 
-                     marginTop: "-25",
-                    zIndex: 9999, 
-                    elevation: 20, 
-                    maxHeight: 152, 
+                    width: "90%",
+                    marginLeft: "1%",
+                    marginTop: "-25",
+                    zIndex: 9999,
+                    elevation: 20,
+                    maxHeight: 152,
                     minHeight: 100,
-                     borderWidth: 1, 
-    borderColor: '#060606ff',
+                    borderWidth: 1,
+                    borderColor: "#060606ff",
                   }}
                   arrowIconStyle={styles.arrowIconStyle}
                   textStyle={styles.textStyle}
@@ -811,7 +935,7 @@ export default function ControlH_Screen({ navigation, route }) {
                 style={styles.inputContainerVacuna}
               >
                 <Image
-                  source={require("../assets/FechaDeNacimieto.png")} 
+                  source={require("../assets/FechaDeNacimieto.png")}
                   style={styles.datePickerLogo}
                 />
                 <TextInput
@@ -823,10 +947,7 @@ export default function ControlH_Screen({ navigation, route }) {
                 />
               </Pressable>
 
-             
-
-            
- {/* Selección de nombre de vacuna */}
+              {/* Selección de nombre de vacuna */}
               <View style={styles.datePickerWrapper}>
                 <Image
                   source={require("../assets/Nombre.png")}
@@ -846,25 +967,24 @@ export default function ControlH_Screen({ navigation, route }) {
                   listMode="SCROLLVIEW"
                   style={styles.dropdownStyle}
                   dropDownStyle={styles.dropdownStyle}
-                   dropDownContainerStyle={{
-                    width: "90%", 
-                    marginLeft: "1%", 
-                     marginTop: "-25",
-                    zIndex: 9999, 
+                  dropDownContainerStyle={{
+                    width: "90%",
+                    marginLeft: "1%",
+                    marginTop: "-25",
+                    zIndex: 9999,
                     elevation: 20,
-                    maxHeight: 132, 
+                    maxHeight: 132,
                     minHeight: 100,
-                     borderWidth: 1, 
-    borderColor: '#060606ff',
+                    borderWidth: 1,
+                    borderColor: "#060606ff",
                   }}
                   arrowIconStyle={styles.arrowIconStyle}
                   textStyle={styles.textStyle}
                 />
               </View>
 
-  {/* Dosis */}
-             <View style={styles.row}>
-         
+              {/* Dosis */}
+              <View style={styles.row}>
                 <View style={[styles.inputDosisContainer]}>
                   <Image
                     source={require("../assets/Vacuna.png")}
@@ -883,8 +1003,8 @@ export default function ControlH_Screen({ navigation, route }) {
                 {/* Unidad */}
                 <DropDownPicker
                   open={openUnidad}
-                  value={unidad} 
-                  items={items} 
+                  value={unidad}
+                  items={items}
                   setOpen={setOpenUnidad}
                   setValue={setUnidad}
                   setItems={setItems}
@@ -900,7 +1020,7 @@ export default function ControlH_Screen({ navigation, route }) {
                   dropDownStyle={{
                     borderWidth: 0,
                     padding: 0,
-                    position: "absolute", 
+                    position: "absolute",
                     zIndex: 100010,
                     top: 0,
                   }}
@@ -926,7 +1046,6 @@ export default function ControlH_Screen({ navigation, route }) {
 
               {/* Botones para cancelar y guardar */}
               <View style={styles.buttonsContainer}>
-               
                 <TouchableOpacity
                   style={styles.buttonCancelarVacuna}
                   onPress={() => setModalVacunaVisible(false)}
@@ -938,7 +1057,6 @@ export default function ControlH_Screen({ navigation, route }) {
                   <Text style={styles.buttonText}>CANCELAR</Text>
                 </TouchableOpacity>
 
-               
                 <TouchableOpacity
                   style={styles.buttonGuardarVacuna}
                   onPress={handleGuardarCambiosVacuna}
@@ -953,14 +1071,11 @@ export default function ControlH_Screen({ navigation, route }) {
             </View>
           </View>
         </Modal>
-
-        
       </ScrollView>
 
       {/* Barra inferior */}
       <View style={styles.greenBar}>
         <View style={styles.bottomImageContainer}>
-          
           <TouchableOpacity onPress={navigateToHome}>
             <View style={styles.imageContainer}>
               <Image
@@ -971,7 +1086,6 @@ export default function ControlH_Screen({ navigation, route }) {
             </View>
           </TouchableOpacity>
 
-   
           <TouchableOpacity onPress={handleGoBack}>
             <View style={styles.imageContainer}>
               <Image

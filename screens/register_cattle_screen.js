@@ -185,7 +185,7 @@ export default function RegisterCattleScreen({ route }) {
           `${API_URL}/register/animal/${chipFromParams}`
         );
         setAnimalData(response.data);
-
+  console.log(response.data);
         if (response.data) {
           const fechaBD = response.data.fecha_nacimiento;
           let fechaFormateada = fechaBD;
@@ -202,6 +202,16 @@ export default function RegisterCattleScreen({ route }) {
           setMother(response.data.id_padre?.toString() || "");
           setObservations(response.data.observaciones || "");
           setPendingBreedId(response.data.raza_id_raza?.toString() || "");
+
+           setCriadero(response.data.procedencia?.toString() || "");
+        setHierro(response.data.hierro || "");
+        setCategoria(response.data.categoria || "");
+        setUbicacion(response.data.ubicacion || "");
+
+        // si es “cria”, carga estos:
+        setParto(response.data.numero_parto?.toString() || "");
+        setPrecocidad(response.data.precocidad?.toString() || "");
+        setTipoMonta(response.data.tipo_monta || "");
 
           if (response.data.enfermedades) {
             const enfermedades = response.data.enfermedades.includes(",")
@@ -654,6 +664,7 @@ formData.append("procedencia", criadero || "");
             value={criadero}
             onChangeText={setCriadero}
           />
+        
         </View>
 
         <View

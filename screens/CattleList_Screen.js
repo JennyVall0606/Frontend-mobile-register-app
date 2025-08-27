@@ -282,12 +282,12 @@ const menuAnim = useState(new Animated.Value(-250))[0];
   {/* Estado */}
   <View style={styles.row}>
     <Image
-      source={require("../assets/Estado.png")}
+      source={require("../assets/Raza.png")}
       style={styles.iconStyle}
     />
-    <Text style={styles.chipText}>Estado: </Text>
+    <Text style={styles.chipText}>Raza: </Text>
     <Text style={styles.DatosTextEstado}>
-      {animal.estado || "Desconocido"}
+      {animal.raza || "Desconocido"}
     </Text>
   </View>
 

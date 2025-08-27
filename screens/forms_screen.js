@@ -117,9 +117,8 @@ const [costoGanadoVenta, setCostoGanadoVenta] = useState('');
       navigation.navigate("Home");
     };
    
-   const handleGoBack = () => {
-
-  navigation.navigate("ControlScreen");
+const handleGoBack = () => {
+  navigation.goBack(); // Regresa a la pantalla anterior sin perder el estado
 };
     //========================================================================
   useEffect(() => {
@@ -205,6 +204,8 @@ useEffect(() => {
       chip_animal: chipPeso,
       fecha_pesaje: fechaPeso,
       peso_kg: parseFloat(peso),
+      costo_compra: parseFloat(costoGanadoCompra) || null,  
+      costo_venta: parseFloat(costoGanadoVenta) || null,  
     });
 
   Alert.alert("Éxito", "Pesaje guardado");
