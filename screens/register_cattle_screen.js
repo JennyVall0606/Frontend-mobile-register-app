@@ -73,7 +73,7 @@ export default function RegisterCattleScreen({ route }) {
 
   // Definir los ítems de la categoría
   const categoriaItems = [
-    { label: "Cría", value: "cria" },
+    { label: "Cria", value: "cria" },
     { label: "Levante", value: "levante" },
     { label: "Ceba", value: "ceba" },
   ];
@@ -308,9 +308,9 @@ export default function RegisterCattleScreen({ route }) {
       categoria: !categoria,
       hierro: !hierro, 
       ubicacion: !ubicacion, 
-      parto: !parto,        
-  precocidad: !precocidad, 
-  tipoMonta: !tipoMonta,
+  parto: categoria === "cria" && !parto,
+  precocidad: categoria === "cria" && !precocidad,
+  tipoMonta: categoria === "cria" && !tipoMonta,
     };
 
     setErrors(newErrors);
@@ -357,18 +357,39 @@ export default function RegisterCattleScreen({ route }) {
       formData.append("fecha_nacimiento", fechaFormateada);
       formData.append("peso_nacimiento", weight);
       formData.append("raza_id_raza", breed);
-      formData.append("procedencia", criadero || null);
-      formData.append("hierro", hierro || null);
-      formData.append("categoria", categoria || null);
-      formData.append("numero_parto", parto || null);
-      formData.append("precocidad", precocidad || null);
-      formData.append("tipo_monta", tipoMonta || null);
-      formData.append("ubicacion", ubicacion || null);
-      if (father) formData.append("id_madre", father);
-      if (mother) formData.append("id_padre", mother);
-      if (enfermedadesFormateadas)
-        formData.append("enfermedades", enfermedadesFormateadas);
-      if (observations) formData.append("observaciones", observations);
+formData.append("categoria", categoria || null);
+ formData.append("hierro", hierro || null);
+formData.append("ubicacion", ubicacion || null);
+
+formData.append("procedencia", criadero || "");
+    if (father) formData.append("id_madre", father);
+    if (mother) formData.append("id_padre", mother);
+    if (enfermedadesFormateadas) formData.append("enfermedades", enfermedadesFormateadas);
+    if (observations) formData.append("observaciones", observations);
+
+
+
+ if (categoria === "cria") {
+      formData.append("numero_parto", parto || "");
+      formData.append("precocidad", precocidad || "");
+      formData.append("tipo_monta", tipoMonta || "");
+      
+      // Log para debug
+      console.log("Enviando datos de cria:");
+      console.log("- Número de parto:", parto);
+      console.log("- Precocidad:", precocidad);
+      console.log("- Tipo de monta:", tipoMonta);
+    } else {
+    
+      formData.append("numero_parto", "");
+      formData.append("precocidad", "");
+      formData.append("tipo_monta", "");
+      
+      console.log("Categoría diferente a cria, enviando campos vacíos");
+    }
+      
+       console.log("Categoría seleccionada:", categoria);
+    console.log("¿Es cria?:", categoria === "cria");
 
       const url = animalData
         ? `${API_URL}/register/update/${chip}`
