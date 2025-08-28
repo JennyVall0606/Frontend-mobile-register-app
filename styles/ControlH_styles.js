@@ -686,6 +686,15 @@ link: {
     height: 20,
   },
 
+  
+  textcosto: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 15,
+    color: "#7dac53",
+    textAlign: "center",
+  },
+
   ////////////////////////////////// MODAL VACUNA ///////////////////////////////////////
 
 

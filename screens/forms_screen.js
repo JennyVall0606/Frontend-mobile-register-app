@@ -204,7 +204,10 @@ useEffect(() => {
       chip_animal: chipPeso,
       fecha_pesaje: fechaPeso,
       peso_kg: parseFloat(peso),
-      costo_compra: parseFloat(costoGanadoCompra) || null,  
+      precio_kg_compra: parseFloat(precioKgCompra) || null,
+precio_kg_venta:  parseFloat(precioKgVenta)  || null, 
+      costo_compra: parseFloat(costoGanadoCompra) || null, 
+
       costo_venta: parseFloat(costoGanadoVenta) || null,  
     });
 
