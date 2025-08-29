@@ -53,15 +53,15 @@ export default function HomeScreen() {
 
   {/* Botón Informes en la parte inferior centrado */}
   <TouchableOpacity
-    style={styles.squareButton}
+    style={styles.squareButtoninforme}
     onPress={() => navigation.navigate('InformesScreen')}
   >
-    <View style={styles.buttonContent}>
+    <View style={styles.buttonContentinforme}>
       <Image
         source={require('../assets/informes.png')} 
-        style={styles.buttonImage}
+        style={styles.buttonImageinforme}
       />
-      <Text style={styles.buttonText}>Informes</Text>
+      <Text style={styles.buttonTextinforme}>Informes</Text>
     </View>
   </TouchableOpacity>
 </View>

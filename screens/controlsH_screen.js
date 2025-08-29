@@ -518,7 +518,7 @@ const handleGuardarCambiosPeso = async () => {
             />
             <Text style={styles.tableCellChip}>Procedencia:</Text>
             <Text style={styles.tableCellDatoChip}>
-              {animalInfo?.procedencia || "No disponible"}
+              {animalInfo?.procedencia || "-"}
             </Text>
           </View>
           <View style={styles.tableRow}>
@@ -528,7 +528,7 @@ const handleGuardarCambiosPeso = async () => {
             />
             <Text style={styles.tableCellChip}>Hierro del propietario:</Text>
             <Text style={styles.tableCellDatoChip}>
-              {animalInfo?.hierro || "No disponible"}
+              {animalInfo?.hierro || "-"}
             </Text>
           </View>
           <View style={styles.tableRow}>
@@ -538,7 +538,7 @@ const handleGuardarCambiosPeso = async () => {
             />
             <Text style={styles.tableCellChip}>Categoría:</Text>
             <Text style={styles.tableCellDatoChip}>
-              {animalInfo?.categoria || "No disponible"}
+              {animalInfo?.categoria || "-"}
             </Text>
           </View>
           {animalInfo?.categoria === "cria" && (
@@ -551,7 +551,7 @@ const handleGuardarCambiosPeso = async () => {
 
                 <Text style={styles.tableCellChip}>Número de Parto:</Text>
                 <Text style={styles.tableCellDatoChip}>
-                  {animalInfo?.numero_parto || "No disponible"}
+                  {animalInfo?.numero_parto || "-"}
                 </Text>
               </View>
 
@@ -562,7 +562,7 @@ const handleGuardarCambiosPeso = async () => {
                 />
                 <Text style={styles.tableCellChip}>Precocidad:</Text>
                 <Text style={styles.tableCellDatoChip}>
-                  {animalInfo?.precocidad || "No disponible"}
+                  {animalInfo?.precocidad || "-"}
                 </Text>
               </View>
 
@@ -573,7 +573,7 @@ const handleGuardarCambiosPeso = async () => {
                 />
                 <Text style={styles.tableCellChip}>Tipo de monta:</Text>
                 <Text style={styles.tableCellDatoChip}>
-                  {animalInfo?.tipo_monta || "No disponible"}
+                  {animalInfo?.tipo_monta || "-"}
                 </Text>
               </View>
             </>
@@ -666,7 +666,7 @@ const handleGuardarCambiosPeso = async () => {
                   {peso.fecha ? peso.fecha.substring(0, 10) : ""}
                 </Text>
                 <Text style={styles.tableCellPeso}>
-                  {peso.peso ? parseInt(peso.peso) : "No disponible"}
+                  {peso.peso ? parseInt(peso.peso) : "-"}
                 </Text>
 
                 <Text style={styles.tableCellPeso}>
@@ -678,7 +678,7 @@ const handleGuardarCambiosPeso = async () => {
                           maximumFractionDigits: 0,
                         }
                       )}`
-                    : "No disponible"}
+                    : "-"}
                 </Text>
 
                 <Text style={styles.tableCellPeso}>
@@ -687,7 +687,7 @@ const handleGuardarCambiosPeso = async () => {
                         minimumFractionDigits: 0,
                         maximumFractionDigits: 0,
                       })}`
-                    : "No disponible"}
+                    : "-"}
                 </Text>
 
                 <TouchableOpacity
@@ -763,7 +763,7 @@ const handleGuardarCambiosPeso = async () => {
       {/* Precio Kg Compra */}
       <View style={styles.inputContainer}>
         <Image
-          source={require("../assets/Obs.png")}
+          source={require("../assets/precio.png")}
           style={styles.inputLogo}
         />
         <TextInput
@@ -790,7 +790,7 @@ const handleGuardarCambiosPeso = async () => {
       {/* Precio Kg Venta */}
       <View style={styles.inputContainer}>
         <Image
-          source={require("../assets/Obs.png")}
+          source={require("../assets/precio.png")}
           style={styles.inputLogo}
         />
       <TextInput
@@ -903,7 +903,7 @@ const handleGuardarCambiosPeso = async () => {
                   {vacuna.dosis}
                 </Text>
                 <Text style={styles.tableCellDatosVacunaObs}>
-                  {vacuna.obs || "No disponible"}
+                  {vacuna.obs || "-"}
                 </Text>
                 <TouchableOpacity
                   onPress={() => handleEditVacuna(vacuna.id)}

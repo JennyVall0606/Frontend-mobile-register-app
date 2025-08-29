@@ -648,7 +648,7 @@ link: {
   buttonsContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop:-5,
+    marginTop:10,
      marginRight: 20,
       marginLeft: 20,
       
