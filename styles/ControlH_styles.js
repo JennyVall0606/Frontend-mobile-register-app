@@ -68,7 +68,14 @@ export default StyleSheet.create({
   },
 
 
-
+modalFieldTitle: {
+  fontSize: 14,
+  fontWeight: 'bold',
+  color: '#43a709ff',
+  marginLeft: 30,
+  
+  marginBottom: 5,
+},
 
  
 

@@ -1,10 +1,9 @@
-import React, { useState, useEffect, SafeAreaView } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
-  scrollViewRef,
   Alert,
   Animated,
   ImageBackground,
@@ -15,7 +14,6 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
-import { Ionicons } from "@expo/vector-icons";
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import styles from "../styles/register_cattle_styles";
@@ -36,7 +34,6 @@ export default function RegisterCattleScreen({ route }) {
   const [observations, setObservations] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [currentDateType, setCurrentDateType] = useState("");
   const [openRaza, setOpenRaza] = useState(false);
   const [itemsRaza, setItemsRaza] = useState([]);
   const [breed, setBreed] = useState("");
@@ -65,11 +62,11 @@ export default function RegisterCattleScreen({ route }) {
     { label: "Ninguna", value: "Ninguna" },
     { label: "OTRA", value: "OTRA" },
   ]);
-  const [criadero, setCriadero] = useState(""); // Procedencia del ganado
-  const [hierro, setHierro] = useState(""); // Hierro del propietario
-  const [categoria, setCategoria] = useState(""); // Categoría
-  const [ubicacion, setUbicacion] = useState(""); // Ubicación del ganado
-  const [openCategoria, setOpenCategoria] = useState(false); // Asegúrate de definir el estado correctamente
+  const [criadero, setCriadero] = useState("");
+  const [hierro, setHierro] = useState("");
+  const [categoria, setCategoria] = useState("");
+  const [ubicacion, setUbicacion] = useState("");
+  const [openCategoria, setOpenCategoria] = useState(false);
 
   // Definir los ítems de la categoría
   const categoriaItems = [
@@ -150,6 +147,14 @@ export default function RegisterCattleScreen({ route }) {
   const navigation = useNavigation();
   const { width, height } = Dimensions.get("window");
   const screenWidth = Dimensions.get("window").width;
+
+  const renderTitle = (title) => {
+    if (isEditing) {
+      return <Text style={styles.fieldTitle}>{title}</Text>;
+    }
+    return null;
+  };
+
   useEffect(() => {
     const fetchRazas = async () => {
       try {
@@ -185,7 +190,7 @@ export default function RegisterCattleScreen({ route }) {
           `${API_URL}/register/animal/${chipFromParams}`
         );
         setAnimalData(response.data);
-  console.log(response.data);
+        console.log(response.data);
         if (response.data) {
           const fechaBD = response.data.fecha_nacimiento;
           let fechaFormateada = fechaBD;
@@ -203,15 +208,15 @@ export default function RegisterCattleScreen({ route }) {
           setObservations(response.data.observaciones || "");
           setPendingBreedId(response.data.raza_id_raza?.toString() || "");
 
-           setCriadero(response.data.procedencia?.toString() || "");
-        setHierro(response.data.hierro || "");
-        setCategoria(response.data.categoria || "");
-        setUbicacion(response.data.ubicacion || "");
+          setCriadero(response.data.procedencia?.toString() || "");
+          setHierro(response.data.hierro || "");
+          setCategoria(response.data.categoria || "");
+          setUbicacion(response.data.ubicacion || "");
 
-        // si es “cria”, carga estos:
-        setParto(response.data.numero_parto?.toString() || "");
-        setPrecocidad(response.data.precocidad?.toString() || "");
-        setTipoMonta(response.data.tipo_monta || "");
+          // si es “cria”, carga estos:
+          setParto(response.data.numero_parto?.toString() || "");
+          setPrecocidad(response.data.precocidad?.toString() || "");
+          setTipoMonta(response.data.tipo_monta || "");
 
           if (response.data.enfermedades) {
             const enfermedades = response.data.enfermedades.includes(",")
@@ -303,9 +308,9 @@ export default function RegisterCattleScreen({ route }) {
     setCriadero("");
     setHierro("");
     setCategoria("");
-     setParto("");        
-  setPrecocidad("");  
-  setTipoMonta("");  
+    setParto("");
+    setPrecocidad("");
+    setTipoMonta("");
   };
 
   const handleRegister = async () => {
@@ -316,11 +321,11 @@ export default function RegisterCattleScreen({ route }) {
       birthDate: !birthDate,
       weight: !weight,
       categoria: !categoria,
-      hierro: !hierro, 
-      ubicacion: !ubicacion, 
-  parto: categoria === "cria" && !parto,
-  precocidad: categoria === "cria" && !precocidad,
-  tipoMonta: categoria === "cria" && !tipoMonta,
+      hierro: !hierro,
+      ubicacion: !ubicacion,
+      parto: categoria === "cria" && !parto,
+      precocidad: categoria === "cria" && !precocidad,
+      tipoMonta: categoria === "cria" && !tipoMonta,
     };
 
     setErrors(newErrors);
@@ -367,39 +372,37 @@ export default function RegisterCattleScreen({ route }) {
       formData.append("fecha_nacimiento", fechaFormateada);
       formData.append("peso_nacimiento", weight);
       formData.append("raza_id_raza", breed);
-formData.append("categoria", categoria || null);
- formData.append("hierro", hierro || null);
-formData.append("ubicacion", ubicacion || null);
+      formData.append("categoria", categoria || null);
+      formData.append("hierro", hierro || null);
+      formData.append("ubicacion", ubicacion || null);
 
-formData.append("procedencia", criadero || "");
-    if (father) formData.append("id_madre", father);
-    if (mother) formData.append("id_padre", mother);
-    if (enfermedadesFormateadas) formData.append("enfermedades", enfermedadesFormateadas);
-    if (observations) formData.append("observaciones", observations);
+      formData.append("procedencia", criadero || "");
+      if (father) formData.append("id_madre", father);
+      if (mother) formData.append("id_padre", mother);
+      if (enfermedadesFormateadas)
+        formData.append("enfermedades", enfermedadesFormateadas);
+      if (observations) formData.append("observaciones", observations);
 
+      if (categoria === "cria") {
+        formData.append("numero_parto", parto || "");
+        formData.append("precocidad", precocidad || "");
+        formData.append("tipo_monta", tipoMonta || "");
 
+        // Log para debug
+        console.log("Enviando datos de cria:");
+        console.log("- Número de parto:", parto);
+        console.log("- Precocidad:", precocidad);
+        console.log("- Tipo de monta:", tipoMonta);
+      } else {
+        formData.append("numero_parto", "");
+        formData.append("precocidad", "");
+        formData.append("tipo_monta", "");
 
- if (categoria === "cria") {
-      formData.append("numero_parto", parto || "");
-      formData.append("precocidad", precocidad || "");
-      formData.append("tipo_monta", tipoMonta || "");
-      
-      // Log para debug
-      console.log("Enviando datos de cria:");
-      console.log("- Número de parto:", parto);
-      console.log("- Precocidad:", precocidad);
-      console.log("- Tipo de monta:", tipoMonta);
-    } else {
-    
-      formData.append("numero_parto", "");
-      formData.append("precocidad", "");
-      formData.append("tipo_monta", "");
-      
-      console.log("Categoría diferente a cria, enviando campos vacíos");
-    }
-      
-       console.log("Categoría seleccionada:", categoria);
-    console.log("¿Es cria?:", categoria === "cria");
+        console.log("Categoría diferente a cria, enviando campos vacíos");
+      }
+
+      console.log("Categoría seleccionada:", categoria);
+      console.log("¿Es cria?:", categoria === "cria");
 
       const url = animalData
         ? `${API_URL}/register/update/${chip}`
@@ -538,7 +541,7 @@ formData.append("procedencia", criadero || "");
         <Text style={styles.ganadoText}>
           {isEditing ? "REGISTRO DE GANADO" : "DE GANADO"}
         </Text>
-
+        {renderTitle("Imagen del animal")}
         {!image ? (
           <TouchableOpacity
             onPress={handleImagePick}
@@ -568,6 +571,7 @@ formData.append("procedencia", criadero || "");
         )}
 
         {/* Chip de registro vacuno */}
+        {renderTitle("Chip de registro vacuno")}
         <View
           style={[styles.inputWithIconChips, errors.chip && styles.inputError]}
         >
@@ -584,7 +588,7 @@ formData.append("procedencia", criadero || "");
             editable={!isEditing}
           />
         </View>
-
+        {renderTitle("Fecha de nacimiento")}
         <TouchableOpacity
           style={[styles.dateButton, errors.birthDate && styles.inputError]}
           onPress={() => setDatePickerVisibility(true)}
@@ -608,7 +612,7 @@ formData.append("procedencia", criadero || "");
           onCancel={() => setDatePickerVisibility(false)}
           maximumDate={new Date()}
         />
-
+        {renderTitle("Peso al nacimiento")}
         <View
           style={[styles.weightContainer, errors.weight && styles.inputError]}
         >
@@ -628,7 +632,7 @@ formData.append("procedencia", criadero || "");
             <Text style={styles.weightUnit}>(Kg)</Text>
           </View>
         </View>
-
+        {renderTitle("Raza del animal")}
         <DropDownPicker
           open={openRaza}
           setOpen={setOpenRaza}
@@ -646,7 +650,7 @@ formData.append("procedencia", criadero || "");
           maxHeight={200}
           arrowIconStyle={styles.arrowIconStyle}
         />
-
+        {renderTitle("Procedencia del ganado (Criadero)")}
         <View
           style={[
             styles.inputWithIconChips,
@@ -664,9 +668,8 @@ formData.append("procedencia", criadero || "");
             value={criadero}
             onChangeText={setCriadero}
           />
-        
         </View>
-
+        {renderTitle("Hierro del propietario")}
         <View
           style={[
             styles.inputWithIconChips,
@@ -685,7 +688,7 @@ formData.append("procedencia", criadero || "");
             onChangeText={setHierro}
           />
         </View>
-
+        {renderTitle("Categoría del animal")}
         <DropDownPicker
           open={openCategoria}
           setOpen={setOpenCategoria}
@@ -707,6 +710,7 @@ formData.append("procedencia", criadero || "");
         {categoria === "cria" && (
           <>
             {/* Número de Parto */}
+            {renderTitle("Número de parto")}
             <View style={[styles.inputWithIconChips]}>
               <Image
                 source={require("../assets/hierro.png")}
@@ -723,6 +727,7 @@ formData.append("procedencia", criadero || "");
             </View>
 
             {/* Precocidad */}
+            {renderTitle("Precocidad")}
             <View style={[styles.inputWithIconChips]}>
               <Image
                 source={require("../assets/hierro.png")}
@@ -738,26 +743,26 @@ formData.append("procedencia", criadero || "");
             </View>
 
             {/* Tipo de Monta */}
+            {renderTitle("Tipo de monta")}
             <DropDownPicker
-  open={openTipoMonta}
-  setOpen={setOpenTipoMonta}
-  items={[
-    { label: "Directa", value: "directa" },
-    { label: "Inseminación", value: "inseminacion" },
-  ]}
-  value={tipoMonta}  // Asegúrate de que este valor esté actualizado correctamente
-  setValue={setTipoMonta}
-  placeholder={tipoMonta ? "" : "Selecciona el tipo de monta"}
-  style={[styles.dropdown, { width: screenWidth * 0.9 }]}
-  textStyle={styles.dropdownText}
-  listMode="SCROLLVIEW"
-  maxHeight={200}
-  arrowIconStyle={styles.arrowIconStyle}
-/>
-
+              open={openTipoMonta}
+              setOpen={setOpenTipoMonta}
+              items={[
+                { label: "Directa", value: "directa" },
+                { label: "Inseminación", value: "inseminacion" },
+              ]}
+              value={tipoMonta} // Asegúrate de que este valor esté actualizado correctamente
+              setValue={setTipoMonta}
+              placeholder={tipoMonta ? "" : "Selecciona el tipo de monta"}
+              style={[styles.dropdown, { width: screenWidth * 0.9 }]}
+              textStyle={styles.dropdownText}
+              listMode="SCROLLVIEW"
+              maxHeight={200}
+              arrowIconStyle={styles.arrowIconStyle}
+            />
           </>
         )}
-
+        {renderTitle("Ubicación del ganado")}
         <View
           style={[
             styles.inputWithIconChips,
@@ -776,8 +781,9 @@ formData.append("procedencia", criadero || "");
             onChangeText={setUbicacion}
           />
         </View>
+        {/* Registro de la madre */}
 
-        {/* Registro del padre */}
+        {renderTitle("Registro de la madre")}
         <View style={styles.inputWithIconChips}>
           <Image
             source={require("../assets/Id_Madre.png")}
@@ -792,7 +798,8 @@ formData.append("procedencia", criadero || "");
           />
         </View>
 
-        {/* Registro de la madre */}
+        {/* Registro del padre */}
+        {renderTitle("Registro del padre")}
         <View style={styles.inputWithIconChips}>
           <Image
             source={require("../assets/Id_Padre.png")}
@@ -806,7 +813,7 @@ formData.append("procedencia", criadero || "");
             onChangeText={setMother}
           />
         </View>
-
+        {renderTitle("Enfermedades del animal")}
         <DropDownPicker
           multiple={true}
           min={0}
@@ -835,7 +842,7 @@ formData.append("procedencia", criadero || "");
             ? disease.join("\n")
             : "Selecciona las enfermedades"}
         </Text>
-
+        {renderTitle("Observaciones")}
         <View style={styles.inputWrapper}>
           <Image
             source={require("../assets/Obs.png")}

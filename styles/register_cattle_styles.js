@@ -163,6 +163,14 @@ position: "absolute",
     paddingTop: 80,
     
   }, 
+  fieldTitle: {
+  fontSize: 14,
+  fontWeight: 'bold',
+  color: '#43a709ff',
+  marginLeft: 30,
+  
+  marginBottom: 5,
+},
 
   editText: {
     fontSize: 26,

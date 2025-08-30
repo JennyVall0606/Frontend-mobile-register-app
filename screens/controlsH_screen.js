@@ -138,6 +138,9 @@ export default function ControlH_Screen({ navigation, route }) {
     const d = new Date(dateString);
     return d.toISOString().substring(0, 10);
   };
+const renderModalTitle = (title) => {
+  return <Text style={styles.modalFieldTitle}>{title}</Text>;
+};
 
   useEffect(() => {
     if (chip) {
@@ -526,16 +529,32 @@ const handleGuardarCambiosPeso = async () => {
               source={require("../assets/hierro.png")}
               style={styles.logo}
             />
-            <Text style={styles.tableCellChip}>Hierro del propietario:</Text>
+            <Text style={styles.tableCellChip}>Ubicación:</Text>
             <Text style={styles.tableCellDatoChip}>
-              {animalInfo?.hierro || "-"}
+              {animalInfo?.ubicacion || "-"}
             </Text>
           </View>
+
+
           <View style={styles.tableRow}>
             <Image
               source={require("../assets/hierro.png")}
               style={styles.logo}
             />
+            <Text style={styles.tableCellChip}>Hierro del propietario:</Text>
+            <Text style={styles.tableCellDatoChip}>
+              {animalInfo?.hierro || "-"}
+            </Text>
+          </View>
+
+
+          <View style={styles.tableRow}>
+            <Image
+              source={require("../assets/hierro.png")}
+              style={styles.logo}
+            />
+
+
             <Text style={styles.tableCellChip}>Categoría:</Text>
             <Text style={styles.tableCellDatoChip}>
               {animalInfo?.categoria || "-"}
@@ -718,7 +737,9 @@ const handleGuardarCambiosPeso = async () => {
         {/* EDITAR PESO */}
 
 <Modal visible={modalVisible} transparent animationType="slide">
+  
   <View style={styles.modalContainer}>
+  
     <View style={styles.modalContent}>
       <Image
         source={require("../assets/Editar_Peso.png")}
@@ -728,6 +749,7 @@ const handleGuardarCambiosPeso = async () => {
       <Text style={styles.modalTitle2}>Peso</Text>
 
       {/* Peso */}
+        {renderModalTitle("Peso del animal")}
       <View style={styles.inputContainer}>
         <Image
           source={require("../assets/Peso.png")}
@@ -743,6 +765,7 @@ const handleGuardarCambiosPeso = async () => {
       </View>
 
       {/* Fecha */}
+       {renderModalTitle("Fecha de registro")}
       <Pressable
         onPress={() => setShowPesoDatePicker(true)}
         style={styles.inputContainer}
@@ -761,23 +784,26 @@ const handleGuardarCambiosPeso = async () => {
       </Pressable>
 
       {/* Precio Kg Compra */}
-      <View style={styles.inputContainer}>
-        <Image
-          source={require("../assets/precio.png")}
-          style={styles.inputLogo}
-        />
-        <TextInput
-  placeholder="Precio Kg Compra"
-  placeholderTextColor="#000"
-  keyboardType="numeric"
-  value={precioKgCompra ? parseInt(precioKgCompra).toLocaleString("es-CO") : ""}
-  onChangeText={(text) => {
-    const numericValue = text.replace(/\D/g, ""); // elimina todo lo que no sea número
-    setPrecioKgCompra(numericValue);
-  }}
-  style={styles.input}
-/>
-      </View>
+{renderModalTitle("Precio por Kg - Compra")}
+<View style={styles.inputContainer}>
+  <Image
+    source={require("../assets/precio.png")}
+    style={styles.inputLogo}
+  />
+  <TextInput
+    placeholder="Precio Kg Compra"
+    placeholderTextColor="#000"
+    keyboardType="numeric"
+    value={precioKgCompra ? parseInt(precioKgCompra).toLocaleString("es-CO") : ""}
+    onChangeText={(text) => {
+      // Remover todos los caracteres no numéricos (incluye puntos y comas)
+      const numericValue = text.replace(/\D/g, "");
+      // Guardar el valor numérico sin formato
+      setPrecioKgCompra(numericValue);
+    }}
+    style={styles.input}
+  />
+</View>
 
       {/* Mostrar costo compra */}
    <Text style={styles.textcosto}>
@@ -788,23 +814,24 @@ const handleGuardarCambiosPeso = async () => {
 </Text>
 
       {/* Precio Kg Venta */}
-      <View style={styles.inputContainer}>
-        <Image
-          source={require("../assets/precio.png")}
-          style={styles.inputLogo}
-        />
-      <TextInput
-  placeholder="Precio Kg Venta"
-  placeholderTextColor="#000"
-  keyboardType="numeric"
-  value={precioKgVenta ? parseInt(precioKgVenta).toLocaleString("es-CO") : ""}
-  onChangeText={(text) => {
-    const numericValue = text.replace(/\D/g, ""); // elimina caracteres no numéricos
-    setPrecioKgVenta(numericValue);
-  }}
-  style={styles.input}
-/>
-      </View>
+{renderModalTitle("Precio por Kg - Venta")}
+<View style={styles.inputContainer}>
+  <Image
+    source={require("../assets/precio.png")}
+    style={styles.inputLogo}
+  />
+  <TextInput
+    placeholder="Precio Kg Venta"
+    placeholderTextColor="#000"
+    keyboardType="numeric"
+    value={precioKgVenta ? parseInt(precioKgVenta).toLocaleString("es-CO") : ""}
+    onChangeText={(text) => {
+      const numericValue = text.replace(/\D/g, ""); // elimina caracteres no numéricos
+      setPrecioKgVenta(numericValue);
+    }}
+    style={styles.input}
+  />
+</View>
 
       {/* Mostrar costo venta */}
 <Text style={styles.textcosto}>
@@ -957,6 +984,7 @@ const handleGuardarCambiosPeso = async () => {
               <Text style={styles.modalTitle1}>EDITAR</Text>
               <Text style={styles.modalTitle2}>VACUNA</Text>
               {/* Selección de tipo de vacuna */}
+               {renderModalTitle("Tipo de vacuna")}
               <View style={styles.datePickerWrapper}>
                 <Image
                   source={require("../assets/CC.png")}
@@ -991,7 +1019,7 @@ const handleGuardarCambiosPeso = async () => {
                   textStyle={styles.textStyle}
                 />
               </View>
-
+ {renderModalTitle("Fecha de nacimiento")}
               <Pressable
                 onPress={() => setShowVacunaDatePicker(true)}
                 style={styles.inputContainerVacuna}
@@ -1010,6 +1038,7 @@ const handleGuardarCambiosPeso = async () => {
               </Pressable>
 
               {/* Selección de nombre de vacuna */}
+               {renderModalTitle("Nombre de vacuna")}
               <View style={styles.datePickerWrapper}>
                 <Image
                   source={require("../assets/Nombre.png")}
@@ -1046,6 +1075,7 @@ const handleGuardarCambiosPeso = async () => {
               </View>
 
               {/* Dosis */}
+              {renderModalTitle("Dosis                                        Unidad")}
               <View style={styles.row}>
                 <View style={[styles.inputDosisContainer]}>
                   <Image
@@ -1063,6 +1093,7 @@ const handleGuardarCambiosPeso = async () => {
                 </View>
 
                 {/* Unidad */}
+                 
                 <DropDownPicker
                   open={openUnidad}
                   value={unidad}
@@ -1093,6 +1124,7 @@ const handleGuardarCambiosPeso = async () => {
               </View>
 
               {/* Campo Observaciones */}
+                 {renderModalTitle("Observaciones")}
               <View style={styles.inputContainerVacuna}>
                 <Image
                   source={require("../assets/Obs.png")}
