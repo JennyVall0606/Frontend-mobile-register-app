@@ -16,11 +16,11 @@ export default StyleSheet.create({
   },
 
   logo: {
-    width: 220,
-    height: 220,
+    width: 200,
+    height: 200,
     marginBottom: 90,
     alignSelf: "center",
-    marginTop: 40,
+    marginTop:20,
   },
 
   buttonRow: {
@@ -68,8 +68,8 @@ export default StyleSheet.create({
   },
 
   squareButtoninforme: {
-    width: 150,
-  height: 150,
+    width: 140,
+  height: 140,
   backgroundColor: "rgba(255, 255, 255, 1)",
   borderRadius: 10,
   justifyContent: "center",
@@ -95,8 +95,8 @@ marginTop: 15,
   },
 
   buttonImageinforme: {
-    width: 140,
-    height: 140,
+    width: 130,
+    height: 130,
     resizeMode: "contain",
     marginBottom: 20,
   },

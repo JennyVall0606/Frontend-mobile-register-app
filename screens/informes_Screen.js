@@ -178,7 +178,7 @@ export default function InformesScreen({ route }) {
           styles.filterIcon, 
           filters[column] && styles.filterIconActive
         ]}>
-          🔽
+          {filterMenus[column] ? '▲' : '▼'}
         </Text>
       </TouchableOpacity>
 

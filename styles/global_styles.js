@@ -128,11 +128,11 @@ position: "absolute",
     flex: 1,
   },
 
-  greenBar: {
-    height: 80, 
-    backgroundColor: "#7dac53", 
-    width: "100%", 
-       marginTop: 10,  
+   greenBar: {
+     height: 90, 
+    backgroundColor: "#7dac53",
+    width: "100%",
+        
   },
 
   bottomImageContainer: {
@@ -140,28 +140,30 @@ position: "absolute",
     bottom: 10, 
     left: 0,
     right: 0,
-    flexDirection: "row", 
-    justifyContent: "space-between",
-    paddingHorizontal: 120, 
-    marginBottom:15, 
+    flexDirection: "row",
+    justifyContent: "space-between", 
+    paddingHorizontal: 140,
+    marginBottom:30, 
   },
   
  imageContainer: {
-    alignItems: "center",
+    alignItems: "center", 
     justifyContent: "center", 
     marginHorizontal: 15, 
   },
 
-  imageStyle: {
+  imageStyleG: {
     width: 20, 
-    height: 20, 
+    height: 20,     
+        right: 6,
   },
 
    imageText: {
-    marginTop: 5, 
+     marginTop: 5, 
     color: "white", 
     fontSize: 12, 
     fontWeight: "normal", 
+     left: -6,
   },
   
 });

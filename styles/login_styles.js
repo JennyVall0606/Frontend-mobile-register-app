@@ -11,15 +11,15 @@ const styles = StyleSheet.create({
   },
 
 logo: {
-  width: 210,
-  height: 210, 
+  width: 200,
+  height: 200, 
   alignSelf: 'center', 
-  marginTop: 100,
-  marginBottom: 50, 
+  marginTop: 25,
+  marginBottom: 20, 
 },
 
   inputContainer: {
-   width: "140%", 
+   width: "100%", 
   height: 60, 
   borderRadius: 10, 
   marginBottom: 35, 

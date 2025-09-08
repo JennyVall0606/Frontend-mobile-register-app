@@ -14,11 +14,15 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
+
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import styles from "../styles/register_cattle_styles";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import * as NavigationBar from "expo-navigation-bar";
 
 export default function RegisterCattleScreen({ route }) {
   const { chip: chipFromParams, razaId, isEditing } = route.params || {};
@@ -260,6 +264,14 @@ export default function RegisterCattleScreen({ route }) {
     requestPermission();
   }, []);
 
+
+  useEffect(() => {
+
+    NavigationBar.setBehaviorAsync("overlay-swipe");
+  
+  }, []);
+
+
   const handleImagePick = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -452,6 +464,10 @@ export default function RegisterCattleScreen({ route }) {
     }
   };
 
+  // === INSETS para barra inferior y scroll ===
+  const insets = useSafeAreaInsets();
+  const BOTTOM_BAR_MIN_HEIGHT = 56; // altura visual mínima de tu barra
+
   if (loading && chipFromParams) {
     return (
       <ImageBackground
@@ -522,8 +538,11 @@ export default function RegisterCattleScreen({ route }) {
         )}
       </View>
 
-      <ScrollView
-        contentContainerStyle={{ paddingBottom: 20, paddingTop: 10 }}
+        <ScrollView
+        contentContainerStyle={{
+          paddingBottom: insets.bottom + BOTTOM_BAR_MIN_HEIGHT + 12, // clave: deja espacio tras la barra
+          paddingTop: 10,
+        }}
         style={{ flex: 1 }}
       >
         <Image
@@ -872,8 +891,19 @@ export default function RegisterCattleScreen({ route }) {
         </TouchableOpacity>
       </ScrollView>
 
-      {/* Barra inferior */}
-      <View style={styles.greenBar}>
+         {/* Barra inferior SEGURA */}
+      <View
+        style={[
+          styles.greenBar,
+          {
+            // evita solaparse con la barra del sistema (gestos/botones)
+            paddingBottom: insets.bottom,
+            // altura visual mínima de tu barra
+            minHeight: BOTTOM_BAR_MIN_HEIGHT,
+            paddingTop: 8,
+          },
+        ]}
+      >
         <View style={styles.bottomImageContainer}>
           {/* Imagen Inicio */}
           <TouchableOpacity onPress={navigateToHome}>

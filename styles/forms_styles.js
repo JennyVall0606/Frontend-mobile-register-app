@@ -120,9 +120,9 @@ position: "absolute",
   },
 
  greenBar: {
-    height: 90, 
+     height: 90, 
     backgroundColor: "#7dac53",
-    width: "100%", 
+    width: "100%",
         
   },
 
@@ -131,10 +131,10 @@ position: "absolute",
     bottom: 10, 
     left: 0,
     right: 0,
-    flexDirection: "row", 
+    flexDirection: "row",
     justifyContent: "space-between", 
-    paddingHorizontal: 150,
-    marginBottom:16, 
+    paddingHorizontal: 140,
+    marginBottom:30, 
   },
   
  imageContainer: {
@@ -145,18 +145,17 @@ position: "absolute",
 
   imageStyleG: {
     width: 20, 
-    height: 20, 
+    height: 20,     
+        right: 6,
   },
 
    imageText: {
-    marginTop: 3, 
+     marginTop: 5, 
     color: "white", 
     fontSize: 12, 
     fontWeight: "normal", 
      left: -6,
-     marginBottom:8,
   },
-
 
    //===========================================================================
 

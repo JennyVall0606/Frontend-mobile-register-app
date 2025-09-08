@@ -71,10 +71,9 @@ export default StyleSheet.create({
 modalFieldTitle: {
   fontSize: 14,
   fontWeight: 'bold',
-  color: '#43a709ff',
-  marginLeft: 30,
-  
-  marginBottom: 5,
+  color: '#337c08ff',
+  marginLeft: 20,
+  marginBottom: 2,
 },
 
  
@@ -126,10 +125,10 @@ position: "absolute",
     flex: 1,
   },
 
-  greenBar: {
-    height: 90, 
+ greenBar: {
+     height: 90, 
     backgroundColor: "#7dac53",
-    width: "100%", 
+    width: "100%",
         
   },
 
@@ -138,12 +137,11 @@ position: "absolute",
     bottom: 10, 
     left: 0,
     right: 0,
-    flexDirection: "row", 
+    flexDirection: "row",
     justifyContent: "space-between", 
-    paddingHorizontal: 150,
-    marginBottom:23, 
+    paddingHorizontal: 140,
+    marginBottom:30, 
   },
-  
   
  imageContainer: {
     alignItems: "center", 
@@ -153,18 +151,17 @@ position: "absolute",
 
   imageStyleG: {
     width: 20, 
-    height: 20, 
+    height: 20,     
+        right: 6,
   },
 
    imageText: {
-    marginTop: 3, 
+     marginTop: 5, 
     color: "white", 
     fontSize: 12, 
     fontWeight: "normal", 
      left: -6,
-     marginBottom:8,
   },
-
 
    //===========================================================================
   
@@ -613,7 +610,7 @@ link: {
   modalImagePeso: {
     width: 82,
     height: 72,
-    marginBottom: 15,
+    marginBottom: 8,
     alignSelf: "center",
   },
 
@@ -626,7 +623,7 @@ link: {
   modalTitle2: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 40,
+    marginBottom: 20,
     textAlign: "center",
     color: "#7dac53",
   },
@@ -809,11 +806,11 @@ link: {
   },
 
   modalImageVacuna: {
-    width: 82,
-    height: 72,
+    width: 72,
+    height: 62,
     marginBottom: 15,
     alignSelf: "center",
-    marginTop:30,
+    marginTop:15,
   },
   modalContainerVacuna: {
     flex: 1,
@@ -844,8 +841,8 @@ link: {
     padding: 8,
     borderTopRightRadius: 0,
     borderRadius: 10,
-     marginTop: 25,
-    marginBottom: 38,
+     marginTop: 2,
+    marginBottom: 20,
     width: "90%",
     alignSelf: "center",
   },

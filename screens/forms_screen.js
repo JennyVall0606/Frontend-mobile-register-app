@@ -118,7 +118,34 @@ const [costoGanadoVenta, setCostoGanadoVenta] = useState('');
     };
    
 const handleGoBack = () => {
-  navigation.goBack(); // Regresa a la pantalla anterior sin perder el estado
+  navigation.goBack(); 
+};
+
+{/* Función para formatear números con puntos de miles */}
+const formatearNumero = (texto) => {
+  
+  const numeroLimpio = texto.replace(/[^0-9]/g, '');
+  
+
+  if (numeroLimpio === '') return '';
+  
+  
+  return parseInt(numeroLimpio).toLocaleString('es-CO');
+};
+
+const manejarCambioPrecioCompra = (texto) => {
+
+  const numeroLimpio = texto.replace(/[^0-9]/g, '');
+  setPrecioKgCompra(formatearNumero(texto));
+  
+  
+};
+
+const manejarCambioPrecioVenta = (texto) => {
+  const numeroLimpio = texto.replace(/[^0-9]/g, '');
+  setPrecioKgVenta(formatearNumero(texto));
+  
+  // setPrecioKgVentaNumerico(numeroLimpio);
 };
     //========================================================================
   useEffect(() => {
@@ -536,45 +563,45 @@ precio_kg_venta:  parseFloat(precioKgVenta)  || null,
 
 
 
-   {/* Nuevos campos agregados */}
+  {/* Campos actualizados con formato */}
 <View style={styles.inputprecio}>
-    <Image
-        source={require("../assets/precio.png")}
-        style={styles.logo}
-      />
+  <Image
+    source={require("../assets/precio.png")}
+    style={styles.logo}
+  />
   <TextInput
     style={styles.weightInput}
     placeholder="Precio del Kg Compra"
     placeholderTextColor="#000"
     keyboardType="numeric"
     value={precioKgCompra}
-    onChangeText={setPrecioKgCompra}
+    onChangeText={manejarCambioPrecioCompra}
   />
 </View>
 
-
 <Text style={styles.textcosto}>
-  Costo del Ganado Compra: ${precioKgCompra && precioKgCompra !== "" ? parseInt(costoGanadoCompra).toLocaleString() : "0"}
+  Costo del Ganado Compra: ${precioKgCompra && precioKgCompra !== "" ? 
+    parseInt(costoGanadoCompra).toLocaleString('es-CO') : "0"}
 </Text>
 
-
 <View style={styles.inputprecio}>
-    <Image
-        source={require("../assets/precio.png")}
-        style={styles.logo}
-      />
+  <Image
+    source={require("../assets/precio.png")}
+    style={styles.logo}
+  />
   <TextInput
     style={styles.weightInput}
     placeholder="Precio del Kg Venta"
     placeholderTextColor="#000"
     keyboardType="numeric"
     value={precioKgVenta}
-    onChangeText={setPrecioKgVenta}
+    onChangeText={manejarCambioPrecioVenta}
   />
 </View>
 
 <Text style={styles.textcosto}>
-  Costo del Ganado Venta: ${precioKgVenta && precioKgVenta !== "" ? parseInt(costoGanadoVenta).toLocaleString() : "0"}
+  Costo del Ganado Venta: ${precioKgVenta && precioKgVenta !== "" ? 
+    parseInt(costoGanadoVenta).toLocaleString('es-CO') : "0"}
 </Text>
 
 

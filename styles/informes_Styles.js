@@ -108,43 +108,43 @@ export default StyleSheet.create({
     flex: 1,
   },
 
-  greenBar: {
-    height: 90,
+   greenBar: {
+     height: 90, 
     backgroundColor: "#7dac53",
     width: "100%",
+        
   },
 
   bottomImageContainer: {
-    position: "absolute",
-    bottom: 10,
+    position: "absolute", 
+    bottom: 10, 
     left: 0,
     right: 0,
     flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 150,
-    marginBottom: 16,
+    justifyContent: "space-between", 
+    paddingHorizontal: 140,
+    marginBottom:30, 
   },
-
-  imageContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginHorizontal: 15,
+  
+ imageContainer: {
+    alignItems: "center", 
+    justifyContent: "center", 
+    marginHorizontal: 15, 
   },
 
   imageStyleG: {
-    width: 20,
-    height: 20,
+    width: 20, 
+    height: 20,     
+        right: 6,
   },
 
-  imageText: {
-    marginTop: 3,
-    color: "white",
-    fontSize: 12,
-    fontWeight: "normal",
-    left: -6,
-    marginBottom: 8,
+   imageText: {
+     marginTop: 5, 
+    color: "white", 
+    fontSize: 12, 
+    fontWeight: "normal", 
+     left: -6,
   },
-
   //===========================================================================
 
   container: {
@@ -266,14 +266,14 @@ export default StyleSheet.create({
 
   // Ícono de filtro (🔽)
   filterIcon: {
-    fontSize: 12,
-    color: "#661616ff",
+    fontSize: 17,
+    color: "#0f58accb",
     textAlign: "center",
   },
 
   // Ícono de filtro cuando hay un filtro activo
   filterIconActive: {
-    color: "#4CAF50", // Verde para indicar filtro activo
+    color: "#e04444ff", // Verde para indicar filtro activo
     fontWeight: "bold",
   },
 
