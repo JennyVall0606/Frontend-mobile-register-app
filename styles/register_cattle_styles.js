@@ -119,7 +119,7 @@ position: "absolute",
   },
 
   greenBar: {
-    height: 90, 
+    height: 70, 
     backgroundColor: "#7dac53",
     width: "100%",
         
@@ -127,13 +127,13 @@ position: "absolute",
 
   bottomImageContainer: {
     position: "absolute", 
-    bottom: 10, 
+    bottom: 5, 
     left: 0,
     right: 0,
     flexDirection: "row",
     justifyContent: "space-between", 
     paddingHorizontal: 150,
-    marginBottom:16, 
+    
   },
   
  imageContainer: {

@@ -110,23 +110,23 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
 
-  greenBar: {
-    height: 90,
+   greenBar: {
+     height: 70, 
     backgroundColor: "#7dac53",
     width: "100%",
+        
   },
 
   bottomImageContainer: {
-    position: "absolute",
-    bottom: 10,
+    position: "absolute", 
+    bottom: 18, 
     left: 0,
     right: 0,
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-between", 
     paddingHorizontal: 140,
-    marginBottom: 30,
+     
   },
-
   imageContainer: {
     alignItems: "center",
     justifyContent: "center",
