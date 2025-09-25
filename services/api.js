@@ -1,27 +1,29 @@
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import jwt from 'jsonwebtoken';
 
 const API_URL = "https://webmobileregister-production.up.railway.app";
 
 // Guardar el token de acceso y refresh token
-const saveTokens = (accessToken, refreshToken) => {
-  localStorage.setItem("accessToken", accessToken);
-  localStorage.setItem("refreshToken", refreshToken);
+const saveTokens = async (accessToken, refreshToken) => {
+  await AsyncStorage.setItem("accessToken", accessToken);
+  await AsyncStorage.setItem("refreshToken", refreshToken);
 };
 
 // Recuperar el token de acceso
-const getAccessToken = () => {
-  return localStorage.getItem("accessToken");
+const getAccessToken = async () => {
+  return await AsyncStorage.getItem("accessToken");
 };
 
 // Recuperar el refresh token
-const getRefreshToken = () => {
-  return localStorage.getItem("refreshToken");
+const getRefreshToken = async () => {
+  return await AsyncStorage.getItem("refreshToken");
 };
 
 // Función para renovar el token usando el refresh token
 const renovarToken = async () => {
   try {
-    const refreshToken = getRefreshToken();
+    const refreshToken = await getRefreshToken();
 
     if (!refreshToken) {
       throw new Error("Refresh token no disponible");
@@ -31,7 +33,7 @@ const renovarToken = async () => {
 
     if (response.status === 200) {
       const { accessToken } = response.data;
-      saveTokens(accessToken, refreshToken); // Guarda el nuevo access token
+      await saveTokens(accessToken, refreshToken); // Guarda el nuevo access token
       return accessToken;
     } else {
       throw new Error("Error al renovar el token");
@@ -50,7 +52,7 @@ const api = axios.create({
 // Interceptor de Axios para manejar la renovación automática del token
 api.interceptors.request.use(
   async (config) => {
-    let token = getAccessToken();
+    let token = await getAccessToken();
 
     // Si el token ha expirado, renueva el token
     if (token && isTokenExpired(token)) {
@@ -84,7 +86,7 @@ export const login = async (username, password) => {
 
     if (response.status === 200) {
       const { accessToken, refreshToken } = response.data;
-      saveTokens(accessToken, refreshToken); // Guardamos ambos tokens
+      await saveTokens(accessToken, refreshToken); // Guardamos ambos tokens
       return { success: true, data: response.data };
     } else {
       return { success: false };
@@ -96,5 +98,3 @@ export const login = async (username, password) => {
 };
 
 export default api;
-
-
