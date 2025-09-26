@@ -98,7 +98,6 @@ const menuAnim = useState(new Animated.Value(-250))[0];
             Authorization: `Bearer ${token}`,
           },
         });
-    
 
         setGanado(response.data);
         setLoading(false);
