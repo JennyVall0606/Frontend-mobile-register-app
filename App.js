@@ -3,19 +3,26 @@ import { View, Text, ActivityIndicator, StyleSheet, Button } from 'react-native'
 import { NavigationContainer } from "@react-navigation/native";
 import AppNavigator from "./navigation/AppNavigator";
 import DatabaseManager from "./database/DatabaseManager";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+// Sistema de autenticación
+import { testAuth } from './services/TestAuth';
+import AuthManager from './services/AuthManager';
 
-// 🆕 Importar sistema de autenticación
-import { testAuth } from './services/TestAuth'; // Archivo de pruebas que vamos a crear
-import AuthManager from './services/AuthManager'; // AuthManager que vamos a crear
+// 🆕 Sistema de sincronización
+import SyncManager from './services/SyncManager';
+import SyncQueue from './services/SyncQueue';
 
 export default function App() {
-  // Estados existentes de SQLite
+  // Estados existentes
   const [isDbReady, setIsDbReady] = useState(false);
   const [dbError, setDbError] = useState(null);
-  
-  // 🆕 Estados nuevos para autenticación
   const [isAuthReady, setIsAuthReady] = useState(false);
   const [authError, setAuthError] = useState(null);
+  
+  // 🆕 Estados de sincronización
+  const [isSyncReady, setIsSyncReady] = useState(false);
+  const [syncError, setSyncError] = useState(null);
+  
   const [showTests, setShowTests] = useState(false);
   const [testResults, setTestResults] = useState(null);
 
@@ -24,10 +31,11 @@ export default function App() {
   }, []);
 
   const initializeApp = async () => {
-    // Inicializar en paralelo SQLite y Auth
+    // Inicializar en paralelo SQLite, Auth y Sync
     await Promise.allSettled([
       initializeDatabase(),
-      initializeAuth()
+      initializeAuth(),
+      initializeSync() // 🆕 Agregar inicialización de sync
     ]);
   };
 
@@ -40,7 +48,6 @@ export default function App() {
     } catch (error) {
       console.error('❌ Error SQLite:', error);
       setDbError(error);
-      // Continuar sin SQLite después de 3 segundos
       setTimeout(() => {
         console.log('⚠️ Continuando sin SQLite...');
         setIsDbReady(true);
@@ -48,34 +55,78 @@ export default function App() {
     }
   };
 
-  // 🆕 Inicializar sistema de autenticación
-  const initializeAuth = async () => {
-    try {
-      console.log('🔄 Inicializando sistema de autenticación...');
+const initializeAuth = async () => {
+  try {
+    console.log('🔄 Inicializando sistema de autenticación...');
+    
+    const connectionTest = await AuthManager.testConnection();
+    if (!connectionTest) {
+      throw new Error('AuthManager no funciona correctamente');
+    }
+
+    // 🆕 Cargar sesión y token desde AsyncStorage
+    const savedSession = await AuthManager.checkSavedSession();
+    if (savedSession) {
+      console.log('✅ Sesión restaurada:', savedSession.user.correo);
+      console.log('✅ Token disponible:', !!AuthManager.getAuthToken());
+    } else {
+      // 🆕 Si no hay sesión en AuthManager, intentar cargar token directo
+      const token = await AsyncStorage.getItem('token');
+      const user = await AsyncStorage.getItem('current_user');
       
-      // Verificar que AuthManager funciona
-      const connectionTest = await AuthManager.testConnection();
-      if (!connectionTest) {
-        throw new Error('AuthManager no funciona correctamente');
+      if (token && user) {
+        // Cargar en AuthManager manualmente
+        AuthManager.authToken = token;
+        AuthManager.currentUser = JSON.parse(user);
+        console.log('✅ Token cargado desde AsyncStorage');
+        console.log('✅ Token disponible:', !!AuthManager.getAuthToken());
+      } else {
+        console.log('⚠️ No hay sesión guardada - login requerido');
+      }
+    }
+
+    console.log('✅ Sistema de autenticación listo');
+    setIsAuthReady(true);
+  } catch (error) {
+    console.error('❌ Error inicializando Auth:', error);
+    setAuthError(error);
+    setIsAuthReady(true);
+  }
+};
+
+  // 🆕 Inicializar sistema de sincronización
+  const initializeSync = async () => {
+    try {
+      console.log('🔄 Inicializando sistema de sincronización...');
+      
+      // Inicializar cola de sincronización
+      await SyncQueue.initialize();
+      
+      // Inicializar gestor de sincronización
+      const syncInitialized = await SyncManager.initialize();
+      
+      if (!syncInitialized) {
+        throw new Error('SyncManager no se inicializó correctamente');
       }
 
-      // Verificar si hay sesión guardada
-      const savedSession = await AuthManager.checkSavedSession();
-      if (savedSession) {
-        console.log('✅ Sesión restaurada:', savedSession.user.correo);
+      // Obtener estadísticas de la cola
+      const queueStats = await SyncQueue.getStats();
+      console.log('📊 Cola de sincronización:', queueStats);
+      
+      if (queueStats.pending > 0) {
+        console.log(`⏳ ${queueStats.pending} operaciones pendientes de sincronizar`);
       }
 
-      console.log('✅ Sistema de autenticación listo');
-      setIsAuthReady(true);
+      console.log('✅ Sistema de sincronización listo');
+      setIsSyncReady(true);
     } catch (error) {
-      console.error('❌ Error inicializando Auth:', error);
-      setAuthError(error);
-      // Auth es crítico, pero continuar para mostrar error
-      setIsAuthReady(true);
+      console.error('❌ Error inicializando Sync:', error);
+      setSyncError(error);
+      // Continuar sin sincronización
+      setIsSyncReady(true);
     }
   };
 
-  // 🆕 Función para ejecutar pruebas de autenticación
   const runAuthTests = async () => {
     setShowTests(true);
     console.log('🧪 Ejecutando pruebas de autenticación...');
@@ -88,7 +139,7 @@ export default function App() {
   };
 
   // Pantalla de loading mientras se inicializa todo
-  if (!isDbReady || !isAuthReady) {
+  if (!isDbReady || !isAuthReady || !isSyncReady) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#007AFF" />
@@ -101,9 +152,14 @@ export default function App() {
           {isDbReady ? '✅' : '🔄'} Base de datos local
         </Text>
         
-        {/* 🆕 Estado Auth */}
+        {/* Estado Auth */}
         <Text style={[styles.subText, { color: isAuthReady ? '#28a745' : '#666' }]}>
           {isAuthReady ? '✅' : '🔄'} Sistema de autenticación
+        </Text>
+        
+        {/* 🆕 Estado Sync */}
+        <Text style={[styles.subText, { color: isSyncReady ? '#28a745' : '#666' }]}>
+          {isSyncReady ? '✅' : '🔄'} Sistema de sincronización
         </Text>
         
         {/* Errores SQLite */}
@@ -115,7 +171,7 @@ export default function App() {
           </View>
         )}
 
-        {/* 🆕 Errores Auth */}
+        {/* Errores Auth */}
         {authError && (
           <View style={[styles.errorContainer, { backgroundColor: '#F8D7DA' }]}>
             <Text style={[styles.errorText, { color: '#721c24' }]}>
@@ -126,11 +182,23 @@ export default function App() {
             </Text>
           </View>
         )}
+
+        {/* 🆕 Errores Sync */}
+        {syncError && (
+          <View style={[styles.errorContainer, { backgroundColor: '#FFF3CD' }]}>
+            <Text style={styles.errorText}>
+              ⚠️ Error en sincronización - Continuando sin sync automático
+            </Text>
+            <Text style={styles.errorSubText}>
+              {syncError.message}
+            </Text>
+          </View>
+        )}
       </View>
     );
   }
 
-  // 🆕 Pantalla de pruebas de autenticación (opcional)
+  // Pantalla de pruebas de autenticación (opcional)
   if (showTests) {
     return (
       <View style={styles.testContainer}>
@@ -212,7 +280,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 4,
   },
-  // 🆕 Estilos para pantalla de pruebas
   testContainer: {
     flex: 1,
     backgroundColor: '#f5f5f5',

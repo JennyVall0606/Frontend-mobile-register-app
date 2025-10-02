@@ -4,7 +4,7 @@ import NetInfo from '@react-native-community/netinfo';
 class AuthManager {
   constructor() {
     // 🚨 CAMBIA ESTA URL POR LA DE TU SERVIDOR
-    this.API_BASE_URL = 'https://tu-servidor.com/api';
+    this.API_BASE_URL = 'https://webmobileregister-production.up.railway.app';
     this.currentUser = null;
     this.authToken = null;
   }
@@ -87,28 +87,28 @@ class AuthManager {
   /**
    * Verificar sesión guardada
    */
-  async checkSavedSession() {
-    try {
-      const savedUser = await AsyncStorage.getItem('current_user');
-      const savedToken = await AsyncStorage.getItem('auth_token');
+async checkSavedSession() {
+  try {
+    const savedUser = await AsyncStorage.getItem('current_user');
+    const savedToken = await AsyncStorage.getItem('auth_token');
+    
+    if (savedUser && savedToken) {
+      const userData = JSON.parse(savedUser);
+      this.currentUser = userData;
+      this.authToken = savedToken;
       
-      if (savedUser && savedToken) {
-        const userData = JSON.parse(savedUser);
-        this.currentUser = userData;
-        this.authToken = savedToken;
-        
-        return {
-          user: userData,
-          token: savedToken
-        };
-      }
+      console.log('✅ Token restaurado:', savedToken.substring(0, 20) + '...');
       
-      return null;
-    } catch (error) {
-      console.error('❌ Error verificando sesión:', error);
-      return null;
+      return { user: userData, token: savedToken };
     }
+    
+    console.log('⚠️ No hay sesión guardada');
+    return null;
+  } catch (error) {
+    console.error('❌ Error verificando sesión:', error);
+    return null;
   }
+}
 
   /**
    * Logout

@@ -20,6 +20,7 @@ import { useNavigation } from "@react-navigation/native";
 import styles from "../styles/login_styles";
 import { login } from "../services/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import AuthManager from '../services/AuthManager';
 
 const API_URL = "https://webmobileregister-production.up.railway.app";
 
@@ -32,28 +33,43 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async () => {
-    if (!username || !password) {
-      Alert.alert("⚠️Atención", "Por favor ingresa usuario y contraseña.", [{ text: "OK" }]);
-      return;
+const handleLogin = async () => {
+  if (!username || !password) {
+    Alert.alert("⚠️Atención", "Por favor ingresa usuario y contraseña.", [{ text: "OK" }]);
+    return;
+  }
+  setLoading(true);
+  try {
+    const response = await login(username, password);
+    if (response.success && response.data.token) {
+      const token = response.data.token;
+      const userData = response.data.user || { 
+        id: response.data.id || 1, 
+        correo: username 
+      };
+      
+      // Guardar en AsyncStorage
+      await AsyncStorage.setItem("token", token);
+      await AsyncStorage.setItem("current_user", JSON.stringify(userData));
+      
+      // Cargar directamente en AuthManager (sin bcrypt)
+      AuthManager.authToken = token;
+      AuthManager.currentUser = userData;
+      
+      console.log('✅ Login completado');
+      console.log('Token disponible:', !!AuthManager.getAuthToken());
+      
+      navigation.navigate("Home");
+    } else {
+      Alert.alert("Error", "Error al iniciar sesión. Verifica tus credenciales.", [{ text: "OK" }]);
     }
-    setLoading(true);
-    try {
-      const response = await login(username, password);
-      if (response.success && response.data.token) {
-        await AsyncStorage.setItem("token", response.data.token);
-        // @ts-ignore
-        navigation.navigate("Home");
-      } else {
-        Alert.alert("Error", "Error al iniciar sesión. Verifica tus credenciales.", [{ text: "OK" }]);
-      }
-    } catch (error) {
-      Alert.alert("🚫Advertencia", "Usuario o contraseña incorrectos.", [{ text: "OK" }]);
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  } catch (error) {
+    Alert.alert("🚫Advertencia", "Usuario o contraseña incorrectos.", [{ text: "OK" }]);
+    console.error(error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <View style={{ flex: 1 }}>

@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from 'expo-file-system';
 
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -23,8 +24,32 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as NavigationBar from "expo-navigation-bar";
+import NetInfo from '@react-native-community/netinfo';
+import SyncQueue from '../services/SyncQueue';
 
 export default function RegisterCattleScreen({ route }) {
+
+  const convertImageToBase64 = async (imageUri) => {
+  try {
+    if (!imageUri || !imageUri.startsWith('file://')) {
+      return imageUri; // Si ya es base64 o URL, devolverla tal como está
+    }
+
+    console.log('🖼️ Convirtiendo imagen a base64:', imageUri);
+    
+    const base64 = await FileSystem.readAsStringAsync(imageUri, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+    
+    const base64Image = `data:image/jpeg;base64,${base64}`;
+    console.log('✅ Imagen convertida a base64, tamaño:', base64Image.length);
+    
+    return base64Image;
+  } catch (error) {
+    console.error('❌ Error convirtiendo imagen:', error);
+    return imageUri; // Devolver original si falla
+  }
+};
   const { chip: chipFromParams, razaId, isEditing } = route.params || {};
   const [chip, setChip] = useState(chipFromParams || "");
   const [animalData, setAnimalData] = useState(null);
@@ -159,31 +184,81 @@ export default function RegisterCattleScreen({ route }) {
     return null;
   };
 
-  useEffect(() => {
-    const fetchRazas = async () => {
-      try {
+useEffect(() => {
+  const fetchRazas = async () => {
+    try {
+      // 1. Intentar cargar desde AsyncStorage local primero
+      const localRazas = await AsyncStorage.getItem('local_razas');
+      
+      if (localRazas) {
+        const razaItems = JSON.parse(localRazas);
+        setItemsRaza(razaItems);
+        console.log('✅ Razas cargadas desde local:', razaItems.length);
+      }
+
+      // 2. Verificar conexión
+      const networkState = await NetInfo.fetch();
+      
+      if (networkState.isConnected) {
+        // 3. Si hay conexión, actualizar desde servidor
+        console.log('🌐 Actualizando razas desde servidor...');
         const response = await axios.get(`${API_URL}/register/razas`);
         const razaItems = response.data.map((raza) => ({
           label: raza.nombre_raza,
           value: raza.id_raza.toString(),
         }));
+        
+        // 4. Guardar en local para uso offline
+        await AsyncStorage.setItem('local_razas', JSON.stringify(razaItems));
         setItemsRaza(razaItems);
-      } catch (error) {
-        console.error("Error al obtener las razas:", error);
+        console.log('✅ Razas actualizadas desde servidor:', razaItems.length);
+      } else if (!localRazas) {
+        // 5. Si no hay conexión ni datos locales, usar razas predeterminadas
+        console.log('⚠️ Sin conexión y sin datos locales, usando razas predeterminadas');
+        const razasPredeterminadas = [
+          { label: 'Brahman', value: '14' },
+          { label: 'Holstein', value: '15' },
+          { label: 'Angus', value: '16' },
+          { label: 'Hereford', value: '17' },
+          { label: 'Charolais', value: '18' },
+          { label: 'Jersey', value: '19' },
+          { label: 'Simmental', value: '20' },
+          { label: 'Limousin', value: '21' },
+          { label: 'Pardo Suizo', value: '22' },
+          { label: 'Gyr', value: '23' },
+          { label: 'Otra Raza', value: '25' },
+        ];
+        setItemsRaza(razasPredeterminadas);
+        await AsyncStorage.setItem('local_razas', JSON.stringify(razasPredeterminadas));
       }
-    };
-
-    fetchRazas();
-  }, []);
-
-  useEffect(() => {
-    if (razaId) {
-      const razaExistente = itemsRaza.find((item) => item.label === razaId);
-      if (razaExistente) {
-        setBreed(razaExistente.value);
+      
+    } catch (error) {
+      console.error('❌ Error al obtener las razas:', error);
+      
+      // Intentar cargar desde local como último recurso
+      try {
+        const localRazas = await AsyncStorage.getItem('local_razas');
+        if (localRazas) {
+          setItemsRaza(JSON.parse(localRazas));
+          console.log('✅ Razas cargadas desde caché local después de error');
+        }
+      } catch (localError) {
+        console.error('❌ Error cargando razas locales:', localError);
       }
     }
-  }, [itemsRaza, razaId]);
+  };
+
+  fetchRazas();
+}, []);
+
+useEffect(() => {
+  if (razaId) {
+    const razaExistente = itemsRaza.find((item) => item.label === razaId);
+    if (razaExistente) {
+      setBreed(razaExistente.value);
+    }
+  }
+}, [itemsRaza, razaId]);
 
   useEffect(() => {
     const fetchAnimalData = async () => {
@@ -311,7 +386,7 @@ export default function RegisterCattleScreen({ route }) {
     setChip("");
     setFather("");
     setMother("");
-    setDisease(Array.isArray(value) ? value : []);
+    setDisease([]);
     setObservations("");
     setParto("");
     setPrecocidad("");
@@ -325,144 +400,252 @@ export default function RegisterCattleScreen({ route }) {
     setTipoMonta("");
   };
 
-  const handleRegister = async () => {
-    const newErrors = {
-      photo: !image,
-      chip: !chip,
-      breed: !breed,
-      birthDate: !birthDate,
-      weight: !weight,
-      categoria: !categoria,
-      hierro: !hierro,
-      ubicacion: !ubicacion,
-      parto: categoria === "cria" && !parto,
-      precocidad: categoria === "cria" && !precocidad,
-      tipoMonta: categoria === "cria" && !tipoMonta,
-    };
+const handleRegister = async () => {
+  const newErrors = {
+    photo: !image,
+    chip: !chip,
+    breed: !breed,
+    birthDate: !birthDate,
+    weight: !weight,
+    categoria: !categoria,
+    hierro: !hierro,
+    ubicacion: !ubicacion,
+    parto: categoria === "cria" && !parto,
+    precocidad: categoria === "cria" && !precocidad,
+    tipoMonta: categoria === "cria" && !tipoMonta,
+  };
 
-    setErrors(newErrors);
+  setErrors(newErrors);
 
-    if (Object.values(newErrors).includes(true)) {
+  if (Object.values(newErrors).includes(true)) {
+    Alert.alert(
+      "⚠️ Campos obligatorios incompletos",
+      "Por favor completa todos los campos obligatorios."
+    );
+    return;
+  }
+
+  try {
+    // 🆕 Verificar conexión a internet
+    const networkState = await NetInfo.fetch();
+    const isConnected = networkState.isConnected;
+    
+    console.log('🌐 Estado de conexión:', isConnected ? 'Online' : 'Offline');
+
+    const token = await AsyncStorage.getItem("token");
+    if (!token) {
       Alert.alert(
-        "⚠️ Campos obligatorios incompletos",
-        "Por favor completa todos los campos obligatorios."
+        "❌ Error",
+        "Token no encontrado. Inicia sesión nuevamente."
       );
       return;
     }
 
-    try {
-      const token = await AsyncStorage.getItem("token");
-      if (!token) {
-        Alert.alert(
-          "❌ Error",
-          "Token no encontrado. Inicia sesión nuevamente."
-        );
-        return;
-      }
+    const fechaFormateada = birthDate.split("T")[0];
+    const enfermedadesFormateadas = disease.length > 0 ? disease.join(",") : null;
 
-      if (!chip || !breed || !birthDate || !weight) {
-        Alert.alert(
-          "⚠️ Datos incompletos",
-          "Por favor completa los campos obligatorios."
-        );
-        return;
-      }
+    // 🆕 Si está OFFLINE, guardar localmente
+    if (!isConnected) {
+      console.log('📵 Sin conexión - Guardando localmente');
+      return await handleOfflineRegister(fechaFormateada, enfermedadesFormateadas);
+    }
 
-      const fechaFormateada = birthDate.split("T")[0];
-      const enfermedadesFormateadas =
-        disease.length > 0 ? disease.join(",") : null;
-      const formData = new FormData();
+    // 🆕 Si está ONLINE, intentar enviar al servidor
+    console.log('📶 Con conexión - Enviando al servidor');
+    return await handleOnlineRegister(fechaFormateada, enfermedadesFormateadas, token);
 
-      if (image && !image.startsWith("http")) {
-        formData.append("foto", {
-          uri: image,
-          type: "image/jpeg",
-          name: "foto.jpg",
-        });
-      }
-      formData.append("chip_animal", chip);
-      formData.append("fecha_nacimiento", fechaFormateada);
-      formData.append("peso_nacimiento", weight);
-      formData.append("raza_id_raza", breed);
-      formData.append("categoria", categoria || null);
-      formData.append("hierro", hierro || null);
-      formData.append("ubicacion", ubicacion || null);
+  } catch (error) {
+    console.error("Error general al registrar:", error);
+    Alert.alert("❌ Error", "No se pudo completar la operación: " + error.message);
+  }
+};
 
-      formData.append("procedencia", criadero || "");
-      if (father) formData.append("id_madre", father);
-      if (mother) formData.append("id_padre", mother);
-      if (enfermedadesFormateadas)
-        formData.append("enfermedades", enfermedadesFormateadas);
-      if (observations) formData.append("observaciones", observations);
 
-      if (categoria === "cria") {
-        formData.append("numero_parto", parto || "");
-        formData.append("precocidad", precocidad || "");
-        formData.append("tipo_monta", tipoMonta || "");
+const handleOfflineRegister = async (fechaFormateada, enfermedadesFormateadas) => {
+  try {
+    // Generar ID temporal local
+    const localId = Date.now();
+    
+    // 🆕 Convertir imagen a base64 antes de guardar
+    let photoData = image;
+    if (image && image.startsWith('file://')) {
+      console.log('📸 Convirtiendo foto para almacenamiento offline...');
+      photoData = await convertImageToBase64(image);
+    }
+    
+    // Preparar datos del animal
+    const animalData = {
+      id: localId,
+      chip_animal: chip,
+      fecha_nacimiento: fechaFormateada,
+      peso_nacimiento: parseFloat(weight),
+      raza_id_raza: parseInt(breed),
+      categoria: categoria,
+      hierro: hierro,
+      ubicacion: ubicacion,
+      procedencia: criadero || null,
+      id_madre: father || null,
+      id_padre: mother || null,
+      enfermedades: enfermedadesFormateadas,
+      observaciones: observations || null,
+      numero_parto: categoria === "cria" ? parto : null,
+      precocidad: categoria === "cria" ? precocidad : null,
+      tipo_monta: categoria === "cria" ? tipoMonta : null,
+      foto: photoData || 'default.jpg', // 🆕 Usar foto convertida
+      created_at: new Date().toISOString(),
+      synced: false,
+    };
 
-        // Log para debug
-        console.log("Enviando datos de cria:");
-        console.log("- Número de parto:", parto);
-        console.log("- Precocidad:", precocidad);
-        console.log("- Tipo de monta:", tipoMonta);
-      } else {
-        formData.append("numero_parto", "");
-        formData.append("precocidad", "");
-        formData.append("tipo_monta", "");
+    console.log('💾 Guardando animal localmente con foto base64');
 
-        console.log("Categoría diferente a cria, enviando campos vacíos");
-      }
+    // Resto del código igual...
+    const existingAnimals = await AsyncStorage.getItem('local_registro_animal');
+    let animals = existingAnimals ? JSON.parse(existingAnimals) : [];
+    animals.push(animalData);
+    await AsyncStorage.setItem('local_registro_animal', JSON.stringify(animals));
 
-      console.log("Categoría seleccionada:", categoria);
-      console.log("¿Es cria?:", categoria === "cria");
+    // Agregar a cola de sincronización
+    await SyncQueue.add({
+      table: 'registro_animal',
+      recordId: localId,
+      action: 'INSERT',
+      data: animalData
+    });
 
-      const url = animalData
-        ? `${API_URL}/register/update/${chip}`
-        : `${API_URL}/register/add`;
+    console.log('✅ Animal guardado localmente con foto y agregado a cola de sync');
 
-      const method = animalData ? "put" : "post";
+    Alert.alert(
+      '📵 Guardado sin conexión',
+      'El animal se registró localmente con su foto. Se sincronizará automáticamente cuando haya conexión a internet.',
+      [
+        {
+          text: 'OK',
+          onPress: () => {
+            resetForm();
+            navigation.goBack();
+          }
+        }
+      ]
+    );
 
-      const response = await axios({
-        method,
-        url,
-        data: formData,
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
+  } catch (error) {
+    console.error('❌ Error en registro offline:', error);
+    Alert.alert(
+      '❌ Error',
+      'No se pudo guardar localmente: ' + error.message
+    );
+  }
+};
+
+// 🆕 Nueva función: Registro ONLINE (tu código original)
+const handleOnlineRegister = async (fechaFormateada, enfermedadesFormateadas, token) => {
+  try {
+    const formData = new FormData();
+
+    if (image && !image.startsWith("http")) {
+      formData.append("foto", {
+        uri: image,
+        type: "image/jpeg",
+        name: "foto.jpg",
+      });
+    }
+
+    formData.append("chip_animal", chip);
+    formData.append("fecha_nacimiento", fechaFormateada);
+    formData.append("peso_nacimiento", weight);
+    formData.append("raza_id_raza", breed);
+    formData.append("categoria", categoria || null);
+    formData.append("hierro", hierro || null);
+    formData.append("ubicacion", ubicacion || null);
+    formData.append("procedencia", criadero || "");
+
+    if (father) formData.append("id_madre", father);
+    if (mother) formData.append("id_padre", mother);
+    if (enfermedadesFormateadas) formData.append("enfermedades", enfermedadesFormateadas);
+    if (observations) formData.append("observaciones", observations);
+
+    if (categoria === "cria") {
+      formData.append("numero_parto", parto || "");
+      formData.append("precocidad", precocidad || "");
+      formData.append("tipo_monta", tipoMonta || "");
+    } else {
+      formData.append("numero_parto", "");
+      formData.append("precocidad", "");
+      formData.append("tipo_monta", "");
+    }
+
+    const url = animalData
+      ? `${API_URL}/register/update/${chip}`
+      : `${API_URL}/register/add`;
+
+    const method = animalData ? "put" : "post";
+
+    console.log('🌐 Enviando al servidor:', url);
+
+    const response = await axios({
+      method,
+      url,
+      data: formData,
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+      timeout: 15000, // 15 segundos timeout
+    });
+
+    if (response.status === 200 || response.status === 201) {
+      console.log('✅ Animal registrado en servidor');
+      
+      Alert.alert(
+        "✅ Operación exitosa",
+        animalData
+          ? "Los datos del animal han sido actualizados correctamente"
+          : "El ganado ha sido registrado correctamente"
+      );
+
+      navigation.setParams({
+        breed: breed,
+        disease: disease,
+        weight: weight,
+        observations: observations,
       });
 
-      if (response.status === 200 || response.status === 201) {
-        Alert.alert(
-          "✅ Operación exitosa",
-          animalData
-            ? "Los datos del animal han sido actualizados correctamente"
-            : "El ganado ha sido registrado correctamente"
-        );
-
-        navigation.setParams({
-          breed: breed,
-          disease: disease,
-          weight: weight,
-          observations: observations,
-        });
-
-        navigation.goBack();
-      }
-    } catch (error) {
-      console.error("Error al registrar/actualizar:", error);
-      if (error.response && error.response.data) {
-        console.log("Detalles del error:", error.response.data);
-        const mensaje =
-          error.response.data.message ||
-          error.response.data.error ||
-          "No se pudo completar la operación.";
-        Alert.alert("❌ Error", mensaje);
-      } else {
-        Alert.alert("❌ Error", "No se pudo completar la operación.");
-      }
+      navigation.goBack();
     }
-  };
+
+  } catch (error) {
+    console.error("❌ Error al registrar online:", error);
+    
+    // Si falla el envío online, guardar offline como fallback
+    if (error.code === 'ECONNABORTED' || error.message.includes('Network')) {
+      console.log('⚠️ Error de red, cambiando a modo offline');
+      Alert.alert(
+        '⚠️ Sin conexión',
+        'No se pudo conectar con el servidor. ¿Deseas guardar localmente?',
+        [
+          {
+            text: 'Cancelar',
+            style: 'cancel'
+          },
+          {
+            text: 'Guardar Offline',
+            onPress: () => handleOfflineRegister(
+              birthDate.split("T")[0],
+              disease.length > 0 ? disease.join(",") : null
+            )
+          }
+        ]
+      );
+    } else {
+      // Error del servidor (400, 500, etc)
+      const mensaje = error.response?.data?.message 
+        || error.response?.data?.error 
+        || "No se pudo completar la operación.";
+      Alert.alert("❌ Error", mensaje);
+    }
+  }
+};
+
 
   // === INSETS para barra inferior y scroll ===
   const insets = useSafeAreaInsets();
