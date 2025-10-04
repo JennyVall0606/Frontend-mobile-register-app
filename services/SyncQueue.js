@@ -56,19 +56,24 @@ class SyncQueue {
 
   /**
    * Obtener todas las operaciones pendientes
+   * ✅ CORREGIDO: Incluye operaciones 'pending' y 'failed'
    */
   async getPending() {
-    await this.initialize();
-    return this.queue.filter(item => item.status === 'pending');
+    await this.initialize(); // ← Cargar la cola desde AsyncStorage
+    return this.queue.filter(op => 
+      op.status === 'pending' || op.status === 'failed'
+    );
   }
 
   /**
    * Obtener operaciones por tabla
+   * ✅ MEJORADO: También incluye operaciones fallidas
    */
   async getByTable(tableName) {
     await this.initialize();
     return this.queue.filter(item => 
-      item.table === tableName && item.status === 'pending'
+      item.table === tableName && 
+      (item.status === 'pending' || item.status === 'failed')
     );
   }
 
@@ -99,11 +104,14 @@ class SyncQueue {
         this.queue[index].status = 'failed';
         this.queue[index].error = errorMessage;
         this.queue[index].attempts += 1;
+        this.queue[index].lastAttempt = new Date().toISOString(); // ← Nuevo
         
         // Si ha fallado más de 5 veces, marcar como error permanente
         if (this.queue[index].attempts >= 5) {
           this.queue[index].status = 'error';
-          console.log(`❌ Operación ${queueItemId} falló permanentemente`);
+          console.log(`❌ Operación ${queueItemId} falló permanentemente después de ${this.queue[index].attempts} intentos`);
+        } else {
+          console.log(`⚠️ Operación ${queueItemId} marcada como fallida (intento ${this.queue[index].attempts}/5)`);
         }
         
         await this.save();
@@ -124,11 +132,43 @@ class SyncQueue {
       
       const cleaned = beforeCount - this.queue.length;
       if (cleaned > 0) {
-        console.log(`✅ Limpiadas ${cleaned} operaciones sincronizadas`);
+        console.log(`🧹 Limpiadas ${cleaned} operaciones sincronizadas`);
       }
       return cleaned;
     } catch (error) {
       console.error('❌ Error limpiando cola:', error);
+    }
+  }
+
+  /**
+   * Reintentar operaciones fallidas (resetear a 'pending')
+   * ✅ NUEVO: Permite reintentar operaciones fallidas manualmente
+   */
+  async retryFailed() {
+    try {
+      const failedOps = this.queue.filter(item => item.status === 'failed');
+      
+      if (failedOps.length === 0) {
+        console.log('ℹ️ No hay operaciones fallidas para reintentar');
+        return 0;
+      }
+
+      let retried = 0;
+      for (const op of failedOps) {
+        const index = this.queue.findIndex(item => item.id === op.id);
+        if (index !== -1) {
+          this.queue[index].status = 'pending';
+          this.queue[index].error = null;
+          retried++;
+        }
+      }
+
+      await this.save();
+      console.log(`🔄 ${retried} operaciones fallidas listas para reintentar`);
+      return retried;
+    } catch (error) {
+      console.error('❌ Error reintentando operaciones:', error);
+      return 0;
     }
   }
 
@@ -147,7 +187,17 @@ class SyncQueue {
       error: this.queue.filter(item => item.status === 'error').length,
     };
 
+    console.log('📊 Cola de sincronización:', stats);
     return stats;
+  }
+
+  /**
+   * Obtener detalles de operaciones fallidas
+   * ✅ NUEVO: Para debugging
+   */
+  async getFailedDetails() {
+    await this.initialize();
+    return this.queue.filter(item => item.status === 'failed' || item.status === 'error');
   }
 
   /**

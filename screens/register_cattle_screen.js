@@ -26,28 +26,70 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as NavigationBar from "expo-navigation-bar";
 import NetInfo from '@react-native-community/netinfo';
 import SyncQueue from '../services/SyncQueue';
+import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
+
 
 export default function RegisterCattleScreen({ route }) {
 
-  const convertImageToBase64 = async (imageUri) => {
+// Reemplaza la función convertImageToBase64 que tienes al inicio del componente
+const convertImageToBase64 = async (imageUri) => {
   try {
     if (!imageUri || !imageUri.startsWith('file://')) {
-      return imageUri; // Si ya es base64 o URL, devolverla tal como está
+      return imageUri;
     }
 
-    console.log('🖼️ Convirtiendo imagen a base64:', imageUri);
+    console.log('🖼️ Comprimiendo y convirtiendo imagen...');
     
-    const base64 = await FileSystem.readAsStringAsync(imageUri, {
+    // 1. COMPRIMIR la imagen ANTES de convertir a base64
+    const compressedImage = await manipulateAsync(
+      imageUri,
+      [{ resize: { width: 800 } }], // Redimensionar a máximo 800px de ancho
+      {
+        compress: 0.7, // Comprimir al 70%
+        format: SaveFormat.JPEG
+      }
+    );
+    
+    console.log('✅ Imagen comprimida desde:', imageUri);
+    console.log('✅ Nueva URI:', compressedImage.uri);
+    
+    // 2. Convertir la imagen comprimida a base64
+    const base64 = await FileSystem.readAsStringAsync(compressedImage.uri, {
       encoding: FileSystem.EncodingType.Base64,
     });
     
     const base64Image = `data:image/jpeg;base64,${base64}`;
-    console.log('✅ Imagen convertida a base64, tamaño:', base64Image.length);
+    
+    console.log('✅ Imagen convertida a base64, tamaño final:', base64Image.length);
+    console.log('📏 Tamaño en MB:', (base64Image.length * 0.75 / 1024 / 1024).toFixed(2));
+    
+    // 3. Validar que no sea demasiado grande (máximo 2MB)
+    const sizeInMB = (base64Image.length * 0.75) / (1024 * 1024);
+    if (sizeInMB > 2) {
+      console.warn('⚠️ Imagen aún muy grande, comprimiendo más...');
+      
+      // Comprimir más agresivamente
+      const moreCompressed = await manipulateAsync(
+        imageUri,
+        [{ resize: { width: 600 } }],
+        {
+          compress: 0.5,
+          format: SaveFormat.JPEG
+        }
+      );
+      
+      const smallerBase64 = await FileSystem.readAsStringAsync(moreCompressed.uri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+      
+      return `data:image/jpeg;base64,${smallerBase64}`;
+    }
     
     return base64Image;
+    
   } catch (error) {
     console.error('❌ Error convirtiendo imagen:', error);
-    return imageUri; // Devolver original si falla
+    return imageUri;
   }
 };
   const { chip: chipFromParams, razaId, isEditing } = route.params || {};
@@ -347,19 +389,32 @@ useEffect(() => {
   }, []);
 
 
-  const handleImagePick = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 1,
-      allowsEditing: true,
-    });
+const handleImagePick = async () => {
+  const result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    quality: 0.7,  // ← Reducir calidad inicial
+    allowsEditing: true,
+  });
 
-    if (!result.canceled && result.assets?.length > 0) {
-      setImage(result.assets[0].uri);
-    } else {
-      Alert.alert("⚠️ No se seleccionó ninguna imagen.");
-    }
-  };
+  if (!result.canceled && result.assets?.length > 0) {
+    console.log('📸 Imagen seleccionada, comprimiendo...');
+    
+    // Comprimir la imagen ANTES de guardarla
+    const compressedImage = await manipulateAsync(
+      result.assets[0].uri,
+      [{ resize: { width: 800 } }],
+      {
+        compress: 0.7,
+        format: SaveFormat.JPEG
+      }
+    );
+    
+    console.log('✅ Imagen comprimida');
+    setImage(compressedImage.uri);
+  } else {
+    Alert.alert("⚠️ No se seleccionó ninguna imagen.");
+  }
+};
 
   const handleConfirmDate = (date) => {
     const year = date.getFullYear();
@@ -463,14 +518,56 @@ const handleRegister = async () => {
 
 const handleOfflineRegister = async (fechaFormateada, enfermedadesFormateadas) => {
   try {
-    // Generar ID temporal local
     const localId = Date.now();
     
-    // 🆕 Convertir imagen a base64 antes de guardar
-    let photoData = image;
+    // ✅ COMPRIMIR PRIMERO, LUEGO CONVERTIR
+    let photoData = null;
+    
     if (image && image.startsWith('file://')) {
-      console.log('📸 Convirtiendo foto para almacenamiento offline...');
-      photoData = await convertImageToBase64(image);
+      console.log('📸 Comprimiendo imagen para modo offline...');
+      
+      // 1. COMPRIMIR la imagen agresivamente
+      const compressedImage = await manipulateAsync(
+        image,
+        [{ resize: { width: 600 } }],
+        {
+          compress: 0.5,
+          format: SaveFormat.JPEG
+        }
+      );
+      
+      console.log('✅ Imagen comprimida:', compressedImage.uri);
+      
+      // 2. Convertir a base64 la versión comprimida
+      const base64 = await FileSystem.readAsStringAsync(compressedImage.uri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+      
+      photoData = `data:image/jpeg;base64,${base64}`;
+      
+      const sizeInKB = (photoData.length * 0.75) / 1024;
+      console.log('📏 Tamaño final de foto offline:', sizeInKB.toFixed(2), 'KB');
+      
+      // 3. Validar que no sea mayor a 200KB para offline
+      if (sizeInKB > 200) {
+        console.warn('⚠️ Imagen muy grande, comprimiendo aún más...');
+        
+        const ultraCompressed = await manipulateAsync(
+          image,
+          [{ resize: { width: 400 } }],
+          {
+            compress: 0.3,
+            format: SaveFormat.JPEG
+          }
+        );
+        
+        const smallerBase64 = await FileSystem.readAsStringAsync(ultraCompressed.uri, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+        
+        photoData = `data:image/jpeg;base64,${smallerBase64}`;
+        console.log('✅ Imagen ultra-comprimida para offline');
+      }
     }
     
     // Preparar datos del animal
@@ -491,14 +588,14 @@ const handleOfflineRegister = async (fechaFormateada, enfermedadesFormateadas) =
       numero_parto: categoria === "cria" ? parto : null,
       precocidad: categoria === "cria" ? precocidad : null,
       tipo_monta: categoria === "cria" ? tipoMonta : null,
-      foto: photoData || 'default.jpg', // 🆕 Usar foto convertida
+      foto: photoData || 'default.jpg',
       created_at: new Date().toISOString(),
       synced: false,
     };
 
-    console.log('💾 Guardando animal localmente con foto base64');
+    console.log('💾 Guardando animal localmente con foto comprimida');
 
-    // Resto del código igual...
+    // Guardar en AsyncStorage
     const existingAnimals = await AsyncStorage.getItem('local_registro_animal');
     let animals = existingAnimals ? JSON.parse(existingAnimals) : [];
     animals.push(animalData);
@@ -516,7 +613,7 @@ const handleOfflineRegister = async (fechaFormateada, enfermedadesFormateadas) =
 
     Alert.alert(
       '📵 Guardado sin conexión',
-      'El animal se registró localmente con su foto. Se sincronizará automáticamente cuando haya conexión a internet.',
+      'El animal se registró localmente con su foto comprimida. Se sincronizará automáticamente cuando haya conexión a internet.',
       [
         {
           text: 'OK',

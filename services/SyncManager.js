@@ -20,7 +20,7 @@ class SyncManager {
       console.log('🔄 Inicializando SyncManager...');
       
       // Limpiar operaciones fallidas al inicio
-      await this.clearFailedOperations();
+    //  await this.clearFailedOperations();
       
       // Cargar cola de sincronización
       await SyncQueue.initialize();
@@ -55,28 +55,38 @@ class SyncManager {
   /**
    * Limpiar operaciones fallidas
    */
-  async clearFailedOperations() {
-    try {
-      console.log('🧹 Limpiando operaciones fallidas...');
-      
-      // Resetear cola completa (método directo)
-      await SyncQueue.resetQueue();
-      
-      console.log('✅ Operaciones fallidas limpiadas');
+ /**
+ * Limpiar SOLO operaciones fallidas, mantener pendientes
+ */
+async clearFailedOperations() {
+  try {
+    console.log('🧹 Limpiando solo operaciones fallidas...');
+    
+    // Obtener cola actual
+    const queueData = await AsyncStorage.getItem('sync_queue');
+    if (!queueData) {
+      console.log('✅ No hay cola para limpiar');
       return true;
-    } catch (error) {
-      console.error('❌ Error limpiando operaciones:', error);
-      // Si no existe el método, limpiar manualmente
-      try {
-        await AsyncStorage.removeItem('sync_queue');
-        console.log('✅ Cola limpiada manualmente');
-        return true;
-      } catch (manualError) {
-        console.error('❌ Error limpiando manualmente:', manualError);
-        return false;
-      }
     }
+    
+    const queue = JSON.parse(queueData);
+    
+    // Filtrar solo las NO fallidas (mantener pending, syncing, etc.)
+    const cleanQueue = queue.filter(op => op.status !== 'failed' && op.status !== 'error');
+    
+    console.log(`🗑️ Eliminando ${queue.length - cleanQueue.length} operaciones fallidas`);
+    console.log(`✅ Manteniendo ${cleanQueue.length} operaciones válidas`);
+    
+    // Guardar cola limpia
+    await AsyncStorage.setItem('sync_queue', JSON.stringify(cleanQueue));
+    
+    console.log('✅ Operaciones fallidas limpiadas correctamente');
+    return true;
+  } catch (error) {
+    console.error('❌ Error limpiando operaciones:', error);
+    return false;
   }
+}
 
   /**
    * Configurar listener de cambios de red
@@ -221,80 +231,128 @@ class SyncManager {
     }
   }
 
-  /**
-   * PUSH: Enviar cambios locales al servidor
-   */
-  async pushToServer() {
+/**
+ * PUSH: Enviar cambios locales al servidor
+ */
+async pushToServer() {
+  try {
+    // 🆕 Obtener token inicial
+    let token = AuthManager.getAuthToken();
+    
+    if (!token) {
+      console.log('❌ No hay token de autenticación');
+      return { success: false, message: 'No hay token de autenticación' };
+    }
+
+    // 🆕 Verificar si el token es válido haciendo una petición de prueba
     try {
-      const token = AuthManager.getAuthToken();
-      if (!token) {
-        console.log('❌ No hay token de autenticación');
-        return { success: false, message: 'No hay token de autenticación' };
-      }
-
-      const pendingOps = await SyncQueue.getPending();
+      console.log('🔍 Verificando validez del token...');
       
-      console.log('=== PUSH TO SERVER ===');
-      console.log('Token disponible:', token ? 'Sí' : 'No');
-      console.log('Operaciones pendientes:', pendingOps.length);
-      
-      if (pendingOps.length === 0) {
-        console.log('✅ No hay operaciones pendientes para enviar');
-        return { success: true, pushed: 0 };
-      }
-
-      // Mostrar detalles de cada operación
-      pendingOps.forEach((op, index) => {
-        console.log(`\nOperación ${index + 1}:`);
-        console.log('  Tabla:', op.table);
-        console.log('  Acción:', op.action);
-        console.log('  ID Local:', op.recordId);
-        console.log('  Datos:', JSON.stringify(op.data, null, 2));
+      const testResponse = await fetch(`${this.API_BASE_URL}/api/sync/registro_animal?since=2025-01-01`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        timeout: 5000
       });
 
-      const results = {
-        success: true,
-        pushed: 0,
-        failed: 0,
-        operations: []
-      };
-
-      for (const op of pendingOps) {
-        try {
-          console.log(`\n📤 Procesando: ${op.action} en ${op.table}`);
-          
-          const result = await this.pushOperation(op, token);
-          
-          console.log('Resultado:', JSON.stringify(result, null, 2));
-          
-          if (result.success) {
-            await SyncQueue.markAsSynced(op.id);
-            results.pushed++;
-            console.log('  ✅ Marcado como sincronizado');
-          } else {
-            await SyncQueue.markAsFailed(op.id, result.error);
-            results.failed++;
-            console.log('  ❌ Marcado como fallido:', result.error);
-          }
-          
-        } catch (error) {
-          console.error('  ❌ Error procesando operación:', error);
-          await SyncQueue.markAsFailed(op.id, error.message);
-          results.failed++;
+      // Si obtenemos 401, el token está inválido
+      if (testResponse.status === 401) {
+        console.log('⚠️ Token inválido detectado, intentando refrescar...');
+        
+        // Intentar refrescar el token
+        const refreshed = await AuthManager.refreshToken();
+        
+        if (!refreshed) {
+          console.log('❌ No se pudo refrescar el token');
+          return { 
+            success: false, 
+            message: 'Token expirado. Por favor inicia sesión nuevamente.' 
+          };
         }
+        
+        // Obtener el nuevo token
+        token = AuthManager.getAuthToken();
+        console.log('✅ Token refrescado exitosamente');
+      } else {
+        console.log('✅ Token válido');
       }
-      
-      console.log('\n=== RESUMEN PUSH ===');
-      console.log('Enviados:', results.pushed);
-      console.log('Fallidos:', results.failed);
-      
-      return results;
-      
-    } catch (error) {
-      console.error('❌ Error en pushToServer:', error);
-      return { success: false, error: error.message };
+    } catch (verifyError) {
+      console.log('⚠️ Error verificando token (continuando de todas formas):', verifyError.message);
     }
+
+    const pendingOps = await SyncQueue.getPending();
+    
+    console.log('=== PUSH TO SERVER ===');
+    console.log('Token disponible:', token ? 'Sí' : 'No');
+    console.log('Operaciones pendientes:', pendingOps.length);
+    
+    if (pendingOps.length === 0) {
+      console.log('✅ No hay operaciones pendientes para enviar');
+      return { success: true, pushed: 0 };
+    }
+
+    // Mostrar detalles de cada operación (solo primeras 5 para no saturar logs)
+    const opsToShow = Math.min(5, pendingOps.length);
+    for (let i = 0; i < opsToShow; i++) {
+      const op = pendingOps[i];
+      console.log(`\nOperación ${i + 1}:`);
+      console.log('  Tabla:', op.table);
+      console.log('  Acción:', op.action);
+      console.log('  ID Local:', op.recordId);
+      
+      // Mostrar tamaño de la foto si existe
+      if (op.data?.foto) {
+        const fotoSize = op.data.foto.length;
+        console.log(`  📸 Tamaño foto: ${(fotoSize / 1024).toFixed(2)} KB`);
+      }
+    }
+    
+    if (pendingOps.length > 5) {
+      console.log(`\n... y ${pendingOps.length - 5} operaciones más`);
+    }
+
+    const results = {
+      success: true,
+      pushed: 0,
+      failed: 0,
+      operations: []
+    };
+
+    for (const op of pendingOps) {
+      try {
+        console.log(`\n📤 Procesando: ${op.action} en ${op.table}`);
+        
+        const result = await this.pushOperation(op, token);
+        
+        if (result.success) {
+          await SyncQueue.markAsSynced(op.id);
+          results.pushed++;
+          console.log('  ✅ Marcado como sincronizado');
+        } else {
+          await SyncQueue.markAsFailed(op.id, result.error);
+          results.failed++;
+          console.log('  ❌ Marcado como fallido:', result.error);
+        }
+        
+      } catch (error) {
+        console.error('  ❌ Error procesando operación:', error);
+        await SyncQueue.markAsFailed(op.id, error.message);
+        results.failed++;
+      }
+    }
+    
+    console.log('\n=== RESUMEN PUSH ===');
+    console.log('Enviados:', results.pushed);
+    console.log('Fallidos:', results.failed);
+    
+    return results;
+    
+  } catch (error) {
+    console.error('❌ Error en pushToServer:', error);
+    return { success: false, error: error.message };
   }
+}
 
   /**
    * Enviar una operación específica al servidor
