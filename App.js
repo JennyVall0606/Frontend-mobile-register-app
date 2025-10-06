@@ -55,6 +55,8 @@ export default function App() {
     }
   };
 
+// En App.js, reemplaza la función initializeAuth por esta versión mejorada:
+
 const initializeAuth = async () => {
   try {
     console.log('🔄 Inicializando sistema de autenticación...');
@@ -64,25 +66,14 @@ const initializeAuth = async () => {
       throw new Error('AuthManager no funciona correctamente');
     }
 
-    // 🆕 Cargar sesión y token desde AsyncStorage
+    // 🆕 Cargar sesión guardada automáticamente
     const savedSession = await AuthManager.checkSavedSession();
+    
     if (savedSession) {
       console.log('✅ Sesión restaurada:', savedSession.user.correo);
       console.log('✅ Token disponible:', !!AuthManager.getAuthToken());
     } else {
-      // 🆕 Si no hay sesión en AuthManager, intentar cargar token directo
-      const token = await AsyncStorage.getItem('token');
-      const user = await AsyncStorage.getItem('current_user');
-      
-      if (token && user) {
-        // Cargar en AuthManager manualmente
-        AuthManager.authToken = token;
-        AuthManager.currentUser = JSON.parse(user);
-        console.log('✅ Token cargado desde AsyncStorage');
-        console.log('✅ Token disponible:', !!AuthManager.getAuthToken());
-      } else {
-        console.log('⚠️ No hay sesión guardada - login requerido');
-      }
+      console.log('⚠️ No hay sesión guardada - login requerido');
     }
 
     console.log('✅ Sistema de autenticación listo');

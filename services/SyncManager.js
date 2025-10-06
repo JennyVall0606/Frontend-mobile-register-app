@@ -354,70 +354,84 @@ async pushToServer() {
   }
 }
 
-  /**
-   * Enviar una operación específica al servidor
-   */
-  async pushOperation(operation, token) {
-    try {
-      // ✅ CORRECCIÓN: Usar /api/sync/batch
-      const url = `${this.API_BASE_URL}/api/sync/batch`;
-      
-      console.log(`Enviando operación ${operation.action} para ${operation.table}`);
-      console.log(`🔗 URL: ${url}`);
-      
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          operations: [operation] // El endpoint batch espera un array
-        }),
-        timeout: 15000
-      });
+async pushOperation(operation, token) {
+  try {
+    // ✅ Usar token guardado en la operación si existe, sino usar el token actual
+    const authToken = operation.token || token || AuthManager.getAuthToken();
+    
+    if (!authToken) {
+      console.error('❌ No hay token disponible para sincronizar');
+      return { 
+        success: false, 
+        error: 'No hay token de autenticación válido' 
+      };
+    }
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Respuesta del servidor:', JSON.stringify(data, null, 2));
+    console.log('🔑 Token para sync:', authToken.substring(0, 20) + '...');
+
+    const url = `${this.API_BASE_URL}/api/sync/batch`;
+    
+    console.log(`📤 Enviando ${operation.action} para ${operation.table}`);
+    
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        operations: [operation]
+      }),
+      timeout: 15000
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log('✅ Operación sincronizada');
+      
+      if (data.success && data.results && data.results.length > 0) {
+        const result = data.results[0];
         
-        // Verificar resultado de la operación individual
-        if (data.success && data.results && data.results.length > 0) {
-          const result = data.results[0];
-          
-          if (result.success) {
-            console.log(`Operación exitosa - Server ID: ${result.serverId || 'N/A'}`);
-            return { success: true, data: result };
-          } else {
-            console.log(`Operación falló en servidor: ${result.error}`);
-            return { success: false, error: result.error };
-          }
-        }
-        
-        return { success: true, data };
-      } else {
-        const errorText = await response.text();
-        console.error('Error HTTP:', response.status, errorText);
-        
-        try {
-          const errorData = JSON.parse(errorText);
-          return { 
-            success: false, 
-            error: errorData.message || errorData.error || `HTTP ${response.status}` 
-          };
-        } catch {
-          return { 
-            success: false, 
-            error: `HTTP ${response.status}: ${errorText}` 
-          };
+        if (result.success) {
+          return { success: true, data: result };
+        } else {
+          return { success: false, error: result.error };
         }
       }
       
-    } catch (error) {
-      console.error('Error en pushOperation:', error);
-      return { success: false, error: error.message };
+      return { success: true, data };
+    } else {
+      const errorText = await response.text();
+      console.error('❌ Error HTTP:', response.status, errorText);
+      
+      // Si es error 401, marcar token como inválido
+      if (response.status === 401) {
+        console.log('⚠️ Token inválido durante sincronización');
+        return { 
+          success: false, 
+          error: 'Token expirado - requiere login' 
+        };
+      }
+      
+      try {
+        const errorData = JSON.parse(errorText);
+        return { 
+          success: false, 
+          error: errorData.message || errorData.error || `HTTP ${response.status}` 
+        };
+      } catch {
+        return { 
+          success: false, 
+          error: `HTTP ${response.status}: ${errorText}` 
+        };
+      }
     }
+    
+  } catch (error) {
+    console.error('❌ Error en pushOperation:', error);
+    return { success: false, error: error.message };
   }
+}
 
   async fullSync() {
   const originalTime = this.lastSyncTime;

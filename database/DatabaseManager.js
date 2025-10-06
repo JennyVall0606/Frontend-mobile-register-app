@@ -1,6 +1,3 @@
-// Prueba estas 3 versiones una por una hasta que funcione
-
-// VERSIÓN 1: Para expo-sqlite más reciente
 import * as SQLite from 'expo-sqlite';
 
 class DatabaseManager {

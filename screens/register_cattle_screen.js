@@ -15,7 +15,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from 'expo-file-system';
-
+import AuthManager from '../services/AuthManager';
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import styles from "../styles/register_cattle_styles";
@@ -518,15 +518,35 @@ const handleRegister = async () => {
 
 const handleOfflineRegister = async (fechaFormateada, enfermedadesFormateadas) => {
   try {
+    // ✅ Verificar que haya token válido
+    const token = AuthManager.getAuthToken();
+    const currentUser = AuthManager.getCurrentUser();
+    
+    if (!token || !currentUser) {
+      Alert.alert(
+        '❌ Error',
+        'No hay sesión activa. Debes iniciar sesión para registrar ganado offline.',
+        [
+          {
+            text: 'Ir a Login',
+            onPress: () => navigation.navigate('Login')
+          }
+        ]
+      );
+      return;
+    }
+
+    console.log('📵 Guardando offline con token válido');
+    console.log('👤 Usuario:', currentUser.correo);
+
     const localId = Date.now();
     
-    // ✅ COMPRIMIR PRIMERO, LUEGO CONVERTIR
+    // Comprimir y convertir imagen
     let photoData = null;
     
     if (image && image.startsWith('file://')) {
       console.log('📸 Comprimiendo imagen para modo offline...');
       
-      // 1. COMPRIMIR la imagen agresivamente
       const compressedImage = await manipulateAsync(
         image,
         [{ resize: { width: 600 } }],
@@ -536,9 +556,6 @@ const handleOfflineRegister = async (fechaFormateada, enfermedadesFormateadas) =
         }
       );
       
-      console.log('✅ Imagen comprimida:', compressedImage.uri);
-      
-      // 2. Convertir a base64 la versión comprimida
       const base64 = await FileSystem.readAsStringAsync(compressedImage.uri, {
         encoding: FileSystem.EncodingType.Base64,
       });
@@ -546,11 +563,10 @@ const handleOfflineRegister = async (fechaFormateada, enfermedadesFormateadas) =
       photoData = `data:image/jpeg;base64,${base64}`;
       
       const sizeInKB = (photoData.length * 0.75) / 1024;
-      console.log('📏 Tamaño final de foto offline:', sizeInKB.toFixed(2), 'KB');
+      console.log('📏 Tamaño foto:', sizeInKB.toFixed(2), 'KB');
       
-      // 3. Validar que no sea mayor a 200KB para offline
       if (sizeInKB > 200) {
-        console.warn('⚠️ Imagen muy grande, comprimiendo aún más...');
+        console.warn('⚠️ Comprimiendo más...');
         
         const ultraCompressed = await manipulateAsync(
           image,
@@ -566,7 +582,6 @@ const handleOfflineRegister = async (fechaFormateada, enfermedadesFormateadas) =
         });
         
         photoData = `data:image/jpeg;base64,${smallerBase64}`;
-        console.log('✅ Imagen ultra-comprimida para offline');
       }
     }
     
@@ -591,9 +606,12 @@ const handleOfflineRegister = async (fechaFormateada, enfermedadesFormateadas) =
       foto: photoData || 'default.jpg',
       created_at: new Date().toISOString(),
       synced: false,
+      // ✅ Guardar info del usuario para sincronización
+      user_id: currentUser.id,
+      user_email: currentUser.correo,
     };
 
-    console.log('💾 Guardando animal localmente con foto comprimida');
+    console.log('💾 Guardando animal localmente');
 
     // Guardar en AsyncStorage
     const existingAnimals = await AsyncStorage.getItem('local_registro_animal');
@@ -601,19 +619,21 @@ const handleOfflineRegister = async (fechaFormateada, enfermedadesFormateadas) =
     animals.push(animalData);
     await AsyncStorage.setItem('local_registro_animal', JSON.stringify(animals));
 
-    // Agregar a cola de sincronización
+    // ✅ Agregar a cola de sincronización con token
     await SyncQueue.add({
       table: 'registro_animal',
       recordId: localId,
       action: 'INSERT',
-      data: animalData
+      data: animalData,
+      token: token, // ✅ Guardar token para usar al sincronizar
+      user_id: currentUser.id
     });
 
-    console.log('✅ Animal guardado localmente con foto y agregado a cola de sync');
+    console.log('✅ Animal guardado localmente y agregado a cola');
 
     Alert.alert(
       '📵 Guardado sin conexión',
-      'El animal se registró localmente con su foto comprimida. Se sincronizará automáticamente cuando haya conexión a internet.',
+      'El animal se registró localmente. Se sincronizará automáticamente cuando haya conexión a internet.',
       [
         {
           text: 'OK',
@@ -634,9 +654,31 @@ const handleOfflineRegister = async (fechaFormateada, enfermedadesFormateadas) =
   }
 };
 
-// 🆕 Nueva función: Registro ONLINE (tu código original)
-const handleOnlineRegister = async (fechaFormateada, enfermedadesFormateadas, token) => {
+// 🔧 CORRECCIÓN: Usar token de AuthManager en lugar de AsyncStorage directo
+const handleOnlineRegister = async (fechaFormateada, enfermedadesFormateadas) => {
   try {
+    // ✅ Obtener token desde AuthManager (ya cargado al iniciar app)
+    let token = AuthManager.getAuthToken();
+    
+    if (!token) {
+      // Si no hay token en memoria, intentar cargar desde AsyncStorage
+      const savedToken = await AsyncStorage.getItem("token");
+      if (savedToken) {
+        token = savedToken;
+        AuthManager.authToken = savedToken; // Actualizar AuthManager
+      } else {
+        Alert.alert(
+          "❌ Error",
+          "No hay sesión activa. Inicia sesión nuevamente."
+        );
+        navigation.navigate("Login");
+        return;
+      }
+    }
+
+    console.log('🔑 Token disponible para registro:', token.substring(0, 20) + '...');
+
+    // Preparar FormData
     const formData = new FormData();
 
     if (image && !image.startsWith("http")) {
@@ -685,9 +727,9 @@ const handleOnlineRegister = async (fechaFormateada, enfermedadesFormateadas, to
       data: formData,
       headers: {
         "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`, // ✅ Token de AuthManager
       },
-      timeout: 15000, // 15 segundos timeout
+      timeout: 15000,
     });
 
     if (response.status === 200 || response.status === 201) {
@@ -713,7 +755,33 @@ const handleOnlineRegister = async (fechaFormateada, enfermedadesFormateadas, to
   } catch (error) {
     console.error("❌ Error al registrar online:", error);
     
-    // Si falla el envío online, guardar offline como fallback
+    // 🆕 Detectar si es error de token expirado
+    if (error.response?.status === 401) {
+      console.log('⚠️ Token expirado o inválido');
+      
+      // Intentar refrescar token
+      const refreshed = await AuthManager.refreshToken();
+      
+      if (!refreshed) {
+        Alert.alert(
+          '🔐 Sesión expirada',
+          'Tu sesión ha expirado. Inicia sesión nuevamente.',
+          [
+            {
+              text: 'Ir a Login',
+              onPress: () => navigation.navigate('Login')
+            }
+          ]
+        );
+        return;
+      }
+      
+      // Token refrescado, reintentar registro
+      console.log('✅ Token refrescado, reintentando registro...');
+      return await handleOnlineRegister(fechaFormateada, enfermedadesFormateadas);
+    }
+    
+    // Si falla por red, ofrecer modo offline
     if (error.code === 'ECONNABORTED' || error.message.includes('Network')) {
       console.log('⚠️ Error de red, cambiando a modo offline');
       Alert.alert(
@@ -726,15 +794,11 @@ const handleOnlineRegister = async (fechaFormateada, enfermedadesFormateadas, to
           },
           {
             text: 'Guardar Offline',
-            onPress: () => handleOfflineRegister(
-              birthDate.split("T")[0],
-              disease.length > 0 ? disease.join(",") : null
-            )
+            onPress: () => handleOfflineRegister(fechaFormateada, enfermedadesFormateadas)
           }
         ]
       );
     } else {
-      // Error del servidor (400, 500, etc)
       const mensaje = error.response?.data?.message 
         || error.response?.data?.error 
         || "No se pudo completar la operación.";
