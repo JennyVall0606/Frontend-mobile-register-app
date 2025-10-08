@@ -9,57 +9,41 @@ import NetInfo from '@react-native-community/netinfo';
 export default function HomeScreen() {
   const navigation = useNavigation();
   
-  // Función para limpiar datos corruptos (moverla fuera del useEffect)
  const clearCorruptedData = async () => {
-  try {
-    console.log('🧹 LIMPIEZA COMPLETA INICIADA...');
-    
-    // 1. Obtener todas las keys de AsyncStorage
-    const allKeys = await AsyncStorage.getAllKeys();
-    console.log('🔍 Keys encontradas:', allKeys);
-    
-    // 2. Eliminar todo excepto el token de auth
-    const keysToKeep = ['token'];
-    const keysToRemove = allKeys.filter(key => !keysToKeep.includes(key));
-    
-    console.log('🗑️ Eliminando keys:', keysToRemove);
-    
-    await AsyncStorage.multiRemove(keysToRemove);
-    
-    console.log('✅ LIMPIEZA COMPLETA TERMINADA');
-    alert('TODO eliminado (excepto login). Cierra la app completamente y ábrela de nuevo.');
-    
-  } catch (error) {
-    console.error('❌ Error en limpieza completa:', error);
-    
-    // Si falla, intentar limpieza manual una por una
-    try {
-      const keysToTry = [
-        'local_registro_animal',
-        'sync_queue',
-        'local_razas',
-        'last_sync_time',
-        'migration_Thu Oct 03 2024',
-        'migration_Fri Oct 04 2024'
-      ];
-      
-      for (const key of keysToTry) {
-        try {
-          await AsyncStorage.removeItem(key);
-          console.log(`✅ Eliminado: ${key}`);
-        } catch (keyError) {
-          console.log(`⚠️ No se pudo eliminar ${key}:`, keyError.message);
+    Alert.alert(
+      '🗑️ Limpiar Datos Locales',
+      '⚠️ Esto eliminará:\n\n• Registros pendientes\n• Cola de sincronización\n• Caché local\n\n¿Continuar?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Limpiar',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              console.log('🧹 LIMPIEZA COMPLETA INICIADA...');
+              
+              // Limpiar específicamente lo necesario
+              await AsyncStorage.removeItem('local_registro_animal');
+              await AsyncStorage.removeItem('sync_queue');
+              await AsyncStorage.removeItem('cached_animals');
+              
+              console.log('✅ LIMPIEZA COMPLETA TERMINADA');
+              
+              Alert.alert(
+                '✅ Limpieza Exitosa',
+                'Todos los datos locales fueron eliminados.\n\n🔄 Cierra completamente la app y ábrela de nuevo para ver los cambios.',
+                [{ text: 'OK' }]
+              );
+              
+            } catch (error) {
+              console.error('❌ Error en limpieza:', error);
+              Alert.alert('Error', 'No se pudo completar la limpieza: ' + error.message);
+            }
+          }
         }
-      }
-      
-      alert('Limpieza manual completada. Reinicia la app.');
-      
-    } catch (manualError) {
-      console.error('❌ Error en limpieza manual:', manualError);
-      alert('Error en limpieza. Puede que necesites reinstalar la app.');
-    }
-  }
-};
+      ]
+    );
+  };
 
   // Función de migración forzada
   const forceMigration = async () => {
