@@ -53,7 +53,12 @@ export default function ControlH_Screen({ navigation, route }) {
   const [fechaVacuna, setFechaVacuna] = useState("");
   const [precioKgCompra, setPrecioKgCompra] = useState("");
   const [precioKgVenta, setPrecioKgVenta] = useState("");
-
+  const [datosCompra, setDatosCompra] = useState(null);
+const [gananciaKg, setGananciaKg] = useState(null);
+const [gananciaValor, setGananciaValor] = useState(null);
+const [periodoMeses, setPeriodoMeses] = useState(null);
+const [openTipoSeguimiento, setOpenTipoSeguimiento] = useState(false);
+const [tipoSeguimientoEdit, setTipoSeguimientoEdit] = useState(null);
   const menuAnim = useState(new Animated.Value(-250))[0];
   const userMenuAnim = useState(new Animated.Value(-250))[0];
 
@@ -242,6 +247,46 @@ export default function ControlH_Screen({ navigation, route }) {
     }, [chip])
   );
 
+  useEffect(() => {
+  const calcularGanancia = async () => {
+    if (tipoSeguimientoEdit === 'venta' && nuevoPeso && precioKgVenta && nuevaFecha) {
+      const compra = await obtenerDatosCompra(selectedPeso?.chip_animal || chip);
+      
+      if (compra) {
+        setDatosCompra(compra);
+        
+        const pesoVenta = parseFloat(nuevoPeso);
+        const pesoCompra = parseFloat(compra.peso_kg);
+        const gananciaPeso = pesoVenta - pesoCompra;
+        setGananciaKg(gananciaPeso);
+        
+        const precioVentaNum = parseFloat(precioKgVenta);
+        const valorVenta = pesoVenta * precioVentaNum;
+        const valorCompra = parseFloat(compra.costo_compra);
+        const gananciaEconomica = valorVenta - valorCompra;
+        setGananciaValor(gananciaEconomica);
+        
+        const meses = calcularMesesEntreFechas(compra.fecha_pesaje, nuevaFecha);
+        setPeriodoMeses(meses);
+      } else {
+        setDatosCompra(null);
+        setGananciaKg(null);
+        setGananciaValor(null);
+        setPeriodoMeses(null);
+      }
+    } else {
+      setDatosCompra(null);
+      setGananciaKg(null);
+      setGananciaValor(null);
+      setPeriodoMeses(null);
+    }
+  };
+  
+  calcularGanancia();
+}, [tipoSeguimientoEdit, nuevoPeso, precioKgVenta, nuevaFecha, chip]);
+
+
+
   const registrosPesajeVisibles = showAllPesos
     ? historicoPesaje
     : historicoPesaje.slice(0, 4);
@@ -267,80 +312,76 @@ export default function ControlH_Screen({ navigation, route }) {
       .catch((err) => console.error(err));
   }, []);
 
-  const handleEditPeso = (id, tipoSeguimiento) => {
-    // Log para debug
-    console.log('🔍 handleEditPeso llamado:', {
-      id,
-      tipoSeguimiento,
-      tipoLower: tipoSeguimiento?.toLowerCase(),
-      esNacimiento: tipoSeguimiento?.toLowerCase() === 'nacimiento'
-    });
+ const handleEditPeso = (id, tipoSeguimiento) => {
+  if (tipoSeguimiento?.toLowerCase() === 'nacimiento') {
+    alert("No se puede editar el peso de nacimiento");
+    return;
+  }
 
-    // Si es nacimiento, no permitir editar
-    if (tipoSeguimiento?.toLowerCase() === 'nacimiento') {
-      console.log('⛔ BLOQUEADO: Es tipo nacimiento');
-      alert("No se puede editar el peso de nacimiento");
-      return;
-    }
+  const pesoSeleccionado = historicoPesaje.find((item) => item.id === id);
 
-    console.log('✅ PERMITIDO: Abriendo modal de edición');
+  if (pesoSeleccionado) {
+    setSelectedPeso(pesoSeleccionado);
+    setNuevoPeso(pesoSeleccionado.peso?.toString() || "");
+    setNuevaFecha(pesoSeleccionado.fecha?.substring(0, 10) || "");
+    
+    // 🆕 Establecer tipo de seguimiento
+    setTipoSeguimientoEdit(pesoSeleccionado.tipo_seguimiento || 'seguimiento');
+    
+    setPrecioKgCompra(pesoSeleccionado.precio_kg_compra?.toString() || "");
+    setPrecioKgVenta(pesoSeleccionado.precio_kg_venta?.toString() || "");
+    
+    // Resetear estados de ganancia
+    setDatosCompra(null);
+    setGananciaKg(null);
+    setGananciaValor(null);
+    setPeriodoMeses(null);
+    
+    setModalVisible(true);
+  }
+};
 
-    const pesoSeleccionado = historicoPesaje.find((item) => item.id === id);
+ const handleGuardarCambiosPeso = async () => {
+  try {
+    const pesoNum = parseFloat(nuevoPeso) || 0;
+    const compraNum = precioKgCompra ? parseFloat(precioKgCompra) : null;
+    const ventaNum = precioKgVenta ? parseFloat(precioKgVenta) : null;
 
-    if (pesoSeleccionado) {
-      setSelectedPeso(pesoSeleccionado);
-      setNuevoPeso(pesoSeleccionado.peso?.toString() || "");
-      setNuevaFecha(pesoSeleccionado.fecha?.substring(0, 10) || "");
-      setPrecioKgCompra(pesoSeleccionado.precio_kg_compra?.toString() || "");
-      setPrecioKgVenta(pesoSeleccionado.precio_kg_venta?.toString() || "");
-      setModalVisible(true);
-    }
-  };
+    const payload = {
+      fecha_pesaje: nuevaFecha.split("T")[0],
+      peso_kg: pesoNum,
+      tipo_seguimiento: tipoSeguimientoEdit, // 🆕 Incluir tipo
+      precio_kg_compra: compraNum,
+      precio_kg_venta: ventaNum,
+      costo_compra: compraNum !== null ? pesoNum * compraNum : null,
+      costo_venta: ventaNum !== null ? pesoNum * ventaNum : null,
+    };
 
-  const handleGuardarCambiosPeso = async () => {
-    try {
-      const pesoNum = parseFloat(nuevoPeso) || 0;
-      const compraNum = precioKgCompra ? parseFloat(precioKgCompra) : null;
-      const ventaNum = precioKgVenta ? parseFloat(precioKgVenta) : null;
+    await axios.put(`${API_URL}/weighing/${selectedPeso.id}`, payload);
 
-      const payload = {
-        fecha_pesaje: nuevaFecha.split("T")[0],
-        peso_kg: pesoNum,
-        precio_kg_compra: compraNum,
-        precio_kg_venta: ventaNum,
-        costo_compra: compraNum !== null ? pesoNum * compraNum : null,
-        costo_venta: ventaNum !== null ? pesoNum * ventaNum : null,
-      };
+    const updatedPesos = historicoPesaje.map((p) =>
+      p.id === selectedPeso.id
+        ? {
+            ...p,
+            peso: payload.peso_kg,
+            fecha: payload.fecha_pesaje,
+            tipo_seguimiento: payload.tipo_seguimiento, // 🆕
+            precio_kg_compra: payload.precio_kg_compra,
+            precio_kg_venta: payload.precio_kg_venta,
+            costo_compra: payload.costo_compra,
+            costo_venta: payload.costo_venta,
+          }
+        : p
+    );
 
-      await axios.put(`${API_URL}/weighing/${selectedPeso.id}`, payload);
-
-      const updatedPesos = historicoPesaje.map((p) =>
-        p.id === selectedPeso.id
-          ? {
-              ...p,
-              peso: payload.peso_kg,
-              fecha: payload.fecha_pesaje,
-              precio_kg_compra: payload.precio_kg_compra,
-              precio_kg_venta: payload.precio_kg_venta,
-              costo_compra: payload.costo_compra,
-              costo_venta: payload.costo_venta,
-            }
-          : p
-      );
-
-      setHistoricoPesaje(updatedPesos);
-      setModalVisible(false);
-      alert("Peso actualizado");
-    } catch (error) {
-      if (error.response) {
-        console.log("Detalles del error:", error.response.data);
-        alert(`Error: ${error.response.data.error || "Datos inválidos"}`);
-      } else {
-        console.error("Error de red:", error);
-        alert("Error de conexión");
-      }
-    }
-  };
+    setHistoricoPesaje(updatedPesos);
+    setModalVisible(false);
+    alert("Peso actualizado");
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Error al actualizar");
+  }
+};
 
   const handleEditVacuna = (id) => {
     const vac = historicoVacunas.find((item) => item.id === id);
@@ -814,7 +855,7 @@ export default function ControlH_Screen({ navigation, route }) {
           </TouchableOpacity>
         )}
 
-        {/* EDITAR PESO */}
+{/* EDITAR PESO */}
         <Modal visible={modalVisible} transparent animationType="slide">
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
@@ -824,6 +865,29 @@ export default function ControlH_Screen({ navigation, route }) {
               />
               <Text style={styles.modalTitle1}>Editar</Text>
               <Text style={styles.modalTitle2}>Peso</Text>
+
+              {/* 🆕 Tipo de Seguimiento */}
+              {renderModalTitle("Tipo de Seguimiento")}
+              <View style={styles.dropdownWrapper}>
+    
+                <DropDownPicker
+                  open={openTipoSeguimiento}
+                  setOpen={setOpenTipoSeguimiento}
+                  value={tipoSeguimientoEdit}
+                  items={[
+                    { label: 'Compra', value: 'compra' },
+                    { label: 'Venta', value: 'venta' },
+                    { label: 'Seguimiento', value: 'seguimiento' }
+                  ]}
+                  setValue={setTipoSeguimientoEdit}
+                  placeholder="Seleccione tipo"
+                  containerStyle={styles.dropdownContainer}
+                  style={styles.dropdown}
+                  listMode="SCROLLVIEW"
+                  maxHeight={200}
+                  zIndex={5000}
+                />
+              </View>
 
               {/* Peso */}
               {renderModalTitle("Peso del animal")}
@@ -860,61 +924,88 @@ export default function ControlH_Screen({ navigation, route }) {
                 />
               </Pressable>
 
-              {/* Precio Kg Compra */}
-              {renderModalTitle("Precio por Kg - Compra")}
-              <View style={styles.inputContainer}>
-                <Image
-                  source={require("../assets/precio.png")}
-                  style={styles.inputLogo}
-                />
-                <TextInput
-                  placeholder="Precio Kg Compra"
-                  placeholderTextColor="#000"
-                  keyboardType="numeric"
-                  value={precioKgCompra ? parseInt(precioKgCompra).toLocaleString("es-CO") : ""}
-                  onChangeText={(text) => {
-                    const numericValue = text.replace(/\D/g, "");
-                    setPrecioKgCompra(numericValue);
-                  }}
-                  style={styles.input}
-                />
-              </View>
+              {/* 🆕 Precio Kg Compra - SOLO SI ES COMPRA */}
+              {tipoSeguimientoEdit === 'compra' && (
+                <>
+                  {renderModalTitle("Precio por Kg - Compra")}
+                  <View style={styles.inputContainer}>
+                    <Image
+                      source={require("../assets/precio.png")}
+                      style={styles.inputLogo}
+                    />
+                    <TextInput
+                      placeholder="Precio Kg Compra"
+                      placeholderTextColor="#000"
+                      keyboardType="numeric"
+                      value={precioKgCompra ? parseInt(precioKgCompra).toLocaleString("es-CO") : ""}
+                      onChangeText={(text) => {
+                        const numericValue = text.replace(/\D/g, "");
+                        setPrecioKgCompra(numericValue);
+                      }}
+                      style={styles.input}
+                    />
+                  </View>
 
-              {/* Mostrar costo compra */}
-              <Text style={styles.textcosto}>
-                Costo del ganado Compra: $
-                {nuevoPeso && precioKgCompra
-                  ? (parseFloat(nuevoPeso) * parseFloat(precioKgCompra)).toLocaleString("es-CO")
-                  : 0}
-              </Text>
+                  {/* Mostrar costo compra */}
+                  <Text style={styles.textcosto}>
+                    Costo del ganado Compra: $
+                    {nuevoPeso && precioKgCompra
+                      ? (parseFloat(nuevoPeso) * parseFloat(precioKgCompra)).toLocaleString("es-CO")
+                      : 0}
+                  </Text>
+                </>
+              )}
 
-              {/* Precio Kg Venta */}
-              {renderModalTitle("Precio por Kg - Venta")}
-              <View style={styles.inputContainer}>
-                <Image
-                  source={require("../assets/precio.png")}
-                  style={styles.inputLogo}
-                />
-                <TextInput
-                  placeholder="Precio Kg Venta"
-                  placeholderTextColor="#000"
-                  keyboardType="numeric"
-                  value={precioKgVenta ? parseInt(precioKgVenta).toLocaleString("es-CO") : ""}
-                  onChangeText={(text) => {
-                    const numericValue = text.replace(/\D/g, "");
-                    setPrecioKgVenta(numericValue);
-                  }}
-                  style={styles.input}
-                />
-              </View>
+              {/* 🆕 Precio Kg Venta - SOLO SI ES VENTA */}
+              {tipoSeguimientoEdit === 'venta' && (
+                <>
+                  {renderModalTitle("Precio por Kg - Venta")}
+                  <View style={styles.inputContainer}>
+                    <Image
+                      source={require("../assets/precio.png")}
+                      style={styles.inputLogo}
+                    />
+                    <TextInput
+                      placeholder="Precio Kg Venta"
+                      placeholderTextColor="#000"
+                      keyboardType="numeric"
+                      value={precioKgVenta ? parseInt(precioKgVenta).toLocaleString("es-CO") : ""}
+                      onChangeText={(text) => {
+                        const numericValue = text.replace(/\D/g, "");
+                        setPrecioKgVenta(numericValue);
+                      }}
+                      style={styles.input}
+                    />
+                  </View>
 
-              {/* Mostrar costo venta */}
-              <Text style={styles.textcosto}>
-                Costo del ganado Venta: $
-                {nuevoPeso && precioKgVenta
-                  ? (parseFloat(nuevoPeso) * parseFloat(precioKgVenta)).toLocaleString("es-CO")
-                  : 0}
-              </Text>
+                  {/* Mostrar costo venta */}
+                  <Text style={styles.textcosto}>
+                    Costo del ganado Venta: $
+                    {nuevoPeso && precioKgVenta
+                      ? (parseFloat(nuevoPeso) * parseFloat(precioKgVenta)).toLocaleString("es-CO")
+                      : 0}
+                  </Text>
+
+                  {/* Mostrar cálculos de ganancia en tiempo real */}
+                  {datosCompra && gananciaKg !== null && gananciaValor !== null && periodoMeses !== null && (
+                    <View style={styles.gananciaContainer}>
+                      <Text style={styles.gananciaTitle}>📊 Resumen de Ganancia</Text>
+                      <Text style={styles.gananciaText}>
+                        En {periodoMeses} {periodoMeses === 1 ? 'mes' : 'meses'}, su ganancia fue de {gananciaKg.toFixed(2)} kg y ${gananciaValor.toFixed(0).toLocaleString('es-CO')}.
+                      </Text>
+                    </View>
+                  )}
+
+                  {/* Advertencia si no hay datos de compra */}
+                  {!datosCompra && nuevoPeso && precioKgVenta && nuevaFecha && (
+                    <View style={styles.warningContainer}>
+                      <Text style={styles.warningText}>
+                        ⚠️ No se encontró registro de compra. Se requiere un registro previo de compra para calcular la ganancia.
+                      </Text>
+                    </View>
+                  )}
+                </>
+              )}
 
               {/* DatePicker */}
               <DateTimePickerModal
