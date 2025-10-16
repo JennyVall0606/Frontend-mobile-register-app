@@ -1,3 +1,5 @@
+// COPIA TODO ESTE ARCHIVO - ES LA VERSIÓN FINAL CON TODOS LOS CAMBIOS
+
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   View,
@@ -52,7 +54,6 @@ export default function ControlH_Screen({ navigation, route }) {
   const [precioKgCompra, setPrecioKgCompra] = useState("");
   const [precioKgVenta, setPrecioKgVenta] = useState("");
 
-  //============================================================================
   const menuAnim = useState(new Animated.Value(-250))[0];
   const userMenuAnim = useState(new Animated.Value(-250))[0];
 
@@ -122,6 +123,31 @@ export default function ControlH_Screen({ navigation, route }) {
 
   const [showVacunaDatePicker, setShowVacunaDatePicker] = useState(false);
 
+  // 🆕 FUNCIONES AUXILIARES PARA TABLA DE PESOS
+  const getTipoAbreviatura = (tipo) => {
+    if (!tipo) return '-';
+    const tipoLower = tipo.toLowerCase();
+    switch (tipoLower) {
+      case 'compra':
+        return 'C';
+      case 'venta':
+        return 'V';
+      case 'seguimiento':
+        return 'S';
+      case 'nacimiento':
+        return 'N';
+      default:
+        return '-';
+    }
+  };
+
+  const formatearGanancia = (ganancia) => {
+    if (!ganancia || ganancia === 0) return '-';
+    const numero = parseFloat(ganancia);
+    const signo = numero >= 0 ? '+' : '';
+    return `${signo}${numero.toFixed(1)} kg`;
+  };
+
   const formatDate = (dateString) => {
     if (!dateString) return "";
     return dateString.split("T")[0];
@@ -138,9 +164,10 @@ export default function ControlH_Screen({ navigation, route }) {
     const d = new Date(dateString);
     return d.toISOString().substring(0, 10);
   };
-const renderModalTitle = (title) => {
-  return <Text style={styles.modalFieldTitle}>{title}</Text>;
-};
+
+  const renderModalTitle = (title) => {
+    return <Text style={styles.modalFieldTitle}>{title}</Text>;
+  };
 
   useEffect(() => {
     if (chip) {
@@ -158,13 +185,12 @@ const renderModalTitle = (title) => {
     }
   }, [chip]);
 
- useEffect(() => {
-  if (selectedPeso) {
-    setPrecioKgCompra(selectedPeso.precio_kg_compra || "");
-    setPrecioKgVenta(selectedPeso.precio_kg_venta || "");
-  }
-}, [selectedPeso]);
-
+  useEffect(() => {
+    if (selectedPeso) {
+      setPrecioKgCompra(selectedPeso.precio_kg_compra || "");
+      setPrecioKgVenta(selectedPeso.precio_kg_venta || "");
+    }
+  }, [selectedPeso]);
 
   useFocusEffect(
     useCallback(() => {
@@ -188,7 +214,6 @@ const renderModalTitle = (title) => {
         try {
           const [pesosRes, vacunasRes] = await Promise.all([
             axios.get(`${API_URL}/weighing/historico-pesaje`),
-
             axios.get(`${API_URL}/vaccines/historico-vacunas`),
           ]);
 
@@ -242,69 +267,80 @@ const renderModalTitle = (title) => {
       .catch((err) => console.error(err));
   }, []);
 
-const handleEditPeso = (id) => {
-  const pesoSeleccionado = historicoPesaje.find((item) => item.id === id);
+  const handleEditPeso = (id, tipoSeguimiento) => {
+    // Log para debug
+    console.log('🔍 handleEditPeso llamado:', {
+      id,
+      tipoSeguimiento,
+      tipoLower: tipoSeguimiento?.toLowerCase(),
+      esNacimiento: tipoSeguimiento?.toLowerCase() === 'nacimiento'
+    });
 
-  if (pesoSeleccionado) {
-    setSelectedPeso(pesoSeleccionado);
-    setNuevoPeso(pesoSeleccionado.peso?.toString() || "");
-    setNuevaFecha(pesoSeleccionado.fecha?.substring(0, 10) || "");
-
-    // 👇 Importante: si no existen, dejar vacío
-    setPrecioKgCompra(pesoSeleccionado.precio_kg_compra?.toString() || "");
-    setPrecioKgVenta(pesoSeleccionado.precio_kg_venta?.toString() || "");
-
-    setModalVisible(true);
-  }
-};
-
-
-
-const handleGuardarCambiosPeso = async () => {
-  try {
-    const pesoNum = parseFloat(nuevoPeso) || 0;
-    const compraNum = precioKgCompra ? parseFloat(precioKgCompra) : null;
-    const ventaNum = precioKgVenta ? parseFloat(precioKgVenta) : null;
-
-    const payload = {
-      fecha_pesaje: nuevaFecha.split("T")[0],
-      peso_kg: pesoNum,
-      precio_kg_compra: compraNum,
-      precio_kg_venta: ventaNum,
-      costo_compra: compraNum !== null ? pesoNum * compraNum : null,
-      costo_venta: ventaNum !== null ? pesoNum * ventaNum : null,
-    };
-
-    await axios.put(`${API_URL}/weighing/${selectedPeso.id}`, payload);
-
-    // 🔧 CORRECCIÓN: Actualizar TODOS los campos en el estado local
-    const updatedPesos = historicoPesaje.map((p) =>
-      p.id === selectedPeso.id
-        ? {
-            ...p,
-            peso: payload.peso_kg,
-            fecha: payload.fecha_pesaje,
-            precio_kg_compra: payload.precio_kg_compra, // ← Agregar estos campos
-            precio_kg_venta: payload.precio_kg_venta,   // ← Agregar estos campos
-            costo_compra: payload.costo_compra,
-            costo_venta: payload.costo_venta,
-          }
-        : p
-    );
-
-    setHistoricoPesaje(updatedPesos);
-    setModalVisible(false);
-    alert("Peso actualizado");
-  } catch (error) {
-    if (error.response) {
-      console.log("Detalles del error:", error.response.data);
-      alert(`Error: ${error.response.data.error || "Datos inválidos"}`);
-    } else {
-      console.error("Error de red:", error);
-      alert("Error de conexión");
+    // Si es nacimiento, no permitir editar
+    if (tipoSeguimiento?.toLowerCase() === 'nacimiento') {
+      console.log('⛔ BLOQUEADO: Es tipo nacimiento');
+      alert("No se puede editar el peso de nacimiento");
+      return;
     }
-  }
-};
+
+    console.log('✅ PERMITIDO: Abriendo modal de edición');
+
+    const pesoSeleccionado = historicoPesaje.find((item) => item.id === id);
+
+    if (pesoSeleccionado) {
+      setSelectedPeso(pesoSeleccionado);
+      setNuevoPeso(pesoSeleccionado.peso?.toString() || "");
+      setNuevaFecha(pesoSeleccionado.fecha?.substring(0, 10) || "");
+      setPrecioKgCompra(pesoSeleccionado.precio_kg_compra?.toString() || "");
+      setPrecioKgVenta(pesoSeleccionado.precio_kg_venta?.toString() || "");
+      setModalVisible(true);
+    }
+  };
+
+  const handleGuardarCambiosPeso = async () => {
+    try {
+      const pesoNum = parseFloat(nuevoPeso) || 0;
+      const compraNum = precioKgCompra ? parseFloat(precioKgCompra) : null;
+      const ventaNum = precioKgVenta ? parseFloat(precioKgVenta) : null;
+
+      const payload = {
+        fecha_pesaje: nuevaFecha.split("T")[0],
+        peso_kg: pesoNum,
+        precio_kg_compra: compraNum,
+        precio_kg_venta: ventaNum,
+        costo_compra: compraNum !== null ? pesoNum * compraNum : null,
+        costo_venta: ventaNum !== null ? pesoNum * ventaNum : null,
+      };
+
+      await axios.put(`${API_URL}/weighing/${selectedPeso.id}`, payload);
+
+      const updatedPesos = historicoPesaje.map((p) =>
+        p.id === selectedPeso.id
+          ? {
+              ...p,
+              peso: payload.peso_kg,
+              fecha: payload.fecha_pesaje,
+              precio_kg_compra: payload.precio_kg_compra,
+              precio_kg_venta: payload.precio_kg_venta,
+              costo_compra: payload.costo_compra,
+              costo_venta: payload.costo_venta,
+            }
+          : p
+      );
+
+      setHistoricoPesaje(updatedPesos);
+      setModalVisible(false);
+      alert("Peso actualizado");
+    } catch (error) {
+      if (error.response) {
+        console.log("Detalles del error:", error.response.data);
+        alert(`Error: ${error.response.data.error || "Datos inválidos"}`);
+      } else {
+        console.error("Error de red:", error);
+        alert("Error de conexión");
+      }
+    }
+  };
 
   const handleEditVacuna = (id) => {
     const vac = historicoVacunas.find((item) => item.id === id);
@@ -312,7 +348,6 @@ const handleGuardarCambiosPeso = async () => {
 
     setSelectedVacuna(vac);
     setNuevaFechaVacuna(vac.fecha.slice(0, 10));
-
     setNuevaObsVacuna(vac.obs || "");
 
     const dosisParts = vac.dosis.split(" ");
@@ -371,7 +406,7 @@ const handleGuardarCambiosPeso = async () => {
     const selectedDate = date.toISOString().split("T")[0];
 
     if (selectedDate > today) {
-      Alert.alert("Fecha inválida", "No puedes seleccionar una fecha futura.");
+      alert("Fecha inválida - No puedes seleccionar una fecha futura.");
       return;
     }
 
@@ -535,7 +570,6 @@ const handleGuardarCambiosPeso = async () => {
             </Text>
           </View>
 
-
           <View style={styles.tableRow}>
             <Image
               source={require("../assets/hierro.png")}
@@ -547,14 +581,11 @@ const handleGuardarCambiosPeso = async () => {
             </Text>
           </View>
 
-
           <View style={styles.tableRow}>
             <Image
               source={require("../assets/hierro.png")}
               style={styles.logo}
             />
-
-
             <Text style={styles.tableCellChip}>Categoría:</Text>
             <Text style={styles.tableCellDatoChip}>
               {animalInfo?.categoria || "-"}
@@ -567,7 +598,6 @@ const handleGuardarCambiosPeso = async () => {
                   source={require("../assets/hierro.png")}
                   style={styles.logo}
                 />
-
                 <Text style={styles.tableCellChip}>Número de Parto:</Text>
                 <Text style={styles.tableCellDatoChip}>
                   {animalInfo?.numero_parto || "-"}
@@ -653,8 +683,7 @@ const handleGuardarCambiosPeso = async () => {
           </TouchableOpacity>
         </View>
 
-        {/* TABLA DE PESO */}
-
+        {/* 🆕 TABLA DE PESO ACTUALIZADA CON DEBUG */}
         <View style={styles.containerPesos}>
           <Image
             source={require("../assets/Imagen_Pesos_Registrados.png")}
@@ -671,55 +700,106 @@ const handleGuardarCambiosPeso = async () => {
             <View style={styles.tableHeaderPesoVacuna}>
               <Text style={styles.tableHeaderTextPeso}>Fecha</Text>
               <Text style={styles.tableHeaderTextPeso}>Peso</Text>
-              <Text style={styles.tableHeaderTextPeso}>Costo Compra</Text>
-              <Text style={styles.tableHeaderTextPeso}>Costo Venta</Text>
+              <Text style={styles.tableHeaderTextPeso}>Tipo</Text>
+              <Text style={styles.tableHeaderTextPeso}>Compra</Text>
+              <Text style={styles.tableHeaderTextPeso}>Venta</Text>
+              <Text style={styles.tableHeaderTextPeso}>Ganancia</Text>
               <Image
                 source={require("../assets/Peso.png")}
                 style={styles.editButtonImagePeso1}
               />
             </View>
 
-            {registrosPesajeVisibles.map((peso, index) => (
-              <View key={index} style={styles.tableRowPeso}>
-                <Text style={styles.tableCellPeso}>
-                  {peso.fecha ? peso.fecha.substring(0, 10) : ""}
-                </Text>
-                <Text style={styles.tableCellPeso}>
-                  {peso.peso ? parseInt(peso.peso) : "-"}
-                </Text>
+            {registrosPesajeVisibles.map((peso, index) => {
+              const esNacimiento = peso.tipo_seguimiento?.toLowerCase() === 'nacimiento';
+              
+              // Log para debug
+              console.log(`📊 Fila ${index}:`, {
+                id: peso.id,
+                tipo: peso.tipo_seguimiento,
+                tipoRaw: JSON.stringify(peso.tipo_seguimiento),
+                esNacimiento: esNacimiento
+              });
+              
+              return (
+                <View key={index} style={styles.tableRowPeso}>
+                  {/* Fecha */}
+                  <Text style={styles.tableCellPeso}>
+                    {peso.fecha ? peso.fecha.substring(0, 10) : ""}
+                  </Text>
 
-                <Text style={styles.tableCellPeso}>
-                  {peso.costo_compra
-                    ? `$${parseFloat(peso.costo_compra).toLocaleString(
-                        "es-CO",
-                        {
+                  {/* Peso */}
+                  <Text style={styles.tableCellPeso}>
+                    {peso.peso ? parseInt(peso.peso) : "-"}
+                  </Text>
+
+                  {/* Tipo de Seguimiento */}
+                  <Text style={[
+                    styles.tableCellPeso,
+                    styles.tipoSeguimientoCell,
+                    peso.tipo_seguimiento?.toLowerCase() === 'compra' && styles.tipoCompra,
+                    peso.tipo_seguimiento?.toLowerCase() === 'venta' && styles.tipoVenta,
+                    peso.tipo_seguimiento?.toLowerCase() === 'seguimiento' && styles.tipoSeguimiento,
+                    peso.tipo_seguimiento?.toLowerCase() === 'nacimiento' && styles.tipoNacimiento
+                  ]}>
+                    {getTipoAbreviatura(peso.tipo_seguimiento)}
+                  </Text>
+
+                  {/* Costo Compra */}
+                  <Text style={styles.tableCellPeso}>
+                    {peso.costo_compra
+                      ? `${parseFloat(peso.costo_compra).toLocaleString(
+                          "es-CO",
+                          {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0,
+                          }
+                        )}`
+                      : "-"}
+                  </Text>
+
+                  {/* Costo Venta */}
+                  <Text style={styles.tableCellPeso}>
+                    {peso.costo_venta
+                      ? `${parseFloat(peso.costo_venta).toLocaleString("es-CO", {
                           minimumFractionDigits: 0,
                           maximumFractionDigits: 0,
-                        }
-                      )}`
-                    : "-"}
-                </Text>
+                        })}`
+                      : "-"}
+                  </Text>
 
-                <Text style={styles.tableCellPeso}>
-                  {peso.costo_venta
-                    ? `$${parseFloat(peso.costo_venta).toLocaleString("es-CO", {
-                        minimumFractionDigits: 0,
-                        maximumFractionDigits: 0,
-                      })}`
-                    : "-"}
-                </Text>
+                  {/* Ganancia de Peso */}
+                  <Text style={[
+                    styles.tableCellPeso,
+                    peso.ganancia_peso > 0 && styles.gananciaPositiva,
+                    peso.ganancia_peso < 0 && styles.gananciaNegativa
+                  ]}>
+                    {formatearGanancia(peso.ganancia_peso)}
+                  </Text>
 
-                <TouchableOpacity
-                  onPress={() => handleEditPeso(peso.id)}
-                  style={styles.editCell}
-                >
-                  <Image
-                    source={require("../assets/Editar_Peso.png")}
-                    style={styles.editButtonImagePeso2}
-                  />
-                </TouchableOpacity>
-              </View>
-            ))}
+                  {/* Botón Editar - NO se muestra si es nacimiento */}
+                  {!esNacimiento && (
+                    <TouchableOpacity
+                      onPress={() => {
+                        console.log('🖱️ Click en botón editar, tipo:', peso.tipo_seguimiento);
+                        handleEditPeso(peso.id, peso.tipo_seguimiento);
+                      }}
+                      style={styles.editCell}
+                    >
+                      <Image
+                        source={require("../assets/Editar_Peso.png")}
+                        style={styles.editButtonImagePeso2}
+                      />
+                    </TouchableOpacity>
+                  )}
+                  
+                  {/* Espacio vacío cuando es nacimiento para mantener alineación */}
+                  {esNacimiento && (
+                    <View style={styles.editCell} />
+                  )}
+                </View>
+              );
+            })}
           </View>
         ) : (
           <Text style={styles.noRecordsText}>
@@ -735,161 +815,154 @@ const handleGuardarCambiosPeso = async () => {
         )}
 
         {/* EDITAR PESO */}
+        <Modal visible={modalVisible} transparent animationType="slide">
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Image
+                source={require("../assets/Editar_Peso.png")}
+                style={styles.modalImagePeso}
+              />
+              <Text style={styles.modalTitle1}>Editar</Text>
+              <Text style={styles.modalTitle2}>Peso</Text>
 
-<Modal visible={modalVisible} transparent animationType="slide">
-  
-  <View style={styles.modalContainer}>
-  
-    <View style={styles.modalContent}>
-      <Image
-        source={require("../assets/Editar_Peso.png")}
-        style={styles.modalImagePeso}
-      />
-      <Text style={styles.modalTitle1}>Editar</Text>
-      <Text style={styles.modalTitle2}>Peso</Text>
+              {/* Peso */}
+              {renderModalTitle("Peso del animal")}
+              <View style={styles.inputContainer}>
+                <Image
+                  source={require("../assets/Peso.png")}
+                  style={styles.inputLogo}
+                />
+                <TextInput
+                  value={nuevoPeso ? String(parseInt(nuevoPeso)) : ""}
+                  onChangeText={(text) => setNuevoPeso(text.replace(/[^0-9]/g, ""))}
+                  placeholder="Peso"
+                  keyboardType="numeric"
+                  style={styles.input}
+                />
+              </View>
 
-      {/* Peso */}
-        {renderModalTitle("Peso del animal")}
-      <View style={styles.inputContainer}>
-        <Image
-          source={require("../assets/Peso.png")}
-          style={styles.inputLogo}
-        />
-    <TextInput
-  value={nuevoPeso ? String(parseInt(nuevoPeso)) : ""}
-  onChangeText={(text) => setNuevoPeso(text.replace(/[^0-9]/g, ""))}
-  placeholder="Peso"
-  keyboardType="numeric"
-  style={styles.input}
-/>
-      </View>
+              {/* Fecha */}
+              {renderModalTitle("Fecha de registro")}
+              <Pressable
+                onPress={() => setShowPesoDatePicker(true)}
+                style={styles.inputContainer}
+              >
+                <Image
+                  source={require("../assets/FechaDeNacimieto.png")}
+                  style={styles.inputLogo}
+                />
+                <TextInput
+                  value={formatDateDisplay(nuevaFecha)}
+                  placeholder="Fecha (YYYY-MM-DD)"
+                  style={styles.input}
+                  editable={false}
+                  pointerEvents="none"
+                />
+              </Pressable>
 
-      {/* Fecha */}
-       {renderModalTitle("Fecha de registro")}
-      <Pressable
-        onPress={() => setShowPesoDatePicker(true)}
-        style={styles.inputContainer}
-      >
-        <Image
-          source={require("../assets/FechaDeNacimieto.png")}
-          style={styles.inputLogo}
-        />
-        <TextInput
-          value={formatDateDisplay(nuevaFecha)}
-          placeholder="Fecha (YYYY-MM-DD)"
-          style={styles.input}
-          editable={false}
-          pointerEvents="none"
-        />
-      </Pressable>
+              {/* Precio Kg Compra */}
+              {renderModalTitle("Precio por Kg - Compra")}
+              <View style={styles.inputContainer}>
+                <Image
+                  source={require("../assets/precio.png")}
+                  style={styles.inputLogo}
+                />
+                <TextInput
+                  placeholder="Precio Kg Compra"
+                  placeholderTextColor="#000"
+                  keyboardType="numeric"
+                  value={precioKgCompra ? parseInt(precioKgCompra).toLocaleString("es-CO") : ""}
+                  onChangeText={(text) => {
+                    const numericValue = text.replace(/\D/g, "");
+                    setPrecioKgCompra(numericValue);
+                  }}
+                  style={styles.input}
+                />
+              </View>
 
-      {/* Precio Kg Compra */}
-{renderModalTitle("Precio por Kg - Compra")}
-<View style={styles.inputContainer}>
-  <Image
-    source={require("../assets/precio.png")}
-    style={styles.inputLogo}
-  />
-  <TextInput
-    placeholder="Precio Kg Compra"
-    placeholderTextColor="#000"
-    keyboardType="numeric"
-    value={precioKgCompra ? parseInt(precioKgCompra).toLocaleString("es-CO") : ""}
-    onChangeText={(text) => {
-      // Remover todos los caracteres no numéricos (incluye puntos y comas)
-      const numericValue = text.replace(/\D/g, "");
-      // Guardar el valor numérico sin formato
-      setPrecioKgCompra(numericValue);
-    }}
-    style={styles.input}
-  />
-</View>
+              {/* Mostrar costo compra */}
+              <Text style={styles.textcosto}>
+                Costo del ganado Compra: $
+                {nuevoPeso && precioKgCompra
+                  ? (parseFloat(nuevoPeso) * parseFloat(precioKgCompra)).toLocaleString("es-CO")
+                  : 0}
+              </Text>
 
-      {/* Mostrar costo compra */}
-   <Text style={styles.textcosto}>
-  Costo del ganado Compra: $
-  {nuevoPeso && precioKgCompra
-    ? (parseFloat(nuevoPeso) * parseFloat(precioKgCompra)).toLocaleString("es-CO")
-    : 0}
-</Text>
+              {/* Precio Kg Venta */}
+              {renderModalTitle("Precio por Kg - Venta")}
+              <View style={styles.inputContainer}>
+                <Image
+                  source={require("../assets/precio.png")}
+                  style={styles.inputLogo}
+                />
+                <TextInput
+                  placeholder="Precio Kg Venta"
+                  placeholderTextColor="#000"
+                  keyboardType="numeric"
+                  value={precioKgVenta ? parseInt(precioKgVenta).toLocaleString("es-CO") : ""}
+                  onChangeText={(text) => {
+                    const numericValue = text.replace(/\D/g, "");
+                    setPrecioKgVenta(numericValue);
+                  }}
+                  style={styles.input}
+                />
+              </View>
 
-      {/* Precio Kg Venta */}
-{renderModalTitle("Precio por Kg - Venta")}
-<View style={styles.inputContainer}>
-  <Image
-    source={require("../assets/precio.png")}
-    style={styles.inputLogo}
-  />
-  <TextInput
-    placeholder="Precio Kg Venta"
-    placeholderTextColor="#000"
-    keyboardType="numeric"
-    value={precioKgVenta ? parseInt(precioKgVenta).toLocaleString("es-CO") : ""}
-    onChangeText={(text) => {
-      const numericValue = text.replace(/\D/g, ""); // elimina caracteres no numéricos
-      setPrecioKgVenta(numericValue);
-    }}
-    style={styles.input}
-  />
-</View>
+              {/* Mostrar costo venta */}
+              <Text style={styles.textcosto}>
+                Costo del ganado Venta: $
+                {nuevoPeso && precioKgVenta
+                  ? (parseFloat(nuevoPeso) * parseFloat(precioKgVenta)).toLocaleString("es-CO")
+                  : 0}
+              </Text>
 
-      {/* Mostrar costo venta */}
-<Text style={styles.textcosto}>
-  Costo del ganado Venta: $
-  {nuevoPeso && precioKgVenta
-    ? (parseFloat(nuevoPeso) * parseFloat(precioKgVenta)).toLocaleString("es-CO")
-    : 0}
-</Text>
+              {/* DatePicker */}
+              <DateTimePickerModal
+                isVisible={showPesoDatePicker}
+                mode="date"
+                date={nuevaFecha ? new Date(nuevaFecha) : new Date()}
+                onConfirm={(date) => handleFechaConfirm(date, "peso")}
+                themeVariant="light"
+                onCancel={() => setShowPesoDatePicker(false)}
+                maximumDate={new Date()}
+              />
 
-      {/* DatePicker */}
-      <DateTimePickerModal
-        isVisible={showPesoDatePicker}
-        mode="date"
-        date={nuevaFecha ? new Date(nuevaFecha) : new Date()}
-        onConfirm={(date) => handleFechaConfirm(date, "peso")}
-        themeVariant="light"
-        onCancel={() => setShowPesoDatePicker(false)}
-        maximumDate={new Date()}
-      />
+              {/* Botones */}
+              <View style={styles.buttonsContainer}>
+                <TouchableOpacity
+                  style={styles.buttonCancelarPeso}
+                  onPress={() => setModalVisible(false)}
+                >
+                  <Image
+                    source={require("../assets/FechaDeNacimieto.png")}
+                    style={styles.buttonLogo}
+                  />
+                  <Text style={styles.buttonText}>CANCELAR</Text>
+                </TouchableOpacity>
 
-      {/* Botones */}
-      <View style={styles.buttonsContainer}>
-        <TouchableOpacity
-          style={styles.buttonCancelarPeso}
-          onPress={() => setModalVisible(false)}
-        >
-          <Image
-            source={require("../assets/FechaDeNacimieto.png")}
-            style={styles.buttonLogo}
-          />
-          <Text style={styles.buttonText}>CANCELAR</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.buttonGuardarPeso}
-          onPress={() =>
-            handleGuardarCambiosPeso({
-              nuevoPeso,
-              nuevaFecha,
-              precioKgCompra,
-              precioKgVenta,
-            })
-          }
-        >
-          <Image
-            source={require("../assets/FechaDeNacimieto.png")}
-            style={styles.buttonLogo}
-          />
-          <Text style={styles.buttonText}>GUARDAR</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  </View>
-</Modal>
-
+                <TouchableOpacity
+                  style={styles.buttonGuardarPeso}
+                  onPress={() =>
+                    handleGuardarCambiosPeso({
+                      nuevoPeso,
+                      nuevaFecha,
+                      precioKgCompra,
+                      precioKgVenta,
+                    })
+                  }
+                >
+                  <Image
+                    source={require("../assets/FechaDeNacimieto.png")}
+                    style={styles.buttonLogo}
+                  />
+                  <Text style={styles.buttonText}>GUARDAR</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
 
         {/* TABLA DE VACUNAS */}
-
         <View style={styles.container}>
           <Image
             source={require("../assets/Imagen_Vacunas_Registradas.png")}
@@ -909,7 +982,6 @@ const handleGuardarCambiosPeso = async () => {
               <Text style={styles.tableHeaderTextVacuna}>Tipo</Text>
               <Text style={styles.tableHeaderTextVacuna}>Dosis</Text>
               <Text style={styles.tableHeaderTextVacuna}>Obs</Text>
-
               <Image
                 source={require("../assets/Vacuna.png")}
                 style={styles.editButtonImageVacuna1}
@@ -972,19 +1044,17 @@ const handleGuardarCambiosPeso = async () => {
         </TouchableOpacity>
 
         {/* EDITAR VACUNAS */}
-
         <Modal visible={modalVacunaVisible} transparent animationType="slide">
           <View style={styles.modalContainerVacuna}>
             <View style={styles.modalContentVacuna}>
-              {/* Imagen del encabezado */}
               <Image
                 source={require("../assets/Editar_Vacunas.png")}
                 style={styles.modalImageVacuna}
               />
               <Text style={styles.modalTitle1}>EDITAR</Text>
               <Text style={styles.modalTitle2}>VACUNA</Text>
-              {/* Selección de tipo de vacuna */}
-               {renderModalTitle("Tipo de vacuna")}
+
+              {renderModalTitle("Tipo de vacuna")}
               <View style={styles.datePickerWrapper}>
                 <Image
                   source={require("../assets/CC.png")}
@@ -1019,7 +1089,8 @@ const handleGuardarCambiosPeso = async () => {
                   textStyle={styles.textStyle}
                 />
               </View>
- {renderModalTitle("Fecha de nacimiento")}
+
+              {renderModalTitle("Fecha de vacunación")}
               <Pressable
                 onPress={() => setShowVacunaDatePicker(true)}
                 style={styles.inputContainerVacuna}
@@ -1037,8 +1108,7 @@ const handleGuardarCambiosPeso = async () => {
                 />
               </Pressable>
 
-              {/* Selección de nombre de vacuna */}
-               {renderModalTitle("Nombre de vacuna")}
+              {renderModalTitle("Nombre de vacuna")}
               <View style={styles.datePickerWrapper}>
                 <Image
                   source={require("../assets/Nombre.png")}
@@ -1074,7 +1144,6 @@ const handleGuardarCambiosPeso = async () => {
                 />
               </View>
 
-              {/* Dosis */}
               {renderModalTitle("Dosis                                        Unidad")}
               <View style={styles.row}>
                 <View style={[styles.inputDosisContainer]}>
@@ -1092,8 +1161,6 @@ const handleGuardarCambiosPeso = async () => {
                   />
                 </View>
 
-                {/* Unidad */}
-                 
                 <DropDownPicker
                   open={openUnidad}
                   value={unidad}
@@ -1123,8 +1190,7 @@ const handleGuardarCambiosPeso = async () => {
                 />
               </View>
 
-              {/* Campo Observaciones */}
-                 {renderModalTitle("Observaciones")}
+              {renderModalTitle("Observaciones")}
               <View style={styles.inputContainerVacuna}>
                 <Image
                   source={require("../assets/Obs.png")}
@@ -1138,7 +1204,16 @@ const handleGuardarCambiosPeso = async () => {
                 />
               </View>
 
-              {/* Botones para cancelar y guardar */}
+              <DateTimePickerModal
+                isVisible={showVacunaDatePicker}
+                mode="date"
+                date={nuevaFechaVacuna ? new Date(nuevaFechaVacuna) : new Date()}
+                onConfirm={(date) => handleFechaConfirm(date, "vacuna")}
+                themeVariant="light"
+                onCancel={() => setShowVacunaDatePicker(false)}
+                maximumDate={new Date()}
+              />
+
               <View style={styles.buttonsContainer}>
                 <TouchableOpacity
                   style={styles.buttonCancelarVacuna}

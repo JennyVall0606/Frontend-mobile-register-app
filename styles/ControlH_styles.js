@@ -415,7 +415,7 @@ link: {
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   tableHeaderTextPeso: {
-    fontSize: 16, 
+    fontSize: 12, 
     fontWeight: "normal", 
     color: "#000", 
     textAlign: "center", 
@@ -442,7 +442,7 @@ link: {
 
   
   tableCellPeso: {
-    fontSize: 14, 
+    fontSize: 10, 
     color: "#7dac53",
     flex: 1, 
     textAlign: "center", 
@@ -932,7 +932,13 @@ link: {
     marginBottom: 30,
   },
 
-
+pesoInicialBadge: {
+  fontSize: 10,
+  color: '#4CAF50', // Verde
+  fontWeight: '600',
+  fontStyle: 'italic',
+  marginLeft: 4,
+},
 
  
 });
