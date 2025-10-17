@@ -119,22 +119,22 @@ position: "absolute",
     flex: 1,
   },
 
-  greenBar: {
-     height: 70, 
+ greenBar: {
+    height: 90, 
     backgroundColor: "#7dac53",
-    width: "100%",
+    width: "100%", 
         
   },
 
   bottomImageContainer: {
     position: "absolute", 
-    bottom: 18, 
+    bottom: 10, 
     left: 0,
     right: 0,
-    flexDirection: "row",
+    flexDirection: "row", 
     justifyContent: "space-between", 
-    paddingHorizontal: 140,
-     
+    paddingHorizontal: 150,
+    marginBottom:16, 
   },
   
  imageContainer: {
@@ -145,17 +145,18 @@ position: "absolute",
 
   imageStyleG: {
     width: 20, 
-    height: 20,     
-        right: 6,
+    height: 20, 
   },
 
    imageText: {
-     marginTop: 5, 
+    marginTop: 3, 
     color: "white", 
     fontSize: 12, 
     fontWeight: "normal", 
      left: -6,
+     marginBottom:8,
   },
+
 
    //===========================================================================
 
@@ -599,4 +600,64 @@ position: "absolute",
     borderColor: "red", 
     borderWidth: 1,
   },
+
+ gananciaContainer: {
+  backgroundColor: '#F5F5F5',
+  borderRadius: 12,
+  padding: 16,
+  marginTop: 16,
+  marginBottom: 16,
+  borderWidth: 1,
+  borderColor: '#E0E0E0',
+},
+
+gananciaTitle: {
+  fontSize: 18,
+  fontWeight: 'bold',
+  color: '#2E7D32',
+  marginBottom: 16,
+  textAlign: 'center',
+},
+
+gananciaSection: {
+  backgroundColor: '#FFF',
+  borderRadius: 8,
+  padding: 12,
+  marginBottom: 12,
+  borderLeftWidth: 4,
+  borderLeftColor: '#4CAF50',
+},
+
+gananciaSectionTitle: {
+  fontSize: 14,
+  fontWeight: '600',
+  color: '#424242',
+  marginBottom: 8,
+},
+
+gananciaText: {
+  fontSize: 14,
+  color: '#616161',
+  marginBottom: 4,
+},
+
+gananciaValue: {
+  fontWeight: 'bold',
+  fontSize: 16,
+},
+
+gananciaPositiva: {
+  color: '#2E7D32',
+},
+
+gananciaNegativa: {
+  color: '#C62828',
+},
+
+gananciaSubtext: {
+  fontSize: 12,
+  color: '#9E9E9E',
+  fontStyle: 'italic',
+  marginTop: 4,
+},
 });

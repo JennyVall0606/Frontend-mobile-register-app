@@ -90,7 +90,6 @@ class DatabaseManager {
       }
     });
   }
-  
 
   async executeSql(query, params = []) {
     if (this.db.execSync) {

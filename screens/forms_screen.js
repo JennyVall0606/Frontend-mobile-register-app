@@ -33,6 +33,7 @@ export default function FormsScreen({ route }) {
     dosis: false,
     unidad: false,
     fechaVacuna: false,
+    tipoSeguimiento: false,
   });
 
   const [pesoChecked, setPesoChecked] = useState(false);
@@ -40,16 +41,23 @@ export default function FormsScreen({ route }) {
   const [cantidad, setCantidad] = useState("");
   const [unidad, setUnidad] = useState("");
   const [dosisFinal, setDosisFinal] = useState("");
-const [precioKgCompra, setPrecioKgCompra] = useState('');
-const [precioKgVenta, setPrecioKgVenta] = useState('');
-const [costoGanadoCompra, setCostoGanadoCompra] = useState('');
-const [costoGanadoVenta, setCostoGanadoVenta] = useState('');
+  const [precioKgCompra, setPrecioKgCompra] = useState('');
+  const [precioKgVenta, setPrecioKgVenta] = useState('');
+  const [costoGanadoCompra, setCostoGanadoCompra] = useState('');
+  const [costoGanadoVenta, setCostoGanadoVenta] = useState('');
 
+  // Nuevos estados para cálculo de ganancia
+  const [datosCompra, setDatosCompra] = useState(null);
+  const [gananciaKg, setGananciaKg] = useState(null);
+  const [gananciaValor, setGananciaValor] = useState(null);
+  const [periodoMeses, setPeriodoMeses] = useState(null);
 
   const [openTipoVacuna, setOpenTipoVacuna] = useState(false);
   const [openVacunaNombre, setOpenVacunaNombre] = useState(false);
+  const [openTipoSeguimiento, setOpenTipoSeguimiento] = useState(false);
   const [tipoVacuna, setTipoVacuna] = useState(null);
   const [nombreVacuna, setNombreVacuna] = useState(null);
+  const [tipoSeguimiento, setTipoSeguimiento] = useState(null);
   const [itemsTipoVacuna, setItemsTipoVacuna] = useState([]);
   const [itemsVacunaNombre, setItemsVacunaNombre] = useState([]);
   const [cattlePeso, setCattlePeso] = useState(null);
@@ -68,99 +76,149 @@ const [costoGanadoVenta, setCostoGanadoVenta] = useState('');
   const [chipVacuna, setChipVacuna] = useState("");
   const API_URL = "https://webmobileregister-production.up.railway.app";
 
-
-  //============================================================================
   const menuAnim = useState(new Animated.Value(-250))[0]; 
-    const userMenuAnim = useState(new Animated.Value(-250))[0]; 
-  
-    const [showMenu, setShowMenu] = useState(false);
-    const [showUserMenu, setShowUserMenu] = useState(false);
-  
-    const toggleMenu = () => {
-      if (showMenu) {
-        Animated.spring(menuAnim, {
-          toValue: -250,
-          bounciness: 10,
-          useNativeDriver: true,
-        }).start();
-      } else {
-        Animated.spring(menuAnim, {
-          toValue: 0,
-          bounciness: 10,
-          useNativeDriver: true,
-        }).start();
-      }
-      setShowMenu(!showMenu);
-      setShowUserMenu(false); 
-    };
-  
-      
-      const toggleUserMenu = () => {
-        if (showUserMenu) {
-          Animated.spring(userMenuAnim, {
-            toValue: -250,
-            bounciness: 10,
-            useNativeDriver: true,
-          }).start();
-        } else {
-          Animated.spring(userMenuAnim, {
-            toValue: 0,
-            bounciness: 10,
-            useNativeDriver: true,
-          }).start();
-        }
-        setShowUserMenu(!showUserMenu);
-        setShowMenu(false); 
-      };
-  
-     const navigateToHome = () => {
-      navigation.navigate("Home");
-    };
+  const userMenuAnim = useState(new Animated.Value(-250))[0]; 
+
+  const [showMenu, setShowMenu] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+
+  const toggleMenu = () => {
+    if (showMenu) {
+      Animated.spring(menuAnim, {
+        toValue: -250,
+        bounciness: 10,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      Animated.spring(menuAnim, {
+        toValue: 0,
+        bounciness: 10,
+        useNativeDriver: true,
+      }).start();
+    }
+    setShowMenu(!showMenu);
+    setShowUserMenu(false); 
+  };
+
+  const toggleUserMenu = () => {
+    if (showUserMenu) {
+      Animated.spring(userMenuAnim, {
+        toValue: -250,
+        bounciness: 10,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      Animated.spring(userMenuAnim, {
+        toValue: 0,
+        bounciness: 10,
+        useNativeDriver: true,
+      }).start();
+    }
+    setShowUserMenu(!showUserMenu);
+    setShowMenu(false); 
+  };
+
+  const navigateToHome = () => {
+    navigation.navigate("Home");
+  };
    
-const handleGoBack = () => {
-  navigation.goBack(); 
-};
+  const handleGoBack = () => {
+    navigation.goBack(); 
+  };
 
-{/* Función para formatear números con puntos de miles */}
-const formatearNumero = (texto) => {
-  
-  const numeroLimpio = texto.replace(/[^0-9]/g, '');
-  
+  const formatearNumero = (texto) => {
+    const numeroLimpio = texto.replace(/[^0-9]/g, '');
+    if (numeroLimpio === '') return '';
+    return parseInt(numeroLimpio).toLocaleString('es-CO');
+  };
 
-  if (numeroLimpio === '') return '';
-  
-  
-  return parseInt(numeroLimpio).toLocaleString('es-CO');
-};
+  const manejarCambioPrecioCompra = (texto) => {
+    setPrecioKgCompra(formatearNumero(texto));
+  };
 
-const manejarCambioPrecioCompra = (texto) => {
+  const manejarCambioPrecioVenta = (texto) => {
+    setPrecioKgVenta(formatearNumero(texto));
+  };
 
-  const numeroLimpio = texto.replace(/[^0-9]/g, '');
-  setPrecioKgCompra(formatearNumero(texto));
-  
-  
-};
-
-const manejarCambioPrecioVenta = (texto) => {
-  const numeroLimpio = texto.replace(/[^0-9]/g, '');
-  setPrecioKgVenta(formatearNumero(texto));
-  
-  // setPrecioKgVentaNumerico(numeroLimpio);
-};
-    //========================================================================
   useEffect(() => {
-  if (peso && precioKgCompra) {
-    setCostoGanadoCompra((parseFloat(peso) * parseFloat(precioKgCompra)).toFixed(2));
-  }
-}, [peso, precioKgCompra]);
+    if (peso && precioKgCompra) {
+      const pesoNumerico = parseFloat(peso);
+      const precioNumerico = parseFloat(precioKgCompra.replace(/\./g, ''));
+      setCostoGanadoCompra((pesoNumerico * precioNumerico).toFixed(2));
+    }
+  }, [peso, precioKgCompra]);
 
-useEffect(() => {
-  if (peso && precioKgVenta) {
-    setCostoGanadoVenta((parseFloat(peso) * parseFloat(precioKgVenta)).toFixed(2));
-  }
-}, [peso, precioKgVenta]);
+  useEffect(() => {
+    if (peso && precioKgVenta) {
+      const pesoNumerico = parseFloat(peso);
+      const precioNumerico = parseFloat(precioKgVenta.replace(/\./g, ''));
+      setCostoGanadoVenta((pesoNumerico * precioNumerico).toFixed(2));
+    }
+  }, [peso, precioKgVenta]);
 
+  // Función para obtener datos de compra del animal
+  const obtenerDatosCompra = async (chipAnimal) => {
+    try {
+      const response = await axios.get(`${API_URL}/weighing/compra/${chipAnimal}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error obteniendo datos de compra:", error);
+      return null;
+    }
+  };
 
+  // Calcular meses entre dos fechas
+  const calcularMesesEntreFechas = (fechaInicio, fechaFin) => {
+    const inicio = new Date(fechaInicio);
+    const fin = new Date(fechaFin);
+    
+    let meses = (fin.getFullYear() - inicio.getFullYear()) * 12;
+    meses += fin.getMonth() - inicio.getMonth();
+    
+    return meses;
+  };
+
+  // ✅ EFECTO CORREGIDO: Calcular ganancia en tiempo real cuando es venta
+  useEffect(() => {
+    const calcularGanancia = async () => {
+      if (tipoSeguimiento === 'venta' && chipPeso && peso && precioKgVenta && fechaPeso) {
+        const compra = await obtenerDatosCompra(chipPeso);
+        
+        if (compra) {
+          setDatosCompra(compra);
+          
+          // Calcular ganancia en kilos
+          const pesoVenta = parseFloat(peso);
+          const pesoCompra = parseFloat(compra.peso_kg);
+          const gananciaPeso = pesoVenta - pesoCompra;
+          setGananciaKg(gananciaPeso);
+          
+          // ✅ CORRECCIÓN: Calcular ganancia en valor usando costo_compra directamente
+          const precioVentaNum = parseFloat(precioKgVenta.replace(/\./g, ''));
+          const valorVenta = pesoVenta * precioVentaNum;
+          const valorCompra = parseFloat(compra.costo_compra); // 👈 USAR COSTO_COMPRA DEL BACKEND
+          const gananciaEconomica = valorVenta - valorCompra;
+          setGananciaValor(gananciaEconomica);
+          
+          // Calcular periodo en meses
+          const meses = calcularMesesEntreFechas(compra.fecha_pesaje, fechaPeso);
+          setPeriodoMeses(meses);
+        } else {
+          setDatosCompra(null);
+          setGananciaKg(null);
+          setGananciaValor(null);
+          setPeriodoMeses(null);
+        }
+      } else {
+        setDatosCompra(null);
+        setGananciaKg(null);
+        setGananciaValor(null);
+        setPeriodoMeses(null);
+      }
+    };
+    
+    calcularGanancia();
+  }, [tipoSeguimiento, chipPeso, peso, precioKgVenta, fechaPeso]);
 
   useEffect(() => {
     axios
@@ -175,7 +233,6 @@ useEffect(() => {
   }, []);
 
   const handleConfirmDate = (date) => {
-    
     const colombiaDate = new Date(date.getTime() - 5 * 60 * 60 * 1000);
     const formattedDate = colombiaDate.toISOString().split("T")[0];
 
@@ -190,16 +247,15 @@ useEffect(() => {
         [{ text: "Aceptar" }],
         { cancelable: false }
       );
+      return;
     }
 
-    
     if (currentDateType === "peso") {
       setFechaPeso(formattedDate);
     } else {
       setFechaVacuna(formattedDate);
     }
 
-    
     setDatePickerVisibility(false);
   };
 
@@ -214,47 +270,102 @@ useEffect(() => {
     setCattlePeso(null);
     setPeso("");
     setFechaPeso("");
+    setTipoSeguimiento(null);
+    setPrecioKgCompra('');
+    setPrecioKgVenta('');
+    setCostoGanadoCompra('');
+    setCostoGanadoVenta('');
+    setDatosCompra(null);
+    setGananciaKg(null);
+    setGananciaValor(null);
+    setPeriodoMeses(null);
   };
 
- const guardarPeso = async () => {
-  if (!fechaPeso || !peso) {
-    setErrors({ ...errors, fechaPeso: !fechaPeso, peso: !peso });
-    Alert.alert(
-      "⚠️ Campos obligatorios",
-      "Por favor, completa todos los campos obligatorios en el Control de Peso."
-    );
-    return;
-  }
+  const guardarPeso = async () => {
+    const erroresNuevos = {
+      tipoSeguimiento: !tipoSeguimiento,
+      fechaPeso: !fechaPeso,
+      peso: !peso,
+    };
 
-  try {
-    const response = await axios.post(`${API_URL}/weighing/add`, {
-      chip_animal: chipPeso,
-      fecha_pesaje: fechaPeso,
-      peso_kg: parseFloat(peso),
-      precio_kg_compra: parseFloat(precioKgCompra) || null,
-precio_kg_venta:  parseFloat(precioKgVenta)  || null, 
-      costo_compra: parseFloat(costoGanadoCompra) || null, 
+    if (erroresNuevos.tipoSeguimiento || erroresNuevos.fechaPeso || erroresNuevos.peso) {
+      setErrors({ ...errors, ...erroresNuevos });
+      Alert.alert(
+        "⚠️ Campos obligatorios",
+        "Por favor, completa todos los campos obligatorios en el Control de Peso."
+      );
+      return;
+    }
 
-      costo_venta: parseFloat(costoGanadoVenta) || null,  
-    });
+    if (tipoSeguimiento === 'compra' && !precioKgCompra) {
+      Alert.alert(
+        "⚠️ Campo requerido",
+        "Por favor, ingresa el precio por kg de compra."
+      );
+      return;
+    }
 
-  Alert.alert("Éxito", "Pesaje guardado");
+    if (tipoSeguimiento === 'venta' && !precioKgVenta) {
+      Alert.alert(
+        "⚠️ Campo requerido",
+        "Por favor, ingresa el precio por kg de venta."
+      );
+      return;
+    }
+
+    // Validación para venta sin compra previa
+    if (tipoSeguimiento === 'venta' && !datosCompra) {
+      Alert.alert(
+        "⚠️ Registro de compra requerido",
+        "Debe registrar primero el valor de compra para poder calcular la ganancia económica, la ganancia en kilos y el periodo de ganancia.",
+        [{ text: "Aceptar" }],
+        { cancelable: false }
+      );
+      return;
+    }
+
+    try {
+      const precioCompraNumerico = precioKgCompra ? parseFloat(precioKgCompra.replace(/\./g, '')) : null;
+      const precioVentaNumerico = precioKgVenta ? parseFloat(precioKgVenta.replace(/\./g, '')) : null;
+
+      const datosGuardar = {
+        chip_animal: chipPeso,
+        fecha_pesaje: fechaPeso,
+        peso_kg: parseFloat(peso),
+        tipo_seguimiento: tipoSeguimiento,
+        precio_kg_compra: precioCompraNumerico,
+        precio_kg_venta: precioVentaNumerico, 
+        costo_compra: parseFloat(costoGanadoCompra) || null, 
+        costo_venta: parseFloat(costoGanadoVenta) || null,
+      };
+
+      // Si es venta, agregar datos de ganancia
+      if (tipoSeguimiento === 'venta' && datosCompra) {
+        datosGuardar.ganancia_peso = gananciaKg;        // ✅ Usar ganancia_peso para el backend
+        datosGuardar.ganancia_valor = gananciaValor;
+        datosGuardar.tiempo_meses = periodoMeses;       // ✅ Usar tiempo_meses para el backend
+      }
+
+      const response = await axios.post(`${API_URL}/weighing/add`, datosGuardar);
+
+      // Mensaje de éxito personalizado
+      let mensajeExito = "Pesaje guardado exitosamente";
+      if (tipoSeguimiento === 'venta' && periodoMeses !== null && gananciaKg !== null && gananciaValor !== null) {
+        mensajeExito += `\n\nEn ${periodoMeses} ${periodoMeses === 1 ? 'mes' : 'meses'}, su ganancia de peso fue de ${gananciaKg.toFixed(2)} kg y economica de $${gananciaValor.toFixed(0).toLocaleString('es-CO')}.`;
+      }
+
+      Alert.alert("✅ Éxito", mensajeExito);
       resetPesoFields();
       navigation.navigate("ControlScreen", {
         chip,
         shouldRefresh: true,
         nuevoPeso: response.data,
       });
-
-    
-     
     } catch (error) {
       console.error(error);
+      Alert.alert("Error", "No se pudo guardar el pesaje. Intenta de nuevo.");
     }
   };
-
-
-
 
   const resetVacunaFields = () => {
     setCattleVacuna(null);
@@ -307,21 +418,17 @@ precio_kg_venta:  parseFloat(precioKgVenta)  || null,
         nuevaVacuna: response.data,
       });
     } catch (error) {
-     
       if (error.response && error.response.data) {
-        
         Alert.alert(
           "Error",
           error.response.data.error || JSON.stringify(error.response.data)
         );
       } else {
-        
         Alert.alert("Error", "No se pudo guardar la vacuna. Intenta de nuevo.");
       }
       console.error(error);
     }
   };
-
 
   const handleSelectCattle = (cattle) => {
     if (pesoChecked) {
@@ -334,10 +441,7 @@ precio_kg_venta:  parseFloat(precioKgVenta)  || null,
       setCattleVacuna(cattle);
       setTipoVacuna(cattle.tipoVacuna || null);
       setNombreVacuna(cattle.nombreVacuna || null);
-
-     
       setDosisFinal(cattle.dosis || "");
-
       setObservacion(cattle.observacion || null);
       setFechaVacuna(cattle.fechaNacimiento || "");
     }
@@ -355,68 +459,63 @@ precio_kg_venta:  parseFloat(precioKgVenta)  || null,
   ]);
 
   return (
-<ImageBackground
-  source={require('../assets/acuarela.Home.png')} 
-  style={{ flex: 1, position: "absolute", width: "100%", height: "100%" }}
->
-         
-               <View >
-                 {/* Header */}
-                 <View style={[styles.topBar, styles.topBarContainer]}>
-                   <View style={styles.topBarGreen}>
-                     <TouchableOpacity onPress={toggleMenu}>
-                       <Image
-                         source={require("../assets/Menu.png")}
-                         style={styles.icon}
-                       />
-                     </TouchableOpacity>
-         
-                     <TouchableOpacity onPress={toggleUserMenu}>
-                       <Image
-                         source={require("../assets/user.png")}
-                         style={styles.iconUser}
-                       />
-                     </TouchableOpacity>
-                   </View>
-                 </View>
-         
-                 {/* Menú lateral */}
-                 {showMenu && (
-                   <Animated.View
-                     style={[
-                       styles.dropdownMenuLeft,
-                       { transform: [{ translateX: menuAnim }] },
-                       { zIndex: 1 }, // Asegura que el menú esté encima
-                     ]}
-                   >
-                     <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-                       <Text style={styles.dropdownItem}>Inicio</Text>
-                     </TouchableOpacity>
-                    
-                   </Animated.View>
-                 )}
-         
-                 {/* Menú de usuario */}
-                 {showUserMenu && (
-                   <Animated.View
-                     style={[
-                       styles.dropdownMenuLeftuser,
-                       { transform: [{ translateX: userMenuAnim }] },
-                       { zIndex: 1 }, // Asegura que el menú esté encima
-                     ]}
-                   >
-                     <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-                       <Text style={styles.dropdownItem}>Cerrar sesión</Text>
-                     </TouchableOpacity>
-                   </Animated.View>
-                 )}
-         
-               </View>
-     <ScrollView
-             ref={scrollViewRef}
-             style={{ flex: 1 }} 
-             contentContainerStyle={{ paddingBottom: 20 }}
-           >
+    <ImageBackground
+      source={require('../assets/acuarela.Home.png')} 
+      style={{ flex: 1, position: "absolute", width: "100%", height: "100%" }}
+    >
+      <View>
+        <View style={[styles.topBar, styles.topBarContainer]}>
+          <View style={styles.topBarGreen}>
+            <TouchableOpacity onPress={toggleMenu}>
+              <Image
+                source={require("../assets/Menu.png")}
+                style={styles.icon}
+              />
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={toggleUserMenu}>
+              <Image
+                source={require("../assets/user.png")}
+                style={styles.iconUser}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {showMenu && (
+          <Animated.View
+            style={[
+              styles.dropdownMenuLeft,
+              { transform: [{ translateX: menuAnim }] },
+              { zIndex: 1 },
+            ]}
+          >
+            <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+              <Text style={styles.dropdownItem}>Inicio</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        )}
+
+        {showUserMenu && (
+          <Animated.View
+            style={[
+              styles.dropdownMenuLeftuser,
+              { transform: [{ translateX: userMenuAnim }] },
+              { zIndex: 1 },
+            ]}
+          >
+            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+              <Text style={styles.dropdownItem}>Cerrar sesión</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        )}
+      </View>
+
+      <ScrollView
+        ref={scrollViewRef}
+        style={{ flex: 1 }} 
+        contentContainerStyle={{ paddingBottom: 20 }}
+      >
         <Image
           source={require("../assets/Imagen_Formulario_Registro_Ganado.png")} 
           style={styles.image}
@@ -463,194 +562,186 @@ precio_kg_venta:  parseFloat(precioKgVenta)  || null,
           </TouchableOpacity>
         </View>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- {/* FORMULARIO DE PESO */}
-{pesoChecked && (
-  <View style={styles.formSection}>
-    <Image
-      source={require("../assets/Peso.png")}
-      style={styles.imagePeso}
-    />
-    <Text style={styles.subtitle1}>Formulario </Text>
-    <Text style={styles.subtitle2}>Control de Peso</Text>
-
-    <View style={styles.inputContainer}>
-      <Image
-        source={require("../assets/Chip.png")}
-        style={styles.logo}
-      />
-
-      <TextInput
-        style={styles.inputChip}
-        value={chipPeso}
-        editable={false}
-      />
-    </View>
-
-    {filteredCattle.length > 0 && (
-      <ScrollView vertical style={styles.cattleList}>
-        {filteredCattle.map((item) => (
-          <TouchableOpacity
-            key={item.chip}
-            style={styles.cattleItem}
-            onPress={() => handleSelectCattle(item)}
-          >
-            <Text>{item.nombre}</Text>
-            <Text>{item.chip}</Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-    )}
-
-    <TouchableOpacity
-      style={[styles.dateButton, errors.fechaPeso && styles.inputError]}
-      onPress={() => {
-        setCurrentDateType("peso");
-        setDatePickerVisibility(true);
-      }}
-    >
-      <Image
-        source={require("../assets/FechaDeNacimieto.png")}
-        style={styles.logo}
-      />
-      <Text style={styles.dateButtonText}>
-        {fechaPeso || "Fecha de pesaje*"}
-      </Text>
-    </TouchableOpacity>
-
-    <View
-      style={[styles.weightContainer, errors.peso && styles.inputError]}
-    >
-      <Image
-        source={require("../assets/Peso.png")} 
-        style={styles.iconStylePeso}
-      />
-      <TextInput
-        style={[styles.weightInput]}
-        placeholder="Peso*"
-        placeholderTextColor="#000"
-        keyboardType="numeric"
-        value={peso}
-        onChangeText={setPeso}
-      />
-      <Text style={styles.weightUnit}>(Kg)</Text>
-    </View>
-
-
-
-
-
-
-
-
-  {/* Campos actualizados con formato */}
-<View style={styles.inputprecio}>
-  <Image
-    source={require("../assets/precio.png")}
-    style={styles.logo}
-  />
-  <TextInput
-    style={styles.weightInput}
-    placeholder="Precio del Kg Compra"
-    placeholderTextColor="#000"
-    keyboardType="numeric"
-    value={precioKgCompra}
-    onChangeText={manejarCambioPrecioCompra}
-  />
-</View>
-
-<Text style={styles.textcosto}>
-  Costo del Ganado Compra: ${precioKgCompra && precioKgCompra !== "" ? 
-    parseInt(costoGanadoCompra).toLocaleString('es-CO') : "0"}
-</Text>
-
-<View style={styles.inputprecio}>
-  <Image
-    source={require("../assets/precio.png")}
-    style={styles.logo}
-  />
-  <TextInput
-    style={styles.weightInput}
-    placeholder="Precio del Kg Venta"
-    placeholderTextColor="#000"
-    keyboardType="numeric"
-    value={precioKgVenta}
-    onChangeText={manejarCambioPrecioVenta}
-  />
-</View>
-
-<Text style={styles.textcosto}>
-  Costo del Ganado Venta: ${precioKgVenta && precioKgVenta !== "" ? 
-    parseInt(costoGanadoVenta).toLocaleString('es-CO') : "0"}
-</Text>
-
-
-
-
-
-
-
-
-
-
-
-    <TouchableOpacity
-      style={styles.buttonGuardar}
-      onPress={guardarPeso}
-    >
-      <Text style={styles.buttonTextGuardar}>Guardar</Text>
-    </TouchableOpacity>
-  </View>
-)}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        {pesoChecked && (
+          <View style={styles.formSection}>
+            <Image
+              source={require("../assets/Peso.png")}
+              style={styles.imagePeso}
+            />
+            <Text style={styles.subtitle1}>Formulario </Text>
+            <Text style={styles.subtitle2}>Control de Peso</Text>
+
+            <View style={styles.inputContainer}>
+              <Image
+                source={require("../assets/Chip.png")}
+                style={styles.logo}
+              />
+              <TextInput
+                style={styles.inputChip}
+                value={chipPeso}
+                editable={false}
+              />
+            </View>
+
+            {filteredCattle.length > 0 && (
+              <ScrollView vertical style={styles.cattleList}>
+                {filteredCattle.map((item) => (
+                  <TouchableOpacity
+                    key={item.chip}
+                    style={styles.cattleItem}
+                    onPress={() => handleSelectCattle(item)}
+                  >
+                    <Text>{item.nombre}</Text>
+                    <Text>{item.chip}</Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            )}
+
+            <DropDownPicker
+              open={openTipoSeguimiento}
+              setOpen={(open) => {
+                setOpenTipoSeguimiento(open);
+              }}
+              value={tipoSeguimiento}
+              items={[
+                { label: 'Compra', value: 'compra' },
+                { label: 'Venta', value: 'venta' },
+                { label: 'Seguimiento', value: 'seguimiento' }
+              ]}
+              setValue={setTipoSeguimiento}
+              placeholder="Tipo de seguimiento*"
+              containerStyle={[styles.dropdownContainerPicker, { zIndex: 5000 }]}
+              style={styles.dropdownListStyle}
+              listMode="SCROLLVIEW"
+              dropDownContainerStyle={{ zIndex: 5000 }}
+              maxHeight={200}
+              onChangeValue={(value) => {
+                if (value === 'compra') {
+                  setPrecioKgVenta('');
+                  setCostoGanadoVenta('');
+                } else if (value === 'venta') {
+                  setPrecioKgCompra('');
+                  setCostoGanadoCompra('');
+                } else if (value === 'seguimiento') {
+                  setPrecioKgCompra('');
+                  setPrecioKgVenta('');
+                  setCostoGanadoCompra('');
+                  setCostoGanadoVenta('');
+                }
+              }}
+              arrowIconStyle={styles.arrowIconStyle}
+            />
+
+            <TouchableOpacity
+              style={[styles.dateButton, errors.fechaPeso && styles.inputError]}
+              onPress={() => {
+                setCurrentDateType("peso");
+                setDatePickerVisibility(true);
+              }}
+            >
+              <Image
+                source={require("../assets/FechaDeNacimieto.png")}
+                style={styles.logo}
+              />
+              <Text style={styles.dateButtonText}>
+                {fechaPeso || "Fecha de pesaje*"}
+              </Text>
+            </TouchableOpacity>
+
+            <View
+              style={[styles.weightContainer, errors.peso && styles.inputError]}
+            >
+              <Image
+                source={require("../assets/Peso.png")} 
+                style={styles.iconStylePeso}
+              />
+              <TextInput
+                style={[styles.weightInput]}
+                placeholder="Peso*"
+                placeholderTextColor="#000"
+                keyboardType="numeric"
+                value={peso}
+                onChangeText={setPeso}
+              />
+              <Text style={styles.weightUnit}>(Kg)</Text>
+            </View>
+
+            {tipoSeguimiento === 'compra' && (
+              <>
+                <View style={styles.inputprecio}>
+                  <Image
+                    source={require("../assets/precio.png")}
+                    style={styles.logo}
+                  />
+                  <TextInput
+                    style={styles.weightInput}
+                    placeholder="Precio del Kg Compra*"
+                    placeholderTextColor="#000"
+                    keyboardType="numeric"
+                    value={precioKgCompra}
+                    onChangeText={manejarCambioPrecioCompra}
+                  />
+                </View>
+
+                <Text style={styles.textcosto}>
+                  Costo del Ganado Compra: ${precioKgCompra && precioKgCompra !== "" ? 
+                    parseInt(costoGanadoCompra).toLocaleString('es-CO') : "0"}
+                </Text>
+              </>
+            )}
+
+            {tipoSeguimiento === 'venta' && (
+              <>
+                <View style={styles.inputprecio}>
+                  <Image
+                    source={require("../assets/precio.png")}
+                    style={styles.logo}
+                  />
+                  <TextInput
+                    style={styles.weightInput}
+                    placeholder="Precio del Kg Venta*"
+                    placeholderTextColor="#000"
+                    keyboardType="numeric"
+                    value={precioKgVenta}
+                    onChangeText={manejarCambioPrecioVenta}
+                  />
+                </View>
+
+                <Text style={styles.textcosto}>
+                  Costo del Ganado Venta: ${precioKgVenta && precioKgVenta !== "" ? 
+                    parseInt(costoGanadoVenta).toLocaleString('es-CO') : "0"}
+                </Text>
+
+                {/* Mostrar cálculos de ganancia en tiempo real */}
+                {datosCompra && gananciaKg !== null && gananciaValor !== null && periodoMeses !== null && (
+                  <View style={styles.gananciaContainer}>
+                    <Text style={styles.gananciaTitle}>📊 Resumen de Ganancia</Text>
+                    <Text style={styles.gananciaText}>
+                      En {periodoMeses} {periodoMeses === 1 ? 'mes' : 'meses'}, su ganancia fue de {gananciaKg.toFixed(2)} kg y ${gananciaValor.toFixed(0).toLocaleString('es-CO')}.
+                    </Text>
+                  </View>
+                )}
+
+                {/* Advertencia si no hay datos de compra */}
+                {!datosCompra && peso && precioKgVenta && fechaPeso && (
+                  <View style={styles.warningContainer}>
+                    <Text style={styles.warningText}>
+                      ⚠️ No se encontró registro de compra. Se requiere un registro previo de compra para calcular la ganancia.
+                    </Text>
+                  </View>
+                )}
+              </>
+            )}
+
+            <TouchableOpacity
+              style={styles.buttonGuardar}
+              onPress={guardarPeso}
+            >
+              <Text style={styles.buttonTextGuardar}>Guardar</Text>
+            </TouchableOpacity>
+          </View>
+        )}
 
         {vacunaChecked && (
           <View style={styles.formSection}>
@@ -666,7 +757,6 @@ precio_kg_venta:  parseFloat(precioKgVenta)  || null,
                 source={require("../assets/Chip.png")}
                 style={styles.logo}
               />
-
               <TextInput
                 style={styles.inputChip}
                 value={chipVacuna}
@@ -689,7 +779,6 @@ precio_kg_venta:  parseFloat(precioKgVenta)  || null,
               </ScrollView>
             )}
 
-           
             <DropDownPicker
               open={openTipoVacuna}
               setOpen={() => {
@@ -770,14 +859,12 @@ precio_kg_venta:  parseFloat(precioKgVenta)  || null,
                 containerStyle={[
                   styles.dropdownContainerUnidad, 
                   open && styles.dropdownBelowUnidad, 
-
                   errors.unidad && styles.inputError, 
                   { zIndex: 9999 },
                 ]}
                 listMode="SCROLLVIEW"
                 arrowIconStyle={styles.arrowIconStyle}
                 onChangeValue={() => setOpen(false)}
-                
                 dropDownStyle={{
                   borderWidth: 0, 
                   padding: 0, 
@@ -841,34 +928,30 @@ precio_kg_venta:  parseFloat(precioKgVenta)  || null,
           maximumDate={new Date()} 
         />
       </ScrollView>
-        {/* Barra inferior */}
-                <View style={styles.greenBar}>
-                  <View style={styles.bottomImageContainer}>
-                    
-                    <TouchableOpacity onPress={navigateToHome}>
-                      <View style={styles.imageContainer}>
-                        <Image
-                          source={require("../assets/Inicio.png")}
-                          style={styles.imageStyleG}
-                        />
-                        <Text style={styles.imageText}>Inicio</Text>
-                      </View>
-                    </TouchableOpacity>
-          
-                   
-                    <TouchableOpacity onPress={handleGoBack}>
-                      <View style={styles.imageContainer}>
-                        <Image
-                          source={require("../assets/Regresar.png")}
-                          style={styles.imageStyleG}
-                        />
-                        <Text style={styles.imageText}>Regresar</Text>
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-                </View> 
-          
-          
-              </ImageBackground>
+
+      <View style={styles.greenBar}>
+        <View style={styles.bottomImageContainer}>
+          <TouchableOpacity onPress={navigateToHome}>
+            <View style={styles.imageContainer}>
+              <Image
+                source={require("../assets/Inicio.png")}
+                style={styles.imageStyleG}
+              />
+              <Text style={styles.imageText}>Inicio</Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={handleGoBack}>
+            <View style={styles.imageContainer}>
+              <Image
+                source={require("../assets/Regresar.png")}
+                style={styles.imageStyleG}
+              />
+              <Text style={styles.imageText}>Regresar</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </ImageBackground>
   );
 }

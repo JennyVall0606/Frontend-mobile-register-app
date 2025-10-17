@@ -27,4 +27,3 @@ export const login = async (username, password) => {
       throw error;
     }
   };
-

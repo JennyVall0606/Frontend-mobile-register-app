@@ -86,26 +86,16 @@ export default function Layout({ children }) {
     }, 4000);
   };
 
-
-
-  
-  
   const toggleMenu = () => {
     if (showMenu) {
-      
       menuAnim.setValue(-250);
-
-     
       Animated.spring(menuAnim, {
         toValue: 0,
         bounciness: 10, 
         useNativeDriver: true,
       }).start();
     } else {
-      
       menuAnim.setValue(-250);
-
-      
       Animated.spring(menuAnim, {
         toValue: 0,
         bounciness: 10, 
@@ -116,17 +106,14 @@ export default function Layout({ children }) {
     setShowUserMenu(false); 
   };
 
-  
   const toggleUserMenu = () => {
     if (showUserMenu) {
-      
       Animated.spring(userMenuAnim, {
         toValue: -250,
         bounciness: 10, 
         useNativeDriver: true,
       }).start();
     } else {
-      
       Animated.spring(userMenuAnim, {
         toValue: 0,
         bounciness: 10, 
@@ -137,7 +124,6 @@ export default function Layout({ children }) {
     setShowMenu(false); 
   };
 
-  
   const closeMenus = () => {
     setShowMenu(false);
     setShowUserMenu(false);
@@ -148,7 +134,6 @@ export default function Layout({ children }) {
       source={require("../assets/acuarela.Home.png")}
       style={globalStyles.background}
     >
-      
       <TouchableWithoutFeedback onPress={closeMenus}>
         <View style={{ flex: 1 }}>
           {/* Header con barra verde */}
@@ -212,4 +197,3 @@ export default function Layout({ children }) {
     </ImageBackground>
   );
 }
-

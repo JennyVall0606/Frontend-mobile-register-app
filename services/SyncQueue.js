@@ -32,16 +32,14 @@ class SyncQueue {
   async add(operation) {
     try {
       const queueItem = {
-        id: Date.now() + Math.random(),
+        id: Date.now() + Math.random(), // ID único
         table: operation.table,
         recordId: operation.recordId,
-        action: operation.action,
+        action: operation.action, // 'INSERT', 'UPDATE', 'DELETE'
         data: operation.data,
-        token: operation.token, // ✅ Guardar token
-        user_id: operation.user_id, // ✅ Guardar user_id
         timestamp: new Date().toISOString(),
         attempts: 0,
-        status: 'pending',
+        status: 'pending', // 'pending', 'syncing', 'success', 'failed'
         error: null
       };
 
@@ -58,9 +56,10 @@ class SyncQueue {
 
   /**
    * Obtener todas las operaciones pendientes
+   * ✅ CORREGIDO: Incluye operaciones 'pending' y 'failed'
    */
   async getPending() {
-    await this.initialize();
+    await this.initialize(); // ← Cargar la cola desde AsyncStorage
     return this.queue.filter(op => 
       op.status === 'pending' || op.status === 'failed'
     );
@@ -68,6 +67,7 @@ class SyncQueue {
 
   /**
    * Obtener operaciones por tabla
+   * ✅ MEJORADO: También incluye operaciones fallidas
    */
   async getByTable(tableName) {
     await this.initialize();
@@ -104,8 +104,9 @@ class SyncQueue {
         this.queue[index].status = 'failed';
         this.queue[index].error = errorMessage;
         this.queue[index].attempts += 1;
-        this.queue[index].lastAttempt = new Date().toISOString();
+        this.queue[index].lastAttempt = new Date().toISOString(); // ← Nuevo
         
+        // Si ha fallado más de 5 veces, marcar como error permanente
         if (this.queue[index].attempts >= 5) {
           this.queue[index].status = 'error';
           console.log(`❌ Operación ${queueItemId} falló permanentemente después de ${this.queue[index].attempts} intentos`);
@@ -121,78 +122,27 @@ class SyncQueue {
   }
 
   /**
-   * ✅ ACTUALIZADO: Limpiar operaciones sincronizadas Y con error permanente
+   * Limpiar operaciones sincronizadas exitosamente
    */
   async cleanSynced() {
     try {
       const beforeCount = this.queue.length;
-      
-      // Eliminar: success, error permanente (status='error'), y operaciones con 5+ intentos
-      this.queue = this.queue.filter(item => 
-        item.status !== 'success' && 
-        item.status !== 'error' &&
-        item.attempts < 5
-      );
-      
+      this.queue = this.queue.filter(item => item.status !== 'success');
       await this.save();
       
       const cleaned = beforeCount - this.queue.length;
       if (cleaned > 0) {
-        console.log(`🧹 Limpiadas ${cleaned} operaciones (sincronizadas + errores permanentes)`);
+        console.log(`🧹 Limpiadas ${cleaned} operaciones sincronizadas`);
       }
       return cleaned;
     } catch (error) {
       console.error('❌ Error limpiando cola:', error);
-      return 0;
-    }
-  }
-
-  /**
-   * 🆕 NUEVO: Eliminar registros locales de operaciones con error permanente
-   */
-  async cleanFailedLocalRecords() {
-    try {
-      // Obtener operaciones con error permanente
-      const failedOps = this.queue.filter(op => 
-        op.status === 'error' || op.attempts >= 5
-      );
-      
-      if (failedOps.length === 0) {
-        return 0;
-      }
-
-      console.log(`🗑️ Limpiando ${failedOps.length} registros locales con error permanente`);
-
-      // Obtener IDs de registros a eliminar
-      const idsToDelete = failedOps.map(op => op.recordId);
-
-      // Eliminar de local_registro_animal
-      const localData = await AsyncStorage.getItem('local_registro_animal');
-      if (localData) {
-        let animals = JSON.parse(localData);
-        const beforeCount = animals.length;
-        
-        animals = animals.filter(animal => !idsToDelete.includes(animal.id));
-        
-        await AsyncStorage.setItem('local_registro_animal', JSON.stringify(animals));
-        
-        const deleted = beforeCount - animals.length;
-        if (deleted > 0) {
-          console.log(`✅ Eliminados ${deleted} registros locales con error permanente`);
-        }
-        
-        return deleted;
-      }
-
-      return 0;
-    } catch (error) {
-      console.error('❌ Error limpiando registros locales:', error);
-      return 0;
     }
   }
 
   /**
    * Reintentar operaciones fallidas (resetear a 'pending')
+   * ✅ NUEVO: Permite reintentar operaciones fallidas manualmente
    */
   async retryFailed() {
     try {
@@ -243,6 +193,7 @@ class SyncQueue {
 
   /**
    * Obtener detalles de operaciones fallidas
+   * ✅ NUEVO: Para debugging
    */
   async getFailedDetails() {
     await this.initialize();

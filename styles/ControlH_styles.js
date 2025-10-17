@@ -71,9 +71,10 @@ export default StyleSheet.create({
 modalFieldTitle: {
   fontSize: 14,
   fontWeight: 'bold',
-  color: '#337c08ff',
-  marginLeft: 20,
-  marginBottom: 2,
+  color: '#43a709ff',
+  marginLeft: 30,
+  
+  marginBottom: 5,
 },
 
  
@@ -126,22 +127,23 @@ position: "absolute",
   },
 
   greenBar: {
-     height: 70, 
+    height: 90, 
     backgroundColor: "#7dac53",
-    width: "100%",
+    width: "100%", 
         
   },
 
   bottomImageContainer: {
     position: "absolute", 
-    bottom: 18, 
+    bottom: 10, 
     left: 0,
     right: 0,
-    flexDirection: "row",
+    flexDirection: "row", 
     justifyContent: "space-between", 
-    paddingHorizontal: 140,
-     
+    paddingHorizontal: 150,
+    marginBottom:23, 
   },
+  
   
  imageContainer: {
     alignItems: "center", 
@@ -151,17 +153,18 @@ position: "absolute",
 
   imageStyleG: {
     width: 20, 
-    height: 20,     
-        right: 6,
+    height: 20, 
   },
 
    imageText: {
-     marginTop: 5, 
+    marginTop: 3, 
     color: "white", 
     fontSize: 12, 
     fontWeight: "normal", 
      left: -6,
+     marginBottom:8,
   },
+
 
    //===========================================================================
   
@@ -412,7 +415,7 @@ link: {
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   tableHeaderTextPeso: {
-    fontSize: 16, 
+    fontSize: 12, 
     fontWeight: "normal", 
     color: "#000", 
     textAlign: "center", 
@@ -439,7 +442,7 @@ link: {
 
   
   tableCellPeso: {
-    fontSize: 14, 
+    fontSize: 10, 
     color: "#7dac53",
     flex: 1, 
     textAlign: "center", 
@@ -610,7 +613,7 @@ link: {
   modalImagePeso: {
     width: 82,
     height: 72,
-    marginBottom: 8,
+    marginBottom: 15,
     alignSelf: "center",
   },
 
@@ -623,7 +626,7 @@ link: {
   modalTitle2: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 40,
     textAlign: "center",
     color: "#7dac53",
   },
@@ -806,11 +809,11 @@ link: {
   },
 
   modalImageVacuna: {
-    width: 72,
-    height: 62,
+    width: 82,
+    height: 72,
     marginBottom: 15,
     alignSelf: "center",
-    marginTop:15,
+    marginTop:30,
   },
   modalContainerVacuna: {
     flex: 1,
@@ -841,8 +844,8 @@ link: {
     padding: 8,
     borderTopRightRadius: 0,
     borderRadius: 10,
-     marginTop: 2,
-    marginBottom: 20,
+     marginTop: 25,
+    marginBottom: 38,
     width: "90%",
     alignSelf: "center",
   },
@@ -929,7 +932,13 @@ link: {
     marginBottom: 30,
   },
 
-
+pesoInicialBadge: {
+  fontSize: 10,
+  color: '#4CAF50', // Verde
+  fontWeight: '600',
+  fontStyle: 'italic',
+  marginLeft: 4,
+},
 
  
 });

@@ -106,67 +106,62 @@ async clearFailedOperations() {
     });
   }
 
-async performSync() {
-  if (this.isSyncing) {
-    console.log('⏳ Sincronización en progreso, esperando...');
-    return { success: false, message: 'Sincronización en progreso' };
-  }
-
-  if (!this.isOnline) {
-    console.log('📵 Sin conexión, no se puede sincronizar');
-    return { success: false, message: 'Sin conexión' };
-  }
-
-  try {
-    this.isSyncing = true;
-    console.log('🔄 === INICIANDO SINCRONIZACIÓN COMPLETA ===');
-    
-    const results = {
-      pull: null,
-      push: null,
-      startTime: new Date(),
-      endTime: null,
-      success: false
-    };
-
-    // 1. PULL: Traer cambios del servidor
-    console.log('\n📥 1. Trayendo cambios del servidor...');
-    results.pull = await this.pullFromServer();
-    
-    // 2. PUSH: Enviar cambios locales al servidor
-    console.log('\n📤 2. Enviando cambios al servidor...');
-    results.push = await this.pushToServer();
-    
-    // 3. ✅ LIMPIAR OPERACIONES (sincronizadas + errores permanentes)
-    console.log('\n🧹 3. Limpiando operaciones procesadas...');
-    const cleaned = await SyncQueue.cleanSynced();
-    
-    // 4. ✅ LIMPIAR REGISTROS LOCALES DE OPERACIONES CON ERROR PERMANENTE
-    const localCleaned = await SyncQueue.cleanFailedLocalRecords();
-    
-    if (localCleaned > 0) {
-      console.log(`🗑️ Se eliminaron ${localCleaned} registros locales con error permanente`);
+  /**
+   * Sincronización completa (Pull + Push)
+   */
+  async performSync() {
+    if (this.isSyncing) {
+      console.log('⏳ Sincronización en progreso, esperando...');
+      return { success: false, message: 'Sincronización en progreso' };
     }
-    
-    // 5. Actualizar tiempo de última sincronización
-    this.lastSyncTime = new Date();
-    await AsyncStorage.setItem('last_sync_time', this.lastSyncTime.toISOString());
-    
-    results.endTime = new Date();
-    results.success = results.pull.success && results.push.success;
-    
-    const duration = (results.endTime - results.startTime) / 1000;
-    console.log(`\n✅ === SINCRONIZACIÓN COMPLETADA EN ${duration.toFixed(2)}s ===`);
-    
-    return results;
-    
-  } catch (error) {
-    console.error('❌ Error en sincronización:', error);
-    return { success: false, error: error.message };
-  } finally {
-    this.isSyncing = false;
+
+    if (!this.isOnline) {
+      console.log('📵 Sin conexión, no se puede sincronizar');
+      return { success: false, message: 'Sin conexión' };
+    }
+
+    try {
+      this.isSyncing = true;
+      console.log('🔄 === INICIANDO SINCRONIZACIÓN COMPLETA ===');
+      
+      const results = {
+        pull: null,
+        push: null,
+        startTime: new Date(),
+        endTime: null,
+        success: false
+      };
+
+      // 1. PULL: Traer cambios del servidor
+      console.log('\n📥 1. Trayendo cambios del servidor...');
+      results.pull = await this.pullFromServer();
+      
+      // 2. PUSH: Enviar cambios locales al servidor
+      console.log('\n📤 2. Enviando cambios al servidor...');
+      results.push = await this.pushToServer();
+      
+      // 3. Limpiar operaciones sincronizadas
+      await SyncQueue.cleanSynced();
+      
+      // 4. Actualizar tiempo de última sincronización
+      this.lastSyncTime = new Date();
+      await AsyncStorage.setItem('last_sync_time', this.lastSyncTime.toISOString());
+      
+      results.endTime = new Date();
+      results.success = results.pull.success && results.push.success;
+      
+      const duration = (results.endTime - results.startTime) / 1000;
+      console.log(`\n✅ === SINCRONIZACIÓN COMPLETADA EN ${duration.toFixed(2)}s ===`);
+      
+      return results;
+      
+    } catch (error) {
+      console.error('❌ Error en sincronización:', error);
+      return { success: false, error: error.message };
+    } finally {
+      this.isSyncing = false;
+    }
   }
-}
 
   /**
    * PULL: Traer datos del servidor

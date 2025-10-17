@@ -518,6 +518,7 @@ const handleRegister = async () => {
 
 const handleOfflineRegister = async (fechaFormateada, enfermedadesFormateadas) => {
   try {
+    // ✅ Verificar que haya token válido
     const token = AuthManager.getAuthToken();
     const currentUser = AuthManager.getCurrentUser();
     
@@ -525,60 +526,62 @@ const handleOfflineRegister = async (fechaFormateada, enfermedadesFormateadas) =
       Alert.alert(
         '❌ Error',
         'No hay sesión activa. Debes iniciar sesión para registrar ganado offline.',
-        [{ text: 'Ir a Login', onPress: () => navigation.navigate('Login') }]
+        [
+          {
+            text: 'Ir a Login',
+            onPress: () => navigation.navigate('Login')
+          }
+        ]
       );
       return;
     }
 
     console.log('📵 Guardando offline con token válido');
+    console.log('👤 Usuario:', currentUser.correo);
+
     const localId = Date.now();
     
-    // ✅ COMPRIMIR MÁS AGRESIVAMENTE PARA SYNC
+    // Comprimir y convertir imagen
     let photoData = null;
     
     if (image && image.startsWith('file://')) {
-      console.log('📸 Comprimiendo imagen agresivamente para sincronización...');
+      console.log('📸 Comprimiendo imagen para modo offline...');
       
-      // 1. Comprimir a 400px y 30% calidad
-      const ultraCompressed = await manipulateAsync(
+      const compressedImage = await manipulateAsync(
         image,
-        [{ resize: { width: 400 } }],
+        [{ resize: { width: 600 } }],
         {
-          compress: 0.3,
+          compress: 0.5,
           format: SaveFormat.JPEG
         }
       );
       
-      const base64 = await FileSystem.readAsStringAsync(ultraCompressed.uri, {
+      const base64 = await FileSystem.readAsStringAsync(compressedImage.uri, {
         encoding: FileSystem.EncodingType.Base64,
       });
       
       photoData = `data:image/jpeg;base64,${base64}`;
       
       const sizeInKB = (photoData.length * 0.75) / 1024;
-      console.log('📏 Tamaño final foto offline:', sizeInKB.toFixed(2), 'KB');
+      console.log('📏 Tamaño foto:', sizeInKB.toFixed(2), 'KB');
       
-      // 2. Si aún es muy grande (>100KB), comprimir más
-      if (sizeInKB > 100) {
-        console.warn('⚠️ Foto aún muy grande, comprimiendo a 300px...');
+      if (sizeInKB > 200) {
+        console.warn('⚠️ Comprimiendo más...');
         
-        const evenSmaller = await manipulateAsync(
+        const ultraCompressed = await manipulateAsync(
           image,
-          [{ resize: { width: 300 } }],
+          [{ resize: { width: 400 } }],
           {
-            compress: 0.2,
+            compress: 0.3,
             format: SaveFormat.JPEG
           }
         );
         
-        const smallerBase64 = await FileSystem.readAsStringAsync(evenSmaller.uri, {
+        const smallerBase64 = await FileSystem.readAsStringAsync(ultraCompressed.uri, {
           encoding: FileSystem.EncodingType.Base64,
         });
         
         photoData = `data:image/jpeg;base64,${smallerBase64}`;
-        
-        const newSizeKB = (photoData.length * 0.75) / 1024;
-        console.log('✅ Foto ultra-comprimida:', newSizeKB.toFixed(2), 'KB');
       }
     }
     
@@ -603,6 +606,7 @@ const handleOfflineRegister = async (fechaFormateada, enfermedadesFormateadas) =
       foto: photoData || 'default.jpg',
       created_at: new Date().toISOString(),
       synced: false,
+      // ✅ Guardar info del usuario para sincronización
       user_id: currentUser.id,
       user_email: currentUser.correo,
     };
@@ -615,21 +619,21 @@ const handleOfflineRegister = async (fechaFormateada, enfermedadesFormateadas) =
     animals.push(animalData);
     await AsyncStorage.setItem('local_registro_animal', JSON.stringify(animals));
 
-    // Agregar a cola de sincronización con token
+    // ✅ Agregar a cola de sincronización con token
     await SyncQueue.add({
       table: 'registro_animal',
       recordId: localId,
       action: 'INSERT',
       data: animalData,
-      token: token,
+      token: token, // ✅ Guardar token para usar al sincronizar
       user_id: currentUser.id
     });
 
-    console.log('✅ Animal guardado y agregado a cola');
+    console.log('✅ Animal guardado localmente y agregado a cola');
 
     Alert.alert(
       '📵 Guardado sin conexión',
-      'El animal se registró localmente. Se sincronizará automáticamente cuando haya conexión.',
+      'El animal se registró localmente. Se sincronizará automáticamente cuando haya conexión a internet.',
       [
         {
           text: 'OK',
@@ -643,7 +647,10 @@ const handleOfflineRegister = async (fechaFormateada, enfermedadesFormateadas) =
 
   } catch (error) {
     console.error('❌ Error en registro offline:', error);
-    Alert.alert('❌ Error', 'No se pudo guardar localmente: ' + error.message);
+    Alert.alert(
+      '❌ Error',
+      'No se pudo guardar localmente: ' + error.message
+    );
   }
 };
 
